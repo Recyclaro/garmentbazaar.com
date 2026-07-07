@@ -32,7 +32,7 @@ const columns = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-slate-800 bg-slate-950 text-slate-300">
+    <footer className="border-t border-white/10 bg-ink text-slate-300">
       <Container className="py-16">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-6">
           <div className="col-span-2">
@@ -50,7 +50,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-slate-400 transition hover:text-amber-400"
+                      className="text-sm text-slate-400 transition hover:text-accent-400"
                     >
                       {link.label}
                     </Link>
@@ -63,7 +63,7 @@ export default function Footer() {
             <h3 className="text-sm font-semibold text-white">Get in touch</h3>
             <ul className="mt-4 space-y-3 text-sm text-slate-400">
               <li>
-                <a href="mailto:hello@garmentbazaar.com" className="hover:text-amber-400">
+                <a href="mailto:hello@garmentbazaar.com" className="hover:text-accent-400">
                   hello@garmentbazaar.com
                 </a>
               </li>
@@ -71,7 +71,7 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800 pt-8 sm:flex-row">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row">
           <p className="text-xs text-slate-500">
             © {new Date().getFullYear()} GarmentBazaar. All rights reserved.
           </p>

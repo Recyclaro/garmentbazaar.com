@@ -116,15 +116,14 @@ const trust = [
 export default function PlatformPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-slate-950">
-        <div className="bg-grid pointer-events-none absolute inset-0" />
+      <section className="relative overflow-hidden bg-background">
         <Container className="relative py-20 sm:py-28">
           <div className="mx-auto max-w-3xl text-center">
-            <Eyebrow light>The Platform</Eyebrow>
-            <h1 className="text-balance mt-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            <Eyebrow>The Platform</Eyebrow>
+            <h1 className="text-balance mt-6 font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
               One AI engine, six connected sourcing capabilities
             </h1>
-            <p className="text-balance mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400">
+            <p className="text-balance mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
               GarmentBazaar applies AI at each stage of the sourcing lifecycle
               — from listing a new product to fulfilling an order — so every
               decision is backed by structured data instead of guesswork.
@@ -145,13 +144,13 @@ export default function PlatformPage() {
                 <div
                   className={`lg:col-span-7 ${i % 2 === 1 ? "lg:order-2" : ""}`}
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-900">
-                    <m.icon className="h-6 w-6 text-amber-400" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-ink">
+                    <m.icon className="h-6 w-6 text-accent-300" />
                   </div>
-                  <p className="mt-5 text-sm font-semibold uppercase tracking-wide text-amber-600">
+                  <p className="mt-5 text-sm font-semibold uppercase tracking-wide text-accent-600">
                     {m.tagline}
                   </p>
-                  <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+                  <h2 className="mt-2 font-serif text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
                     {m.title}
                   </h2>
                   <p className="mt-4 text-base leading-7 text-slate-600">
@@ -161,10 +160,10 @@ export default function PlatformPage() {
                 <div
                   className={`lg:col-span-5 ${i % 2 === 1 ? "lg:order-1" : ""}`}
                 >
-                  <ul className="space-y-4 rounded-2xl border border-slate-200 bg-slate-50 p-6">
+                  <ul className="space-y-4 rounded-2xl border border-slate-200 bg-background p-6">
                     {m.points.map((pt) => (
                       <li key={pt} className="flex gap-3">
-                        <IconCheck className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
+                        <IconCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent-600" />
                         <span className="text-sm leading-6 text-slate-700">
                           {pt}
                         </span>
@@ -178,11 +177,11 @@ export default function PlatformPage() {
         </Container>
       </section>
 
-      <section className="bg-slate-50 py-20 sm:py-28">
+      <section className="bg-background py-20 sm:py-28">
         <Container>
           <div className="mx-auto max-w-2xl text-center">
             <Eyebrow>Built on trust</Eyebrow>
-            <h2 className="text-balance mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
               Automation that keeps people in control
             </h2>
           </div>
@@ -192,10 +191,10 @@ export default function PlatformPage() {
                 key={t.title}
                 className="rounded-2xl border border-slate-200 bg-white p-8"
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50">
-                  <t.icon className="h-5 w-5 text-amber-600" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-100">
+                  <t.icon className="h-5 w-5 text-accent-600" />
                 </div>
-                <h3 className="mt-5 text-base font-semibold text-slate-900">
+                <h3 className="mt-5 text-base font-semibold text-ink">
                   {t.title}
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-slate-600">

@@ -41,15 +41,14 @@ const values = [
 export default function AboutPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-slate-950">
-        <div className="bg-grid pointer-events-none absolute inset-0" />
+      <section className="relative overflow-hidden bg-background">
         <Container className="relative py-20 sm:py-28">
           <div className="mx-auto max-w-3xl text-center">
-            <Eyebrow light>About GarmentBazaar</Eyebrow>
-            <h1 className="text-balance mt-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            <Eyebrow>About GarmentBazaar</Eyebrow>
+            <h1 className="text-balance mt-6 font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
               Building the AI-first backbone of fashion sourcing
             </h1>
-            <p className="text-balance mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400">
+            <p className="text-balance mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
               GarmentBazaar exists to connect brands, manufacturers, factories,
               and retailers across India&apos;s fashion and lifestyle ecosystem
               on a single, intelligent platform.
@@ -62,7 +61,7 @@ export default function AboutPage() {
         <Container>
           <div className="mx-auto max-w-3xl">
             <Eyebrow>Our mission</Eyebrow>
-            <h2 className="text-balance mt-4 text-3xl font-semibold tracking-tight text-slate-900">
+            <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink">
               Make sourcing decisions as fast and reliable as the products
               they produce
             </h2>
@@ -92,11 +91,11 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      <section className="bg-slate-50 py-20 sm:py-28">
+      <section className="bg-background py-20 sm:py-28">
         <Container>
           <div className="mx-auto max-w-2xl text-center">
             <Eyebrow>What we believe</Eyebrow>
-            <h2 className="text-balance mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
               Our operating principles
             </h2>
           </div>
@@ -106,10 +105,10 @@ export default function AboutPage() {
                 key={v.title}
                 className="rounded-2xl border border-slate-200 bg-white p-6"
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900">
-                  <v.icon className="h-5 w-5 text-amber-400" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink">
+                  <v.icon className="h-5 w-5 text-accent-300" />
                 </div>
-                <h3 className="mt-5 text-base font-semibold text-slate-900">
+                <h3 className="mt-5 text-base font-semibold text-ink">
                   {v.title}
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-slate-600">

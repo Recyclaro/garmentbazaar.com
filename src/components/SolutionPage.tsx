@@ -32,15 +32,14 @@ export default function SolutionPage({
 }: SolutionPageProps) {
   return (
     <>
-      <section className="relative overflow-hidden bg-slate-950">
-        <div className="bg-grid pointer-events-none absolute inset-0" />
+      <section className="relative overflow-hidden bg-background">
         <Container className="relative py-20 sm:py-28">
           <div className="mx-auto max-w-3xl text-center">
-            <Eyebrow light>{eyebrow}</Eyebrow>
-            <h1 className="text-balance mt-6 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            <Eyebrow>{eyebrow}</Eyebrow>
+            <h1 className="text-balance mt-6 font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
               {title}
             </h1>
-            <p className="text-balance mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400">
+            <p className="text-balance mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
               {subtitle}
             </p>
           </div>
@@ -52,7 +51,7 @@ export default function SolutionPage({
           <div className="grid grid-cols-1 gap-16 lg:grid-cols-2">
             <div>
               <Eyebrow>The challenge</Eyebrow>
-              <h2 className="mt-4 text-2xl font-semibold tracking-tight text-slate-900">
+              <h2 className="mt-4 font-serif text-2xl font-semibold tracking-tight text-ink">
                 What slows you down today
               </h2>
               <ul className="mt-8 space-y-4">
@@ -66,13 +65,13 @@ export default function SolutionPage({
             </div>
             <div>
               <Eyebrow>With GarmentBazaar</Eyebrow>
-              <h2 className="mt-4 text-2xl font-semibold tracking-tight text-slate-900">
+              <h2 className="mt-4 font-serif text-2xl font-semibold tracking-tight text-ink">
                 What changes
               </h2>
               <ul className="mt-8 space-y-4">
                 {solutionPoints.map((item) => (
                   <li key={item} className="flex gap-3 text-slate-700">
-                    <IconCheck className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
+                    <IconCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent-600" />
                     <span className="leading-7">{item}</span>
                   </li>
                 ))}
@@ -82,11 +81,11 @@ export default function SolutionPage({
         </Container>
       </section>
 
-      <section className="bg-slate-50 py-20 sm:py-28">
+      <section className="bg-background py-20 sm:py-28">
         <Container>
           <div className="mx-auto max-w-2xl text-center">
             <Eyebrow>Relevant capabilities</Eyebrow>
-            <h2 className="text-balance mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
               Built for how you work
             </h2>
           </div>
@@ -96,10 +95,10 @@ export default function SolutionPage({
                 key={f.title}
                 className="rounded-2xl border border-slate-200 bg-white p-6"
               >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-900">
-                  <f.icon className="h-5 w-5 text-amber-400" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink">
+                  <f.icon className="h-5 w-5 text-accent-300" />
                 </div>
-                <h3 className="mt-5 text-base font-semibold text-slate-900">
+                <h3 className="mt-5 text-base font-semibold text-ink">
                   {f.title}
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-slate-600">{f.desc}</p>

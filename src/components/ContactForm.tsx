@@ -19,8 +19,8 @@ export default function ContactForm() {
 
   if (submitted) {
     return (
-      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center">
-        <h3 className="text-lg font-semibold text-slate-900">
+      <div className="rounded-2xl border border-accent-200 bg-accent-50 p-8 text-center">
+        <h3 className="text-lg font-semibold text-ink">
           Thanks — we&apos;ve got your message
         </h3>
         <p className="mt-2 text-sm leading-6 text-slate-600">
@@ -36,7 +36,7 @@ export default function ContactForm() {
         <div>
           <label
             htmlFor="name"
-            className="block text-sm font-medium text-slate-900"
+            className="block text-sm font-medium text-ink"
           >
             Full name
           </label>
@@ -45,14 +45,14 @@ export default function ContactForm() {
             name="name"
             type="text"
             required
-            className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+            className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-ink shadow-sm outline-none placeholder:text-slate-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
             placeholder="Jane Doe"
           />
         </div>
         <div>
           <label
             htmlFor="company"
-            className="block text-sm font-medium text-slate-900"
+            className="block text-sm font-medium text-ink"
           >
             Company
           </label>
@@ -61,7 +61,7 @@ export default function ContactForm() {
             name="company"
             type="text"
             required
-            className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+            className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-ink shadow-sm outline-none placeholder:text-slate-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
             placeholder="Company name"
           />
         </div>
@@ -71,7 +71,7 @@ export default function ContactForm() {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-slate-900"
+            className="block text-sm font-medium text-ink"
           >
             Work email
           </label>
@@ -80,14 +80,14 @@ export default function ContactForm() {
             name="email"
             type="email"
             required
-            className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+            className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-ink shadow-sm outline-none placeholder:text-slate-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
             placeholder="you@company.com"
           />
         </div>
         <div>
           <label
             htmlFor="role"
-            className="block text-sm font-medium text-slate-900"
+            className="block text-sm font-medium text-ink"
           >
             I am a...
           </label>
@@ -96,7 +96,7 @@ export default function ContactForm() {
             name="role"
             required
             defaultValue=""
-            className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+            className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-ink shadow-sm outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
           >
             <option value="" disabled>
               Select one
@@ -113,7 +113,7 @@ export default function ContactForm() {
       <div>
         <label
           htmlFor="message"
-          className="block text-sm font-medium text-slate-900"
+          className="block text-sm font-medium text-ink"
         >
           How can we help?
         </label>
@@ -122,14 +122,14 @@ export default function ContactForm() {
           name="message"
           rows={4}
           required
-          className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none placeholder:text-slate-400 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20"
+          className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-ink shadow-sm outline-none placeholder:text-slate-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
           placeholder="Tell us about your sourcing needs..."
         />
       </div>
 
       <button
         type="submit"
-        className="inline-flex w-full items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 sm:w-auto"
+        className="inline-flex w-full items-center justify-center rounded-full bg-accent-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-700 sm:w-auto"
       >
         Send message
       </button>

@@ -35,7 +35,7 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Eyebrow>Contact us</Eyebrow>
-            <h1 className="text-balance mt-4 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
+            <h1 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
               Let&apos;s talk about your sourcing needs
             </h1>
             <p className="mt-4 text-base leading-7 text-slate-600">
@@ -47,11 +47,11 @@ export default function ContactPage() {
             <div className="mt-10 space-y-4">
               {audiences.map((a) => (
                 <div key={a.title} className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-50">
-                    <a.icon className="h-5 w-5 text-amber-600" />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent-100">
+                    <a.icon className="h-5 w-5 text-accent-600" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-slate-900">
+                    <p className="text-sm font-semibold text-ink">
                       {a.title}
                     </p>
                     <p className="text-sm leading-6 text-slate-600">
@@ -63,12 +63,12 @@ export default function ContactPage() {
             </div>
 
             <div className="mt-10 border-t border-slate-200 pt-8">
-              <p className="text-sm font-semibold text-slate-900">
+              <p className="text-sm font-semibold text-ink">
                 Prefer email?
               </p>
               <a
                 href="mailto:hello@garmentbazaar.com"
-                className="text-sm text-amber-700 hover:text-amber-800"
+                className="text-sm text-accent-700 hover:text-accent-600"
               >
                 hello@garmentbazaar.com
               </a>
@@ -76,7 +76,7 @@ export default function ContactPage() {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 sm:p-10">
+            <div className="rounded-3xl border border-slate-200 bg-background p-6 sm:p-10">
               <ContactForm />
             </div>
           </div>

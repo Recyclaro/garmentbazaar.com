@@ -34,7 +34,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/85 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-background/90 backdrop-blur-md">
       <Container className="flex h-16 items-center justify-between">
         <Link href="/" className="shrink-0" onClick={() => setMobileOpen(false)}>
           <Logo />
@@ -47,7 +47,7 @@ export default function Header() {
             onMouseLeave={() => setSolutionsOpen(false)}
           >
             <button
-              className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-slate-700 transition hover:text-slate-950"
+              className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-slate-700 transition hover:text-ink"
               aria-expanded={solutionsOpen}
             >
               Solutions
@@ -70,7 +70,7 @@ export default function Header() {
                       href={s.href}
                       className="block rounded-lg px-3 py-2.5 transition hover:bg-slate-50"
                     >
-                      <p className="text-sm font-medium text-slate-900">{s.label}</p>
+                      <p className="text-sm font-medium text-ink">{s.label}</p>
                       <p className="mt-0.5 text-xs text-slate-500">{s.desc}</p>
                     </Link>
                   ))}
@@ -83,7 +83,7 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 transition hover:text-slate-950"
+              className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 transition hover:text-ink"
             >
               {link.label}
             </Link>
@@ -93,7 +93,7 @@ export default function Header() {
         <div className="hidden items-center gap-3 lg:flex">
           <Link
             href="/contact"
-            className="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+            className="rounded-full bg-accent-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-700"
           >
             Request a Demo
           </Link>
@@ -145,7 +145,7 @@ export default function Header() {
             ))}
             <Link
               href="/contact"
-              className="mt-2 rounded-full bg-slate-900 px-4 py-2.5 text-center text-sm font-semibold text-white"
+              className="mt-2 rounded-full bg-accent-600 px-4 py-2.5 text-center text-sm font-semibold text-white"
               onClick={() => setMobileOpen(false)}
             >
               Request a Demo
