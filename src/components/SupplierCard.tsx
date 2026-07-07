@@ -49,7 +49,7 @@ export default function SupplierCard({ supplier }: { supplier: Supplier }) {
         </div>
 
         <Link
-          href={`/contact?supplier=${encodeURIComponent(supplier.name)}`}
+          href={`/contact?supplier=${encodeURIComponent(supplier.slug)}`}
           className="mt-4 inline-flex items-center justify-center rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-700"
         >
           Request a Quote

@@ -3,6 +3,7 @@ import Container from "@/components/Container";
 import Eyebrow from "@/components/Eyebrow";
 import ContactForm from "@/components/ContactForm";
 import { IconBuilding, IconFactory, IconStorefront } from "@/components/Icons";
+import { getSupplierBySlug } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -33,9 +34,10 @@ export default async function ContactPage({
 }: {
   searchParams: Promise<{ supplier?: string }>;
 }) {
-  const { supplier } = await searchParams;
+  const { supplier: supplierSlug } = await searchParams;
+  const supplier = supplierSlug ? getSupplierBySlug(supplierSlug) : undefined;
   const defaultMessage = supplier
-    ? `I'm interested in sourcing from ${supplier}.`
+    ? `I'm interested in sourcing from ${supplier.name}.`
     : undefined;
 
   return (
@@ -86,7 +88,10 @@ export default async function ContactPage({
 
           <div className="lg:col-span-7">
             <div className="rounded-3xl border border-slate-200 bg-background p-6 sm:p-10">
-              <ContactForm defaultMessage={defaultMessage} />
+              <ContactForm
+                defaultMessage={defaultMessage}
+                supplierSlug={supplier?.slug}
+              />
             </div>
           </div>
         </div>

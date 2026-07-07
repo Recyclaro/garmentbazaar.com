@@ -9,13 +9,17 @@ import {
   categories,
   certifications,
   regions,
-  suppliers,
   type Category,
   type Certification,
   type Region,
+  type Supplier,
 } from "@/data/suppliers";
 
-export default function MarketplaceClient() {
+export default function MarketplaceClient({
+  suppliers,
+}: {
+  suppliers: Supplier[];
+}) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<Category | "All">("All");
   const [region, setRegion] = useState<Region | "All">("All");
@@ -55,7 +59,7 @@ export default function MarketplaceClient() {
       }
       return true;
     });
-  }, [query, category, region, selectedCerts]);
+  }, [query, category, region, selectedCerts, suppliers]);
 
   return (
     <section className="bg-background py-16 sm:py-20">

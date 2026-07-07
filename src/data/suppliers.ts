@@ -62,7 +62,12 @@ export const certifications: Certification[] = [
   "Sedex",
 ];
 
-export const suppliers: Supplier[] = [
+/**
+ * Seed data loaded into the database on first run (see src/lib/db.ts).
+ * Once seeded, the database is the source of truth — editing this array
+ * afterwards has no effect on an existing app.db.
+ */
+export const seedSuppliers: Supplier[] = [
   {
     slug: "shree-textile-mills",
     name: "Shree Textile Mills",

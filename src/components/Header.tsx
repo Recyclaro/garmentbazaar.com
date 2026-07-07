@@ -30,7 +30,12 @@ const navLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
-export default function Header() {
+export interface HeaderUser {
+  name: string;
+  role: string;
+}
+
+export default function Header({ user }: { user: HeaderUser | null }) {
   const [solutionsOpen, setSolutionsOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -92,12 +97,29 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Link
-            href="/contact"
-            className="rounded-full bg-accent-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-700"
-          >
-            Request a Demo
-          </Link>
+          {user ? (
+            <Link
+              href="/dashboard"
+              className="rounded-full bg-accent-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-700"
+            >
+              Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 transition hover:text-ink"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/signup"
+                className="rounded-full bg-accent-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-700"
+              >
+                Sign up
+              </Link>
+            </>
+          )}
         </div>
 
         <button
@@ -144,13 +166,32 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/contact"
-              className="mt-2 rounded-full bg-accent-600 px-4 py-2.5 text-center text-sm font-semibold text-white"
-              onClick={() => setMobileOpen(false)}
-            >
-              Request a Demo
-            </Link>
+            {user ? (
+              <Link
+                href="/dashboard"
+                className="mt-2 rounded-full bg-accent-600 px-4 py-2.5 text-center text-sm font-semibold text-white"
+                onClick={() => setMobileOpen(false)}
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/signup"
+                  className="mt-2 rounded-full bg-accent-600 px-4 py-2.5 text-center text-sm font-semibold text-white"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
           </Container>
         </div>
       )}

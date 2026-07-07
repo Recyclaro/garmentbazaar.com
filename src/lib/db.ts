@@ -1,0 +1,408 @@
+import "server-only";
+import { DatabaseSync } from "node:sqlite";
+import path from "node:path";
+import fs from "node:fs";
+import bcrypt from "bcryptjs";
+import {
+  seedSuppliers,
+  type Category,
+  type Region,
+  type Supplier,
+} from "@/data/suppliers";
+
+export type Role = "brand" | "manufacturer" | "retailer" | "admin";
+export type ListingStatus = "pending" | "approved" | "rejected";
+export type RfqStatus = "new" | "contacted" | "closed";
+
+export interface UserRow {
+  id: number;
+  name: string;
+  email: string;
+  password_hash: string;
+  role: Role;
+  company_name: string | null;
+  created_at: string;
+}
+
+export interface SupplierRow {
+  id: number;
+  slug: string;
+  owner_user_id: number | null;
+  name: string;
+  city: string;
+  region: Region;
+  category: Category;
+  specialties: string; // JSON string
+  moq: number;
+  lead_time_days: number;
+  rating: number;
+  reviews: number;
+  certifications: string; // JSON string
+  since: number;
+  verified: number; // 0 | 1
+  status: ListingStatus;
+  created_at: string;
+}
+
+export interface RfqRow {
+  id: number;
+  supplier_id: number | null;
+  from_user_id: number | null;
+  name: string;
+  email: string;
+  company: string;
+  role: string;
+  message: string;
+  status: RfqStatus;
+  created_at: string;
+}
+
+declare global {
+  var __gbDb: DatabaseSync | undefined;
+}
+
+function openDatabase(): DatabaseSync {
+  const dataDir = path.join(process.cwd(), "data");
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
+  const db = new DatabaseSync(path.join(dataDir, "app.db"));
+  db.exec("PRAGMA journal_mode = WAL;");
+  db.exec("PRAGMA foreign_keys = ON;");
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      role TEXT NOT NULL CHECK (role IN ('brand','manufacturer','retailer','admin')),
+      company_name TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS suppliers (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug TEXT NOT NULL UNIQUE,
+      owner_user_id INTEGER REFERENCES users(id),
+      name TEXT NOT NULL,
+      city TEXT NOT NULL,
+      region TEXT NOT NULL,
+      category TEXT NOT NULL,
+      specialties TEXT NOT NULL,
+      moq INTEGER NOT NULL,
+      lead_time_days INTEGER NOT NULL,
+      rating REAL NOT NULL DEFAULT 0,
+      reviews INTEGER NOT NULL DEFAULT 0,
+      certifications TEXT NOT NULL,
+      since INTEGER NOT NULL,
+      verified INTEGER NOT NULL DEFAULT 0,
+      status TEXT NOT NULL DEFAULT 'approved' CHECK (status IN ('pending','approved','rejected')),
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS rfqs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      supplier_id INTEGER REFERENCES suppliers(id),
+      from_user_id INTEGER REFERENCES users(id),
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      company TEXT NOT NULL,
+      role TEXT NOT NULL,
+      message TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new','contacted','closed')),
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+  `);
+
+  seedIfEmpty(db);
+  return db;
+}
+
+function seedIfEmpty(db: DatabaseSync) {
+  const supplierCount = db
+    .prepare("SELECT COUNT(*) as count FROM suppliers")
+    .get() as { count: number };
+
+  if (supplierCount.count === 0) {
+    const insert = db.prepare(`
+      INSERT INTO suppliers
+        (slug, owner_user_id, name, city, region, category, specialties, moq, lead_time_days, rating, reviews, certifications, since, verified, status)
+      VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved')
+    `);
+    for (const s of seedSuppliers) {
+      insert.run(
+        s.slug,
+        s.name,
+        s.city,
+        s.region,
+        s.category,
+        JSON.stringify(s.specialties),
+        s.moq,
+        s.leadTimeDays,
+        s.rating,
+        s.reviews,
+        JSON.stringify(s.certifications),
+        s.since,
+        s.verified ? 1 : 0,
+      );
+    }
+  }
+
+  const adminCount = db
+    .prepare("SELECT COUNT(*) as count FROM users WHERE role = 'admin'")
+    .get() as { count: number };
+
+  if (adminCount.count === 0) {
+    const email = process.env.ADMIN_EMAIL || "admin@garmentbazaar.com";
+    const password = process.env.ADMIN_PASSWORD || "changeme123";
+    const passwordHash = bcrypt.hashSync(password, 10);
+    db.prepare(
+      `INSERT INTO users (name, email, password_hash, role, company_name) VALUES (?, ?, ?, 'admin', ?)`,
+    ).run("GarmentBazaar Admin", email, passwordHash, "GarmentBazaar");
+  }
+}
+
+export function getDb(): DatabaseSync {
+  if (!global.__gbDb) {
+    global.__gbDb = openDatabase();
+  }
+  return global.__gbDb;
+}
+
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+export function supplierRowToSupplier(row: SupplierRow): Supplier {
+  return {
+    slug: row.slug,
+    name: row.name,
+    city: row.city,
+    region: row.region,
+    category: row.category,
+    specialties: JSON.parse(row.specialties),
+    moq: row.moq,
+    leadTimeDays: row.lead_time_days,
+    rating: row.rating,
+    reviews: row.reviews,
+    certifications: JSON.parse(row.certifications),
+    since: row.since,
+    verified: row.verified === 1,
+  };
+}
+
+// --- Users ---
+
+export function getUserByEmail(email: string): UserRow | undefined {
+  return getDb()
+    .prepare("SELECT * FROM users WHERE email = ?")
+    .get(email.toLowerCase()) as UserRow | undefined;
+}
+
+export function getUserById(id: number): UserRow | undefined {
+  return getDb().prepare("SELECT * FROM users WHERE id = ?").get(id) as
+    | UserRow
+    | undefined;
+}
+
+export function createUser(input: {
+  name: string;
+  email: string;
+  passwordHash: string;
+  role: Role;
+  companyName: string;
+}): number {
+  const result = getDb()
+    .prepare(
+      `INSERT INTO users (name, email, password_hash, role, company_name) VALUES (?, ?, ?, ?, ?)`,
+    )
+    .run(
+      input.name,
+      input.email.toLowerCase(),
+      input.passwordHash,
+      input.role,
+      input.companyName,
+    );
+  return Number(result.lastInsertRowid);
+}
+
+// --- Suppliers ---
+
+export function listApprovedSuppliers(): SupplierRow[] {
+  return getDb()
+    .prepare("SELECT * FROM suppliers WHERE status = 'approved' ORDER BY rating DESC")
+    .all() as unknown as SupplierRow[];
+}
+
+export function getSupplierBySlug(slug: string): SupplierRow | undefined {
+  return getDb().prepare("SELECT * FROM suppliers WHERE slug = ?").get(slug) as
+    | SupplierRow
+    | undefined;
+}
+
+export function listSuppliersByOwner(ownerUserId: number): SupplierRow[] {
+  return getDb()
+    .prepare("SELECT * FROM suppliers WHERE owner_user_id = ? ORDER BY created_at DESC")
+    .all(ownerUserId) as unknown as SupplierRow[];
+}
+
+export function listPendingSuppliers(): SupplierRow[] {
+  return getDb()
+    .prepare("SELECT * FROM suppliers WHERE status = 'pending' ORDER BY created_at ASC")
+    .all() as unknown as SupplierRow[];
+}
+
+export interface ListingInput {
+  name: string;
+  city: string;
+  region: Region;
+  category: Category;
+  specialties: string[];
+  moq: number;
+  leadTimeDays: number;
+  certifications: string[];
+  since: number;
+}
+
+export function createListing(ownerUserId: number, input: ListingInput): string {
+  const db = getDb();
+  let slug = slugify(input.name);
+  if (getSupplierBySlug(slug)) {
+    slug = `${slug}-${Date.now().toString(36)}`;
+  }
+  db.prepare(
+    `INSERT INTO suppliers
+      (slug, owner_user_id, name, city, region, category, specialties, moq, lead_time_days, rating, reviews, certifications, since, verified, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, ?, ?, 0, 'pending')`,
+  ).run(
+    slug,
+    ownerUserId,
+    input.name,
+    input.city,
+    input.region,
+    input.category,
+    JSON.stringify(input.specialties),
+    input.moq,
+    input.leadTimeDays,
+    JSON.stringify(input.certifications),
+    input.since,
+  );
+  return slug;
+}
+
+export function updateListing(
+  id: number,
+  ownerUserId: number,
+  input: ListingInput,
+): boolean {
+  const result = getDb()
+    .prepare(
+      `UPDATE suppliers SET
+        name = ?, city = ?, region = ?, category = ?, specialties = ?,
+        moq = ?, lead_time_days = ?, certifications = ?, since = ?, status = 'pending', verified = 0
+       WHERE id = ? AND owner_user_id = ?`,
+    )
+    .run(
+      input.name,
+      input.city,
+      input.region,
+      input.category,
+      JSON.stringify(input.specialties),
+      input.moq,
+      input.leadTimeDays,
+      JSON.stringify(input.certifications),
+      input.since,
+      id,
+      ownerUserId,
+    );
+  return result.changes > 0;
+}
+
+export function deleteListing(id: number, ownerUserId: number): boolean {
+  const result = getDb()
+    .prepare("DELETE FROM suppliers WHERE id = ? AND owner_user_id = ?")
+    .run(id, ownerUserId);
+  return result.changes > 0;
+}
+
+export function setListingStatus(id: number, status: ListingStatus): void {
+  getDb()
+    .prepare(
+      "UPDATE suppliers SET status = ?, verified = ? WHERE id = ?",
+    )
+    .run(status, status === "approved" ? 1 : 0, id);
+}
+
+// --- RFQs ---
+
+export interface RfqInput {
+  supplierId: number | null;
+  fromUserId: number | null;
+  name: string;
+  email: string;
+  company: string;
+  role: string;
+  message: string;
+}
+
+export function createRfq(input: RfqInput): number {
+  const result = getDb()
+    .prepare(
+      `INSERT INTO rfqs (supplier_id, from_user_id, name, email, company, role, message)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    )
+    .run(
+      input.supplierId,
+      input.fromUserId,
+      input.name,
+      input.email,
+      input.company,
+      input.role,
+      input.message,
+    );
+  return Number(result.lastInsertRowid);
+}
+
+export function listRfqsForSupplierOwner(ownerUserId: number): (RfqRow & {
+  supplier_name: string | null;
+})[] {
+  return getDb()
+    .prepare(
+      `SELECT rfqs.*, suppliers.name as supplier_name
+       FROM rfqs
+       JOIN suppliers ON suppliers.id = rfqs.supplier_id
+       WHERE suppliers.owner_user_id = ?
+       ORDER BY rfqs.created_at DESC`,
+    )
+    .all(ownerUserId) as unknown as (RfqRow & { supplier_name: string | null })[];
+}
+
+export function listRfqsFromUser(fromUserId: number): (RfqRow & {
+  supplier_name: string | null;
+})[] {
+  return getDb()
+    .prepare(
+      `SELECT rfqs.*, suppliers.name as supplier_name
+       FROM rfqs
+       LEFT JOIN suppliers ON suppliers.id = rfqs.supplier_id
+       WHERE rfqs.from_user_id = ?
+       ORDER BY rfqs.created_at DESC`,
+    )
+    .all(fromUserId) as unknown as (RfqRow & { supplier_name: string | null })[];
+}
+
+export function listAllRfqs(): (RfqRow & { supplier_name: string | null })[] {
+  return getDb()
+    .prepare(
+      `SELECT rfqs.*, suppliers.name as supplier_name
+       FROM rfqs
+       LEFT JOIN suppliers ON suppliers.id = rfqs.supplier_id
+       ORDER BY rfqs.created_at DESC`,
+    )
+    .all() as unknown as (RfqRow & { supplier_name: string | null })[];
+}
