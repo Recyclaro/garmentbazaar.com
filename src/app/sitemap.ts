@@ -5,6 +5,7 @@ const siteUrl = "https://garmentbazaar.com";
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = [
     "",
+    "/marketplace",
     "/platform",
     "/solutions/brands",
     "/solutions/manufacturers",

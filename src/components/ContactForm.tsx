@@ -9,7 +9,11 @@ const roles = [
   "Other",
 ];
 
-export default function ContactForm() {
+export default function ContactForm({
+  defaultMessage,
+}: {
+  defaultMessage?: string;
+}) {
   const [submitted, setSubmitted] = useState(false);
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -122,6 +126,7 @@ export default function ContactForm() {
           name="message"
           rows={4}
           required
+          defaultValue={defaultMessage}
           className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-ink shadow-sm outline-none placeholder:text-slate-400 focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
           placeholder="Tell us about your sourcing needs..."
         />

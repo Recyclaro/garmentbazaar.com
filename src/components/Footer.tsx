@@ -7,6 +7,7 @@ const columns = [
     title: "Platform",
     links: [
       { href: "/platform", label: "AI Sourcing Platform" },
+      { href: "/marketplace", label: "Supplier Marketplace" },
       { href: "/platform#onboarding", label: "Product Onboarding" },
       { href: "/platform#procurement", label: "Procurement & Pricing" },
       { href: "/platform#inventory", label: "Inventory Optimization" },

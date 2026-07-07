@@ -162,10 +162,10 @@ export default function Home() {
                   <IconArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
-                  href="/platform"
+                  href="/marketplace"
                   className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-ink transition hover:bg-slate-50"
                 >
-                  Explore the Platform
+                  Browse the Marketplace
                 </Link>
               </div>
 

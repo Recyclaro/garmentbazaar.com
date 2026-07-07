@@ -28,7 +28,16 @@ const audiences = [
   },
 ];
 
-export default function ContactPage() {
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ supplier?: string }>;
+}) {
+  const { supplier } = await searchParams;
+  const defaultMessage = supplier
+    ? `I'm interested in sourcing from ${supplier}.`
+    : undefined;
+
   return (
     <section className="bg-white py-20 sm:py-28">
       <Container>
@@ -77,7 +86,7 @@ export default function ContactPage() {
 
           <div className="lg:col-span-7">
             <div className="rounded-3xl border border-slate-200 bg-background p-6 sm:p-10">
-              <ContactForm />
+              <ContactForm defaultMessage={defaultMessage} />
             </div>
           </div>
         </div>
