@@ -5,6 +5,7 @@ import fs from "node:fs";
 import bcrypt from "bcryptjs";
 import {
   seedSuppliers,
+  pendingRealSuppliers,
   type Category,
   type Region,
   type Supplier,
@@ -33,12 +34,12 @@ export interface SupplierRow {
   region: Region;
   category: Category;
   specialties: string; // JSON string
-  moq: number;
-  lead_time_days: number;
+  moq: number | null;
+  lead_time_days: number | null;
   rating: number;
   reviews: number;
   certifications: string; // JSON string
-  since: number;
+  since: number | null;
   verified: number; // 0 | 1
   status: ListingStatus;
   created_at: string;
@@ -90,12 +91,12 @@ function openDatabase(): DatabaseSync {
       region TEXT NOT NULL,
       category TEXT NOT NULL,
       specialties TEXT NOT NULL,
-      moq INTEGER NOT NULL,
-      lead_time_days INTEGER NOT NULL,
+      moq INTEGER,
+      lead_time_days INTEGER,
       rating REAL NOT NULL DEFAULT 0,
       reviews INTEGER NOT NULL DEFAULT 0,
       certifications TEXT NOT NULL,
-      since INTEGER NOT NULL,
+      since INTEGER,
       verified INTEGER NOT NULL DEFAULT 0,
       status TEXT NOT NULL DEFAULT 'approved' CHECK (status IN ('pending','approved','rejected')),
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
@@ -128,9 +129,9 @@ function seedIfEmpty(db: DatabaseSync) {
     const insert = db.prepare(`
       INSERT INTO suppliers
         (slug, owner_user_id, name, city, region, category, specialties, moq, lead_time_days, rating, reviews, certifications, since, verified, status)
-      VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved')
+      VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
-    for (const s of seedSuppliers) {
+    const seedRow = (s: Supplier, status: ListingStatus) =>
       insert.run(
         s.slug,
         s.name,
@@ -145,8 +146,10 @@ function seedIfEmpty(db: DatabaseSync) {
         JSON.stringify(s.certifications),
         s.since,
         s.verified ? 1 : 0,
+        status,
       );
-    }
+    for (const s of seedSuppliers) seedRow(s, "approved");
+    for (const s of pendingRealSuppliers) seedRow(s, "pending");
   }
 
   const adminCount = db

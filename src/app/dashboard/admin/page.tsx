@@ -29,7 +29,8 @@ export default async function AdminDashboardPage() {
                   {l.city}, {l.region} &middot; {l.category}
                 </p>
                 <p className="mt-1 text-xs text-slate-400">
-                  MOQ {l.moq} &middot; {l.lead_time_days}d lead time
+                  {l.moq ? `MOQ ${l.moq}` : "MOQ not provided"} &middot;{" "}
+                  {l.lead_time_days ? `${l.lead_time_days}d lead time` : "lead time not provided"}
                 </p>
                 <div className="mt-4 flex gap-2">
                   <form action={approveListingAction.bind(null, l.id)}>

@@ -144,7 +144,7 @@ export default function ListingForm({
             type="number"
             min={1}
             required
-            defaultValue={initial?.moq}
+            defaultValue={initial?.moq ?? undefined}
             className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-ink shadow-sm outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
           />
           {state?.errors?.moq && (
@@ -161,7 +161,7 @@ export default function ListingForm({
             type="number"
             min={1}
             required
-            defaultValue={initial?.leadTimeDays}
+            defaultValue={initial?.leadTimeDays ?? undefined}
             className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-ink shadow-sm outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
           />
           {state?.errors?.leadTimeDays && (
@@ -181,7 +181,7 @@ export default function ListingForm({
             min={1900}
             max={new Date().getFullYear()}
             required
-            defaultValue={initial?.since}
+            defaultValue={initial?.since ?? undefined}
             className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-ink shadow-sm outline-none focus:border-accent-500 focus:ring-2 focus:ring-accent-500/20"
           />
           {state?.errors?.since && (

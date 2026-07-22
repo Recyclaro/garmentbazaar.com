@@ -29,6 +29,10 @@ export function categorySwatch(category: Category): React.CSSProperties {
       return {
         background: "linear-gradient(135deg, #134e4a 0%, #0d9488 55%, #5eead4 100%)",
       };
+    case "Fabric & Textiles":
+      return {
+        background: "linear-gradient(135deg, #581c87 0%, #9333ea 55%, #d8b4fe 100%)",
+      };
     default:
       return { background: "#e2e8f0" };
   }
