@@ -5,7 +5,7 @@ import fs from "node:fs";
 import bcrypt from "bcryptjs";
 import {
   seedSuppliers,
-  pendingRealSuppliers,
+  importedRealSuppliers,
   type Category,
   type Region,
   type Supplier,
@@ -149,7 +149,10 @@ function seedIfEmpty(db: DatabaseSync) {
         status,
       );
     for (const s of seedSuppliers) seedRow(s, "approved");
-    for (const s of pendingRealSuppliers) seedRow(s, "pending");
+    // Approved so they're visible on the marketplace, but each keeps
+    // verified: false (see suppliers.ts) — no "Verified" badge is shown
+    // since these companies haven't actually been vetted by anyone.
+    for (const s of importedRealSuppliers) seedRow(s, "approved");
   }
 
   const adminCount = db

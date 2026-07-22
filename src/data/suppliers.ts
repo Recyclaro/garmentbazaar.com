@@ -260,14 +260,15 @@ export const seedSuppliers: Supplier[] = [
 
 /**
  * Real companies imported from a fabric/textile manufacturer directory
- * supplied by the site owner. These are seeded with status "pending" (see
- * src/lib/db.ts) — they do NOT appear on the public marketplace until an
- * admin reviews and approves them from /dashboard/admin. MOQ, lead time,
+ * supplied by the site owner. Seeded as "approved" (see src/lib/db.ts) so
+ * they're visible on the public marketplace, but each keeps
+ * `verified: false` — no listing here has actually been vetted, so no
+ * "Verified" badge is shown for any of them. MOQ, lead time,
  * certifications, and ratings are deliberately left blank rather than
  * invented, since that data wasn't part of the source directory — the UI
  * shows "Contact for details" for anything left unset.
  */
-export const pendingRealSuppliers: Supplier[] = [
+export const importedRealSuppliers: Supplier[] = [
   { slug: "beekalene-fabrics", name: "Beekalene Fabrics Private Ltd", city: "Mumbai", region: "Maharashtra", category: "Fabric & Textiles", specialties: [], moq: null, leadTimeDays: null, rating: 0, reviews: 0, certifications: [], since: null, verified: false },
   { slug: "bellflower-trading", name: "Bellflower Trading Co Pvt Ltd", city: "Dombivli", region: "Maharashtra", category: "Fabric & Textiles", specialties: [], moq: null, leadTimeDays: null, rating: 0, reviews: 0, certifications: [], since: null, verified: false },
   { slug: "bella-casa-fashion", name: "Bella Casa Fashion & Retail Ltd", city: "Jaipur", region: "Rajasthan", category: "Fabric & Textiles", specialties: [], moq: null, leadTimeDays: null, rating: 0, reviews: 0, certifications: [], since: null, verified: false },
