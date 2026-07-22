@@ -138,10 +138,10 @@ export default function Home() {
             <div className="lg:col-span-6">
               <Eyebrow>AI-First B2B Sourcing</Eyebrow>
               <h1 className="text-balance mt-6 font-serif text-5xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-6xl">
-                Fashion sourcing,
+                Source Better. Source Faster.
                 <br />
                 <span className="relative inline-block">
-                  made intelligent.
+                  Source with Confidence.
                   <span
                     className="absolute inset-x-0 -bottom-1 h-1 rounded-full bg-accent-400/70"
                     aria-hidden
@@ -149,9 +149,10 @@ export default function Home() {
                 </span>
               </h1>
               <p className="text-balance mt-6 max-w-xl text-lg leading-8 text-slate-600">
-                GarmentBazaar connects brands, manufacturers, factories, and
-                retailers on one AI-powered platform — automating onboarding,
-                procurement, pricing, inventory, and supply chain decisions.
+                GarmentBazaar connects global buyers with verified Indian
+                fabric and garment manufacturers through AI-powered supplier
+                discovery, transparent sourcing, and end-to-end procurement
+                tools.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
