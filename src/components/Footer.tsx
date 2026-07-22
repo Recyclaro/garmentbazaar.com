@@ -39,8 +39,8 @@ export default function Footer() {
           <div className="col-span-2">
             <Logo dark />
             <p className="mt-4 max-w-xs text-sm leading-6 text-slate-400">
-              The AI-first B2B sourcing and supply chain platform for India&apos;s
-              fashion and lifestyle ecosystem.
+              The AI-first platform connecting global buyers with verified
+              Indian fabric and garment manufacturers.
             </p>
           </div>
           {columns.map((col) => (
@@ -77,7 +77,7 @@ export default function Footer() {
             © {new Date().getFullYear()} GarmentBazaar. All rights reserved.
           </p>
           <p className="text-xs text-slate-500">
-            Built for India&apos;s fashion &amp; lifestyle supply chain.
+            Sourcing better from India&apos;s fashion &amp; lifestyle manufacturers.
           </p>
         </div>
       </Container>
