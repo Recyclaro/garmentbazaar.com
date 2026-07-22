@@ -11,7 +11,7 @@ export default async function EditListingPage({
 }) {
   const session = await requireRole("manufacturer");
   const { slug } = await params;
-  const row = await getSupplierBySlug(slug);
+  const row = getSupplierBySlug(slug);
 
   if (!row || row.owner_user_id !== session.userId) {
     notFound();

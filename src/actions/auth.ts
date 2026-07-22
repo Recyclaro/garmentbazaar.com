@@ -39,12 +39,12 @@ export async function signup(
 
   const { name, email, password, role, companyName } = validated.data;
 
-  if (await getUserByEmail(email)) {
+  if (getUserByEmail(email)) {
     return { message: "An account with that email already exists." };
   }
 
   const passwordHash = await hashPassword(password);
-  const userId = await createUser({
+  const userId = createUser({
     name,
     email,
     passwordHash,
@@ -75,7 +75,7 @@ export async function login(
   }
 
   const { email, password } = validated.data;
-  const user = await getUserByEmail(email);
+  const user = getUserByEmail(email);
   if (!user) {
     return { message: "Invalid email or password." };
   }

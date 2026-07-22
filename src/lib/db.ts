@@ -1,9 +1,17 @@
 import "server-only";
-import { neon } from "@neondatabase/serverless";
-import { drizzle, type NeonHttpDatabase } from "drizzle-orm/neon-http";
-import { eq, and, desc, asc } from "drizzle-orm";
-import { users, suppliers, rfqs } from "./schema";
-import type { Category, Region, Supplier } from "@/data/suppliers";
+import { DatabaseSync } from "node:sqlite";
+import path from "node:path";
+import fs from "node:fs";
+import bcrypt from "bcryptjs";
+import {
+  seedSuppliers,
+  importedRealSuppliers,
+  surplusSuppliers,
+  tirupurManufacturers,
+  type Category,
+  type Region,
+  type Supplier,
+} from "@/data/suppliers";
 
 export type Role = "brand" | "manufacturer" | "retailer" | "admin";
 export type ListingStatus = "pending" | "approved" | "rejected";
@@ -34,8 +42,7 @@ export interface SupplierRow {
   reviews: number;
   certifications: string; // JSON string
   since: number | null;
-  verified: number; // 0 | 1 — kept as 0/1 (not boolean) so callers written
-  // against the old SQLite-backed shape don't need to change.
+  verified: number; // 0 | 1
   status: ListingStatus;
   created_at: string;
 }
@@ -54,76 +61,123 @@ export interface RfqRow {
 }
 
 declare global {
-  var __gbDb: NeonHttpDatabase | undefined;
+  var __gbDb: DatabaseSync | undefined;
 }
 
-// The neon-http driver talks to Postgres over plain HTTP requests rather
-// than a persistent TCP connection, which is exactly what serverless
-// functions need (each invocation can be short-lived and there's no
-// connection pool to exhaust). Table creation and seeding both happen
-// separately at deploy time (see scripts/migrate.mjs) — this file only
-// ever reads/writes rows.
-function getDb(): NeonHttpDatabase {
-  if (!global.__gbDb) {
-    const url = process.env.DATABASE_URL;
-    if (!url) {
-      throw new Error(
-        "DATABASE_URL is not set. Add it in your Vercel project's Environment " +
-          "Variables (or .env.local for local development) — see .env.example.",
+function openDatabase(): DatabaseSync {
+  const dataDir = path.join(process.cwd(), "data");
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+  }
+  const db = new DatabaseSync(path.join(dataDir, "app.db"));
+  db.exec("PRAGMA journal_mode = WAL;");
+  db.exec("PRAGMA foreign_keys = ON;");
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      role TEXT NOT NULL CHECK (role IN ('brand','manufacturer','retailer','admin')),
+      company_name TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS suppliers (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug TEXT NOT NULL UNIQUE,
+      owner_user_id INTEGER REFERENCES users(id),
+      name TEXT NOT NULL,
+      city TEXT NOT NULL,
+      region TEXT NOT NULL,
+      category TEXT NOT NULL,
+      specialties TEXT NOT NULL,
+      moq INTEGER,
+      lead_time_days INTEGER,
+      rating REAL NOT NULL DEFAULT 0,
+      reviews INTEGER NOT NULL DEFAULT 0,
+      certifications TEXT NOT NULL,
+      since INTEGER,
+      verified INTEGER NOT NULL DEFAULT 0,
+      status TEXT NOT NULL DEFAULT 'approved' CHECK (status IN ('pending','approved','rejected')),
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS rfqs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      supplier_id INTEGER REFERENCES suppliers(id),
+      from_user_id INTEGER REFERENCES users(id),
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      company TEXT NOT NULL,
+      role TEXT NOT NULL,
+      message TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new','contacted','closed')),
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+  `);
+
+  seedIfEmpty(db);
+  return db;
+}
+
+function seedIfEmpty(db: DatabaseSync) {
+  const supplierCount = db
+    .prepare("SELECT COUNT(*) as count FROM suppliers")
+    .get() as { count: number };
+
+  if (supplierCount.count === 0) {
+    const insert = db.prepare(`
+      INSERT INTO suppliers
+        (slug, owner_user_id, name, city, region, category, specialties, moq, lead_time_days, rating, reviews, certifications, since, verified, status)
+      VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    const seedRow = (s: Supplier, status: ListingStatus) =>
+      insert.run(
+        s.slug,
+        s.name,
+        s.city,
+        s.region,
+        s.category,
+        JSON.stringify(s.specialties),
+        s.moq,
+        s.leadTimeDays,
+        s.rating,
+        s.reviews,
+        JSON.stringify(s.certifications),
+        s.since,
+        s.verified ? 1 : 0,
+        status,
       );
-    }
-    global.__gbDb = drizzle(neon(url));
+    for (const s of seedSuppliers) seedRow(s, "approved");
+    // Approved so they're visible on the marketplace, but each keeps
+    // verified: false (see suppliers.ts) — no "Verified" badge is shown
+    // since these companies haven't actually been vetted by anyone.
+    for (const s of importedRealSuppliers) seedRow(s, "approved");
+    for (const s of surplusSuppliers) seedRow(s, "approved");
+    for (const s of tirupurManufacturers) seedRow(s, "approved");
+  }
+
+  const adminCount = db
+    .prepare("SELECT COUNT(*) as count FROM users WHERE role = 'admin'")
+    .get() as { count: number };
+
+  if (adminCount.count === 0) {
+    const email = process.env.ADMIN_EMAIL || "admin@garmentbazaar.com";
+    const password = process.env.ADMIN_PASSWORD || "changeme123";
+    const passwordHash = bcrypt.hashSync(password, 10);
+    db.prepare(
+      `INSERT INTO users (name, email, password_hash, role, company_name) VALUES (?, ?, ?, 'admin', ?)`,
+    ).run("GarmentBazaar Admin", email, passwordHash, "GarmentBazaar");
+  }
+}
+
+export function getDb(): DatabaseSync {
+  if (!global.__gbDb) {
+    global.__gbDb = openDatabase();
   }
   return global.__gbDb;
-}
-
-function toRowUser(row: typeof users.$inferSelect): UserRow {
-  return {
-    id: row.id,
-    name: row.name,
-    email: row.email,
-    password_hash: row.passwordHash,
-    role: row.role as Role,
-    company_name: row.companyName,
-    created_at: row.createdAt.toISOString(),
-  };
-}
-
-function toRowSupplier(row: typeof suppliers.$inferSelect): SupplierRow {
-  return {
-    id: row.id,
-    slug: row.slug,
-    owner_user_id: row.ownerUserId,
-    name: row.name,
-    city: row.city,
-    region: row.region as Region,
-    category: row.category as Category,
-    specialties: row.specialties,
-    moq: row.moq,
-    lead_time_days: row.leadTimeDays,
-    rating: row.rating,
-    reviews: row.reviews,
-    certifications: row.certifications,
-    since: row.since,
-    verified: row.verified ? 1 : 0,
-    status: row.status as ListingStatus,
-    created_at: row.createdAt.toISOString(),
-  };
-}
-
-function toRowRfq(row: typeof rfqs.$inferSelect): RfqRow {
-  return {
-    id: row.id,
-    supplier_id: row.supplierId,
-    from_user_id: row.fromUserId,
-    name: row.name,
-    email: row.email,
-    company: row.company,
-    role: row.role,
-    message: row.message,
-    status: row.status as RfqStatus,
-    created_at: row.createdAt.toISOString(),
-  };
 }
 
 function slugify(name: string): string {
@@ -154,76 +208,63 @@ export function supplierRowToSupplier(row: SupplierRow): Supplier {
 
 // --- Users ---
 
-export async function getUserByEmail(email: string): Promise<UserRow | undefined> {
-  const rows = await getDb()
-    .select()
-    .from(users)
-    .where(eq(users.email, email.toLowerCase()))
-    .limit(1);
-  return rows[0] ? toRowUser(rows[0]) : undefined;
+export function getUserByEmail(email: string): UserRow | undefined {
+  return getDb()
+    .prepare("SELECT * FROM users WHERE email = ?")
+    .get(email.toLowerCase()) as UserRow | undefined;
 }
 
-export async function getUserById(id: number): Promise<UserRow | undefined> {
-  const rows = await getDb().select().from(users).where(eq(users.id, id)).limit(1);
-  return rows[0] ? toRowUser(rows[0]) : undefined;
+export function getUserById(id: number): UserRow | undefined {
+  return getDb().prepare("SELECT * FROM users WHERE id = ?").get(id) as
+    | UserRow
+    | undefined;
 }
 
-export async function createUser(input: {
+export function createUser(input: {
   name: string;
   email: string;
   passwordHash: string;
   role: Role;
   companyName: string;
-}): Promise<number> {
-  const rows = await getDb()
-    .insert(users)
-    .values({
-      name: input.name,
-      email: input.email.toLowerCase(),
-      passwordHash: input.passwordHash,
-      role: input.role,
-      companyName: input.companyName,
-    })
-    .returning({ id: users.id });
-  return rows[0].id;
+}): number {
+  const result = getDb()
+    .prepare(
+      `INSERT INTO users (name, email, password_hash, role, company_name) VALUES (?, ?, ?, ?, ?)`,
+    )
+    .run(
+      input.name,
+      input.email.toLowerCase(),
+      input.passwordHash,
+      input.role,
+      input.companyName,
+    );
+  return Number(result.lastInsertRowid);
 }
 
 // --- Suppliers ---
 
-export async function listApprovedSuppliers(): Promise<SupplierRow[]> {
-  const rows = await getDb()
-    .select()
-    .from(suppliers)
-    .where(eq(suppliers.status, "approved"))
-    .orderBy(desc(suppliers.rating));
-  return rows.map(toRowSupplier);
+export function listApprovedSuppliers(): SupplierRow[] {
+  return getDb()
+    .prepare("SELECT * FROM suppliers WHERE status = 'approved' ORDER BY rating DESC")
+    .all() as unknown as SupplierRow[];
 }
 
-export async function getSupplierBySlug(slug: string): Promise<SupplierRow | undefined> {
-  const rows = await getDb()
-    .select()
-    .from(suppliers)
-    .where(eq(suppliers.slug, slug))
-    .limit(1);
-  return rows[0] ? toRowSupplier(rows[0]) : undefined;
+export function getSupplierBySlug(slug: string): SupplierRow | undefined {
+  return getDb().prepare("SELECT * FROM suppliers WHERE slug = ?").get(slug) as
+    | SupplierRow
+    | undefined;
 }
 
-export async function listSuppliersByOwner(ownerUserId: number): Promise<SupplierRow[]> {
-  const rows = await getDb()
-    .select()
-    .from(suppliers)
-    .where(eq(suppliers.ownerUserId, ownerUserId))
-    .orderBy(desc(suppliers.createdAt));
-  return rows.map(toRowSupplier);
+export function listSuppliersByOwner(ownerUserId: number): SupplierRow[] {
+  return getDb()
+    .prepare("SELECT * FROM suppliers WHERE owner_user_id = ? ORDER BY created_at DESC")
+    .all(ownerUserId) as unknown as SupplierRow[];
 }
 
-export async function listPendingSuppliers(): Promise<SupplierRow[]> {
-  const rows = await getDb()
-    .select()
-    .from(suppliers)
-    .where(eq(suppliers.status, "pending"))
-    .orderBy(asc(suppliers.createdAt));
-  return rows.map(toRowSupplier);
+export function listPendingSuppliers(): SupplierRow[] {
+  return getDb()
+    .prepare("SELECT * FROM suppliers WHERE status = 'pending' ORDER BY created_at ASC")
+    .all() as unknown as SupplierRow[];
 }
 
 export interface ListingInput {
@@ -238,72 +279,73 @@ export interface ListingInput {
   since: number;
 }
 
-export async function createListing(
-  ownerUserId: number,
-  input: ListingInput,
-): Promise<string> {
+export function createListing(ownerUserId: number, input: ListingInput): string {
+  const db = getDb();
   let slug = slugify(input.name);
-  if (await getSupplierBySlug(slug)) {
+  if (getSupplierBySlug(slug)) {
     slug = `${slug}-${Date.now().toString(36)}`;
   }
-  await getDb().insert(suppliers).values({
+  db.prepare(
+    `INSERT INTO suppliers
+      (slug, owner_user_id, name, city, region, category, specialties, moq, lead_time_days, rating, reviews, certifications, since, verified, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, ?, ?, 0, 'pending')`,
+  ).run(
     slug,
     ownerUserId,
-    name: input.name,
-    city: input.city,
-    region: input.region,
-    category: input.category,
-    specialties: JSON.stringify(input.specialties),
-    moq: input.moq,
-    leadTimeDays: input.leadTimeDays,
-    rating: 0,
-    reviews: 0,
-    certifications: JSON.stringify(input.certifications),
-    since: input.since,
-    verified: false,
-    status: "pending",
-  });
+    input.name,
+    input.city,
+    input.region,
+    input.category,
+    JSON.stringify(input.specialties),
+    input.moq,
+    input.leadTimeDays,
+    JSON.stringify(input.certifications),
+    input.since,
+  );
   return slug;
 }
 
-export async function updateListing(
+export function updateListing(
   id: number,
   ownerUserId: number,
   input: ListingInput,
-): Promise<boolean> {
-  const result = await getDb()
-    .update(suppliers)
-    .set({
-      name: input.name,
-      city: input.city,
-      region: input.region,
-      category: input.category,
-      specialties: JSON.stringify(input.specialties),
-      moq: input.moq,
-      leadTimeDays: input.leadTimeDays,
-      certifications: JSON.stringify(input.certifications),
-      since: input.since,
-      status: "pending",
-      verified: false,
-    })
-    .where(and(eq(suppliers.id, id), eq(suppliers.ownerUserId, ownerUserId)))
-    .returning({ id: suppliers.id });
-  return result.length > 0;
+): boolean {
+  const result = getDb()
+    .prepare(
+      `UPDATE suppliers SET
+        name = ?, city = ?, region = ?, category = ?, specialties = ?,
+        moq = ?, lead_time_days = ?, certifications = ?, since = ?, status = 'pending', verified = 0
+       WHERE id = ? AND owner_user_id = ?`,
+    )
+    .run(
+      input.name,
+      input.city,
+      input.region,
+      input.category,
+      JSON.stringify(input.specialties),
+      input.moq,
+      input.leadTimeDays,
+      JSON.stringify(input.certifications),
+      input.since,
+      id,
+      ownerUserId,
+    );
+  return result.changes > 0;
 }
 
-export async function deleteListing(id: number, ownerUserId: number): Promise<boolean> {
-  const result = await getDb()
-    .delete(suppliers)
-    .where(and(eq(suppliers.id, id), eq(suppliers.ownerUserId, ownerUserId)))
-    .returning({ id: suppliers.id });
-  return result.length > 0;
+export function deleteListing(id: number, ownerUserId: number): boolean {
+  const result = getDb()
+    .prepare("DELETE FROM suppliers WHERE id = ? AND owner_user_id = ?")
+    .run(id, ownerUserId);
+  return result.changes > 0;
 }
 
-export async function setListingStatus(id: number, status: ListingStatus): Promise<void> {
-  await getDb()
-    .update(suppliers)
-    .set({ status, verified: status === "approved" })
-    .where(eq(suppliers.id, id));
+export function setListingStatus(id: number, status: ListingStatus): void {
+  getDb()
+    .prepare(
+      "UPDATE suppliers SET status = ?, verified = ? WHERE id = ?",
+    )
+    .run(status, status === "approved" ? 1 : 0, id);
 }
 
 // --- RFQs ---
@@ -318,53 +360,59 @@ export interface RfqInput {
   message: string;
 }
 
-export async function createRfq(input: RfqInput): Promise<number> {
-  const rows = await getDb()
-    .insert(rfqs)
-    .values({
-      supplierId: input.supplierId,
-      fromUserId: input.fromUserId,
-      name: input.name,
-      email: input.email,
-      company: input.company,
-      role: input.role,
-      message: input.message,
-    })
-    .returning({ id: rfqs.id });
-  return rows[0].id;
+export function createRfq(input: RfqInput): number {
+  const result = getDb()
+    .prepare(
+      `INSERT INTO rfqs (supplier_id, from_user_id, name, email, company, role, message)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    )
+    .run(
+      input.supplierId,
+      input.fromUserId,
+      input.name,
+      input.email,
+      input.company,
+      input.role,
+      input.message,
+    );
+  return Number(result.lastInsertRowid);
 }
 
-export async function listRfqsForSupplierOwner(
-  ownerUserId: number,
-): Promise<(RfqRow & { supplier_name: string | null })[]> {
-  const rows = await getDb()
-    .select({ rfq: rfqs, supplierName: suppliers.name })
-    .from(rfqs)
-    .innerJoin(suppliers, eq(suppliers.id, rfqs.supplierId))
-    .where(eq(suppliers.ownerUserId, ownerUserId))
-    .orderBy(desc(rfqs.createdAt));
-  return rows.map((r) => ({ ...toRowRfq(r.rfq), supplier_name: r.supplierName }));
+export function listRfqsForSupplierOwner(ownerUserId: number): (RfqRow & {
+  supplier_name: string | null;
+})[] {
+  return getDb()
+    .prepare(
+      `SELECT rfqs.*, suppliers.name as supplier_name
+       FROM rfqs
+       JOIN suppliers ON suppliers.id = rfqs.supplier_id
+       WHERE suppliers.owner_user_id = ?
+       ORDER BY rfqs.created_at DESC`,
+    )
+    .all(ownerUserId) as unknown as (RfqRow & { supplier_name: string | null })[];
 }
 
-export async function listRfqsFromUser(
-  fromUserId: number,
-): Promise<(RfqRow & { supplier_name: string | null })[]> {
-  const rows = await getDb()
-    .select({ rfq: rfqs, supplierName: suppliers.name })
-    .from(rfqs)
-    .leftJoin(suppliers, eq(suppliers.id, rfqs.supplierId))
-    .where(eq(rfqs.fromUserId, fromUserId))
-    .orderBy(desc(rfqs.createdAt));
-  return rows.map((r) => ({ ...toRowRfq(r.rfq), supplier_name: r.supplierName ?? null }));
+export function listRfqsFromUser(fromUserId: number): (RfqRow & {
+  supplier_name: string | null;
+})[] {
+  return getDb()
+    .prepare(
+      `SELECT rfqs.*, suppliers.name as supplier_name
+       FROM rfqs
+       LEFT JOIN suppliers ON suppliers.id = rfqs.supplier_id
+       WHERE rfqs.from_user_id = ?
+       ORDER BY rfqs.created_at DESC`,
+    )
+    .all(fromUserId) as unknown as (RfqRow & { supplier_name: string | null })[];
 }
 
-export async function listAllRfqs(): Promise<
-  (RfqRow & { supplier_name: string | null })[]
-> {
-  const rows = await getDb()
-    .select({ rfq: rfqs, supplierName: suppliers.name })
-    .from(rfqs)
-    .leftJoin(suppliers, eq(suppliers.id, rfqs.supplierId))
-    .orderBy(desc(rfqs.createdAt));
-  return rows.map((r) => ({ ...toRowRfq(r.rfq), supplier_name: r.supplierName ?? null }));
+export function listAllRfqs(): (RfqRow & { supplier_name: string | null })[] {
+  return getDb()
+    .prepare(
+      `SELECT rfqs.*, suppliers.name as supplier_name
+       FROM rfqs
+       LEFT JOIN suppliers ON suppliers.id = rfqs.supplier_id
+       ORDER BY rfqs.created_at DESC`,
+    )
+    .all() as unknown as (RfqRow & { supplier_name: string | null })[];
 }

@@ -1,9 +1,8 @@
 "use server";
 
 import { z } from "zod";
-import { createRfq, getSupplierBySlug, getUserById } from "@/lib/db";
+import { createRfq, getSupplierBySlug } from "@/lib/db";
 import { getOptionalSession } from "@/lib/dal";
-import { sendRfqNotificationEmail } from "@/lib/email";
 
 const RfqSchema = z.object({
   name: z.string().trim().min(1, "Name is required."),
@@ -39,10 +38,10 @@ export async function submitRfq(
 
   const { name, email, company, role, message, supplierSlug } = validated.data;
 
-  const supplier = supplierSlug ? await getSupplierBySlug(supplierSlug) : undefined;
+  const supplier = supplierSlug ? getSupplierBySlug(supplierSlug) : undefined;
   const session = await getOptionalSession();
 
-  await createRfq({
+  createRfq({
     supplierId: supplier?.id ?? null,
     fromUserId: session?.userId ?? null,
     name,
@@ -51,22 +50,6 @@ export async function submitRfq(
     role,
     message,
   });
-
-  // Only listings with a real registered owner (self-service submissions,
-  // not the bulk-imported directory entries) have anyone to notify.
-  if (supplier?.owner_user_id) {
-    const owner = await getUserById(supplier.owner_user_id);
-    if (owner) {
-      await sendRfqNotificationEmail({
-        to: owner.email,
-        supplierName: supplier.name,
-        fromName: name,
-        fromCompany: company,
-        fromEmail: email,
-        message,
-      });
-    }
-  }
 
   return { success: true };
 }

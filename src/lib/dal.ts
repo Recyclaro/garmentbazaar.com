@@ -19,7 +19,7 @@ export const getOptionalSession = cache(async () => {
 export const getCurrentUser = cache(async () => {
   const session = await getSession();
   if (!session?.userId) return null;
-  const user = await getUserById(session.userId);
+  const user = getUserById(session.userId);
   if (!user) return null;
   return {
     id: user.id,

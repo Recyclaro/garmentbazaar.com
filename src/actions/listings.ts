@@ -78,7 +78,7 @@ export async function createListingAction(
     return { errors: validated.error.flatten().fieldErrors };
   }
 
-  const slug = await dbCreateListing(session.userId, {
+  const slug = dbCreateListing(session.userId, {
     ...validated.data,
     certifications: validated.data.certifications ?? [],
   });
@@ -95,7 +95,7 @@ export async function updateListingAction(
 ): Promise<ListingFormState | undefined> {
   const session = await requireRole("manufacturer");
 
-  const existing = await getSupplierBySlug(slug);
+  const existing = getSupplierBySlug(slug);
   if (!existing || existing.owner_user_id !== session.userId) {
     return { message: "You don't have permission to edit this listing." };
   }
@@ -105,7 +105,7 @@ export async function updateListingAction(
     return { errors: validated.error.flatten().fieldErrors };
   }
 
-  await dbUpdateListing(existing.id, session.userId, {
+  dbUpdateListing(existing.id, session.userId, {
     ...validated.data,
     certifications: validated.data.certifications ?? [],
   });
@@ -117,9 +117,9 @@ export async function updateListingAction(
 
 export async function deleteListingAction(slug: string) {
   const session = await requireRole("manufacturer");
-  const existing = await getSupplierBySlug(slug);
+  const existing = getSupplierBySlug(slug);
   if (existing && existing.owner_user_id === session.userId) {
-    await dbDeleteListing(existing.id, session.userId);
+    dbDeleteListing(existing.id, session.userId);
     revalidatePath("/marketplace");
     revalidatePath("/dashboard/manufacturer");
   }

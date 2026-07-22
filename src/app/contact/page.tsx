@@ -35,7 +35,7 @@ export default async function ContactPage({
   searchParams: Promise<{ supplier?: string }>;
 }) {
   const { supplier: supplierSlug } = await searchParams;
-  const supplier = supplierSlug ? await getSupplierBySlug(supplierSlug) : undefined;
+  const supplier = supplierSlug ? getSupplierBySlug(supplierSlug) : undefined;
   const defaultMessage = supplier
     ? `I'm interested in sourcing from ${supplier.name}.`
     : undefined;
