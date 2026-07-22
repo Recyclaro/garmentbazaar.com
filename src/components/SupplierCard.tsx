@@ -8,7 +8,11 @@ export default function SupplierCard({ supplier }: { supplier: Supplier }) {
 
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-md">
-      <div className="relative h-32 w-full" style={categorySwatch(supplier.category, supplier.slug)}>
+      <Link
+        href={`/marketplace/${encodeURIComponent(supplier.slug)}`}
+        className="relative block h-32 w-full"
+        style={categorySwatch(supplier.category, supplier.slug)}
+      >
         {supplier.verified && (
           <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-accent-700 shadow-sm">
             <IconCheck className="h-3 w-3" />
@@ -18,10 +22,14 @@ export default function SupplierCard({ supplier }: { supplier: Supplier }) {
         <span className="absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-ink shadow-sm">
           {supplier.category}
         </span>
-      </div>
+      </Link>
 
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-base font-semibold text-ink">{supplier.name}</h3>
+        <Link href={`/marketplace/${encodeURIComponent(supplier.slug)}`}>
+          <h3 className="text-base font-semibold text-ink hover:text-accent-700">
+            {supplier.name}
+          </h3>
+        </Link>
         <div className="mt-1 flex items-center gap-1.5 text-xs text-slate-500">
           <IconMapPin className="h-3.5 w-3.5" />
           {supplier.city}, {supplier.region}
