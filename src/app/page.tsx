@@ -3,7 +3,6 @@ import Container from "@/components/Container";
 import Eyebrow from "@/components/Eyebrow";
 import CTASection from "@/components/CTASection";
 import HeroCollage from "@/components/HeroCollage";
-import { listApprovedSuppliers } from "@/lib/db";
 import {
   IconArrowRight,
   IconBolt,
@@ -22,12 +21,12 @@ import {
   IconUpload,
 } from "@/components/Icons";
 
-// The manufacturer count and region count are computed live from the
-// database in Home() below, not hardcoded — so the homepage never claims a
-// number that isn't actually true of the current marketplace. That live
-// read also means the page is rendered per-request rather than served as
-// a static build-time snapshot (same reasoning as /marketplace).
-export const dynamic = "force-dynamic";
+const stats = [
+  { value: "6", label: "AI-Powered Modules" },
+  { value: "3", label: "Connected Ecosystems" },
+  { value: "Minutes", label: "Onboarding Time" },
+  { value: "End-to-End", label: "Supply Chain View" },
+];
 
 const capabilities = [
   {
@@ -66,19 +65,19 @@ const personas = [
   {
     icon: IconBuilding,
     title: "Brands",
-    desc: "Discover Indian manufacturers, automate quoting and quality checks, and launch new styles faster — without a sourcing office on the ground.",
+    desc: "Discover vetted manufacturers, automate quoting and quality checks, and launch new styles faster.",
     href: "/solutions/brands",
   },
   {
     icon: IconFactory,
     title: "Manufacturers & Factories",
-    desc: "Get discovered by global buyers, fill production capacity with matched orders, and get paid on predictable terms.",
+    desc: "Fill production capacity with matched orders, streamline compliance, and get paid on predictable terms.",
     href: "/solutions/manufacturers",
   },
   {
     icon: IconStorefront,
     title: "Retailers",
-    desc: "Source wholesale assortments directly from Indian factories, with AI matching regional demand to the right mix.",
+    desc: "Get AI-curated assortments and automated replenishment tuned to regional demand.",
     href: "/solutions/retailers",
   },
 ];
@@ -87,7 +86,7 @@ const steps = [
   {
     number: "01",
     title: "Onboard",
-    desc: "Buyers and manufacturers onboard in days, not months. AI ingests catalogs, capacity, and compliance documents automatically.",
+    desc: "Brands, manufacturers, and retailers onboard in days, not months. AI ingests catalogs, capacity, and compliance documents automatically.",
   },
   {
     number: "02",
@@ -115,35 +114,21 @@ const pillars = [
   {
     icon: IconShieldCheck,
     title: "Trust & verification",
-    desc: "Structured supplier profiles with clear verification status, so buyers know exactly what they're getting before they commit.",
+    desc: "Structured data and verification checks on manufacturers, factories, and compliance credentials.",
   },
   {
     icon: IconBolt,
     title: "Speed to shelf",
-    desc: "Compress cross-border sourcing cycles from weeks to days by removing manual back-and-forth.",
+    desc: "Compress sourcing cycles from weeks to days by removing manual back-and-forth.",
   },
   {
     icon: IconLayers,
     title: "One ecosystem",
-    desc: "Global buyers and Indian manufacturers operate on one shared, connected platform.",
+    desc: "Brands, manufacturers, factories, and retailers operate on a shared, connected platform.",
   },
 ];
 
-export default async function Home() {
-  const approvedSuppliers = await listApprovedSuppliers();
-  const manufacturerCount = approvedSuppliers.length;
-  const regionCount = new Set(approvedSuppliers.map((s) => s.region)).size;
-
-  const stats = [
-    {
-      value: `${Math.floor(manufacturerCount / 10) * 10}+`,
-      label: "Manufacturers Listed",
-    },
-    { value: `${regionCount}`, label: "Sourcing Regions in India" },
-    { value: "6", label: "AI-Powered Modules" },
-    { value: "Minutes", label: "Onboarding Time" },
-  ];
-
+export default function Home() {
   return (
     <>
       {/* Hero */}
@@ -235,13 +220,13 @@ export default async function Home() {
             <div>
               <Eyebrow>The problem</Eyebrow>
               <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink">
-                Sourcing from India still runs on spreadsheets, WhatsApp, and guesswork
+                Fashion sourcing is still run on spreadsheets, WhatsApp, and guesswork
               </h2>
               <ul className="mt-8 space-y-4">
                 {[
-                  "No reliable way to discover and vet Indian manufacturers without visiting in person",
-                  "Pricing negotiated ad hoc over WhatsApp, with no cost or market benchmarking",
-                  "Inventory and reorder decisions made on intuition, thousands of miles from the factory floor",
+                  "Manual, relationship-driven vendor discovery with no standardized data",
+                  "Pricing negotiated ad hoc with little cost or market benchmarking",
+                  "Inventory decisions based on intuition, leading to stockouts and markdowns",
                   "Supply chain visibility that ends the moment an order is placed",
                 ].map((item) => (
                   <li key={item} className="flex gap-3 text-slate-600">
@@ -254,11 +239,11 @@ export default async function Home() {
             <div>
               <Eyebrow>The GarmentBazaar approach</Eyebrow>
               <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink">
-                One AI-powered platform, from the Indian factory floor to your shelf
+                One AI-powered platform, from raw material to retail shelf
               </h2>
               <ul className="mt-8 space-y-4">
                 {[
-                  "Structured supplier profiles with clear verification status on every listing",
+                  "Structured, AI-verified data on every manufacturer, factory, and product",
                   "Automated, benchmarked pricing across cost, quality, and lead time",
                   "AI-driven demand forecasting and replenishment recommendations",
                   "Continuous supply chain visibility with proactive risk alerts",
@@ -284,8 +269,8 @@ export default async function Home() {
             </h2>
             <p className="mt-4 text-base leading-7 text-slate-600">
               From the first product upload to the final mile, GarmentBazaar
-              automates the decisions that used to take teams of people and
-              weeks of cross-border back-and-forth.
+              automates the decisions that used to take teams of people and weeks
+              of back-and-forth.
             </p>
           </div>
           <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -352,7 +337,7 @@ export default async function Home() {
           <div className="mx-auto max-w-2xl text-center">
             <Eyebrow>Who it&apos;s for</Eyebrow>
             <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-              Built for global buyers and Indian manufacturers alike
+              Built for every side of the sourcing ecosystem
             </h2>
           </div>
           <div className="mt-16 grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -419,12 +404,7 @@ export default async function Home() {
         </Container>
       </section>
 
-      <CTASection
-        title="Ready to source better from India?"
-        subtitle="Tell us what you're looking to source, and see how GarmentBazaar connects you with Indian manufacturers, transparent pricing, and end-to-end visibility."
-        secondaryLabel="Browse the Marketplace"
-        secondaryHref="/marketplace"
-      />
+      <CTASection />
     </>
   );
 }

@@ -1,6 +1,6 @@
 import "server-only";
-import { Pool } from "pg";
-import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
+import { neon } from "@neondatabase/serverless";
+import { drizzle, type NeonHttpDatabase } from "drizzle-orm/neon-http";
 import { eq, and, desc, asc } from "drizzle-orm";
 import { users, suppliers, rfqs } from "./schema";
 import type { Category, Region, Supplier } from "@/data/suppliers";
@@ -54,18 +54,16 @@ export interface RfqRow {
 }
 
 declare global {
-  var __gbDb: NodePgDatabase | undefined;
+  var __gbDb: NeonHttpDatabase | undefined;
 }
 
-// Standard `pg` over TCP — works identically against any Postgres,
-// including a plain local database (used for local development, since
-// Neon's own HTTP-only driver can't talk to a non-Neon Postgres server).
-// In production, point DATABASE_URL at Neon's *pooled* connection string
-// (the one with "-pooler" in the hostname, shown in the Neon dashboard) —
-// it's backed by PgBouncer, which is what keeps a small `max` pool per
-// serverless instance from exhausting Postgres's real connection limit
-// once many instances are running at once.
-function getDb(): NodePgDatabase {
+// The neon-http driver talks to Postgres over plain HTTP requests rather
+// than a persistent TCP connection, which is exactly what serverless
+// functions need (each invocation can be short-lived and there's no
+// connection pool to exhaust). Table creation and seeding both happen
+// separately at deploy time (see scripts/migrate.mjs) — this file only
+// ever reads/writes rows.
+function getDb(): NeonHttpDatabase {
   if (!global.__gbDb) {
     const url = process.env.DATABASE_URL;
     if (!url) {
@@ -74,7 +72,7 @@ function getDb(): NodePgDatabase {
           "Variables (or .env.local for local development) — see .env.example.",
       );
     }
-    global.__gbDb = drizzle(new Pool({ connectionString: url, max: 5 }));
+    global.__gbDb = drizzle(neon(url));
   }
   return global.__gbDb;
 }

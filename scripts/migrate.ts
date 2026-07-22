@@ -10,9 +10,9 @@
  *   haven't run yet (drizzle tracks this itself in a `__drizzle_migrations`
  *   table it creates), then seed baseline data on an empty database.
  */
-import { Pool } from "pg";
-import { drizzle } from "drizzle-orm/node-postgres";
-import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
+import { migrate } from "drizzle-orm/neon-http/migrator";
 import { eq, sql } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { users, suppliers } from "../src/lib/schema";
@@ -34,7 +34,7 @@ async function main() {
     return;
   }
 
-  const db = drizzle(new Pool({ connectionString: url }));
+  const db = drizzle(neon(url));
 
   console.log("[migrate] Applying schema migrations...");
   await migrate(db, { migrationsFolder: "./drizzle" });

@@ -7,12 +7,11 @@ working marketplace: real accounts, role-based dashboards, manufacturer
 self-listing with admin moderation, and quote request (RFQ) capture.
 
 Built with [Next.js](https://nextjs.org) (App Router), TypeScript, and
-Tailwind CSS. Data lives in Postgres, accessed via [Drizzle ORM](https://orm.drizzle.team)
-over the standard `pg` client — in production that's a
-[Neon](https://neon.tech) database, but any Postgres works (including a
-local one for development). Sessions are signed cookies (`jose` +
-`bcryptjs`), and transactional email goes through [Resend](https://resend.com).
-Designed to deploy on [Vercel](https://vercel.com) with zero server management.
+Tailwind CSS. Data lives in a hosted Postgres database
+([Neon](https://neon.tech), via [Drizzle ORM](https://orm.drizzle.team)),
+sessions are signed cookies (`jose` + `bcryptjs`), and transactional email
+goes through [Resend](https://resend.com). Designed to deploy on
+[Vercel](https://vercel.com) with zero server management.
 
 ## Pages
 
@@ -42,20 +41,16 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-Local development needs a real `DATABASE_URL`. Easiest options:
-
-- A local Postgres (e.g. `createdb garmentbazaar_dev`, then
-  `DATABASE_URL=postgresql://localhost:5432/garmentbazaar_dev`), or
-- A free Neon project (or a separate branch of your production Neon
-  project, so local testing never touches real user data) — use the
-  *pooled* connection string from its dashboard.
+Local development needs a real `DATABASE_URL` — create a free Neon project
+(or a separate branch of your production Neon project, so local testing
+never touches real user data) and paste its connection string into
+`.env.local`.
 
 ### Environment variables
 
 Copy `.env.example` to `.env.local` and set:
 
-- `DATABASE_URL` — Postgres connection string. Required. Use Neon's
-  *pooled* string in production (see `.env.example` for details).
+- `DATABASE_URL` — Postgres connection string from Neon. Required.
 - `SESSION_SECRET` — signs session cookies. Generate one with
   `openssl rand -base64 32`. Falls back to an insecure dev-only value with a
   console warning if unset — fine for poking around locally, never for
