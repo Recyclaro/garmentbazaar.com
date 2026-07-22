@@ -5,7 +5,7 @@ import { IconArrowRight } from "@/components/Icons";
 
 export default async function BuyerDashboardPage() {
   const session = await verifySession();
-  const rfqs = listRfqsFromUser(session.userId);
+  const rfqs = await listRfqsFromUser(session.userId);
 
   return (
     <div className="space-y-8">

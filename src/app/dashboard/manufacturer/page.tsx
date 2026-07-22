@@ -16,8 +16,8 @@ export default async function ManufacturerDashboardPage({
 }) {
   const session = await requireRole("manufacturer");
   const { created, updated } = await searchParams;
-  const listings = listSuppliersByOwner(session.userId);
-  const rfqs = listRfqsForSupplierOwner(session.userId);
+  const listings = await listSuppliersByOwner(session.userId);
+  const rfqs = await listRfqsForSupplierOwner(session.userId);
 
   return (
     <div className="space-y-10">

@@ -6,14 +6,14 @@ import { setListingStatus } from "@/lib/db";
 
 export async function approveListingAction(id: number) {
   await requireRole("admin");
-  setListingStatus(id, "approved");
+  await setListingStatus(id, "approved");
   revalidatePath("/marketplace");
   revalidatePath("/dashboard/admin");
 }
 
 export async function rejectListingAction(id: number) {
   await requireRole("admin");
-  setListingStatus(id, "rejected");
+  await setListingStatus(id, "rejected");
   revalidatePath("/marketplace");
   revalidatePath("/dashboard/admin");
 }

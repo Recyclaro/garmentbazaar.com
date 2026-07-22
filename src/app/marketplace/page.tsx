@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 // always read fresh from the database rather than serving a build-time snapshot.
 export const dynamic = "force-dynamic";
 
-export default function MarketplacePage() {
-  const suppliers = listApprovedSuppliers().map(supplierRowToSupplier);
+export default async function MarketplacePage() {
+  const rows = await listApprovedSuppliers();
+  const suppliers = rows.map(supplierRowToSupplier);
   return <MarketplaceClient suppliers={suppliers} />;
 }

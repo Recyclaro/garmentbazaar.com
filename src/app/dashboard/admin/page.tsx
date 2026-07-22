@@ -4,8 +4,8 @@ import { approveListingAction, rejectListingAction } from "@/actions/moderation"
 
 export default async function AdminDashboardPage() {
   await requireRole("admin");
-  const pending = listPendingSuppliers();
-  const rfqs = listAllRfqs();
+  const pending = await listPendingSuppliers();
+  const rfqs = await listAllRfqs();
 
   return (
     <div className="space-y-10">
