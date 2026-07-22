@@ -6,6 +6,8 @@ import bcrypt from "bcryptjs";
 import {
   seedSuppliers,
   importedRealSuppliers,
+  surplusSuppliers,
+  tirupurManufacturers,
   type Category,
   type Region,
   type Supplier,
@@ -153,6 +155,8 @@ function seedIfEmpty(db: DatabaseSync) {
     // verified: false (see suppliers.ts) — no "Verified" badge is shown
     // since these companies haven't actually been vetted by anyone.
     for (const s of importedRealSuppliers) seedRow(s, "approved");
+    for (const s of surplusSuppliers) seedRow(s, "approved");
+    for (const s of tirupurManufacturers) seedRow(s, "approved");
   }
 
   const adminCount = db

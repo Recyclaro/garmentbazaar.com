@@ -8,7 +8,7 @@ export default function SupplierCard({ supplier }: { supplier: Supplier }) {
 
   return (
     <div className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-md">
-      <div className="relative h-32 w-full" style={categorySwatch(supplier.category)}>
+      <div className="relative h-32 w-full" style={categorySwatch(supplier.category, supplier.slug)}>
         {supplier.verified && (
           <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-accent-700 shadow-sm">
             <IconCheck className="h-3 w-3" />
