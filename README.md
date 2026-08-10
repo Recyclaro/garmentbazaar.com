@@ -16,7 +16,11 @@ Tailwind CSS. Auth and data are self-contained — a local SQLite database
 - `/` — Home
 - `/platform` — Deep dive into the six AI capabilities (onboarding,
   procurement, pricing, inventory, supply chain, retailer recommendations)
-- `/marketplace` — Live, filterable supplier directory backed by the database
+- `/marketplace`, `/marketplace/[slug]` — Live, filterable supplier
+  directory backed by the database, plus a full detail page per supplier
+- `/collections`, `/collections/[slug]` — Fashion & lifestyle collections
+  listed by brands; retailers order directly at the brand's MOQ, with real
+  checkout via Razorpay
 - `/solutions/brands`, `/solutions/manufacturers`, `/solutions/retailers` —
   Persona-specific solution pages
 - `/about` — Mission and principles
@@ -26,8 +30,12 @@ Tailwind CSS. Auth and data are self-contained — a local SQLite database
 - `/dashboard` — Role-aware redirect into:
   - `/dashboard/manufacturer` — manage your factory listing(s), view quote
     requests received, create/edit/delete listings
-  - `/dashboard/buyer` — brand/retailer view of your submitted quote requests
-  - `/dashboard/admin` — moderation queue for pending listings + all RFQs
+  - `/dashboard/brand` — manage your collection listing(s), view orders
+    received from retailers
+  - `/dashboard/buyer` — brand/retailer view of submitted quote requests;
+    retailers also see their order history here
+  - `/dashboard/admin` — moderation queue for pending listings/collections,
+    all RFQs, and all orders
 
 ## Getting Started
 
@@ -50,6 +58,12 @@ Copy `.env.example` to `.env.local` and set:
 - `ADMIN_EMAIL` / `ADMIN_PASSWORD` — seeded as the one admin account the
   first time the app runs (default `admin@garmentbazaar.com` /
   `changeme123`). Change these before deploying anywhere real.
+- `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` — optional. Without them,
+  retailers can still browse and "order" collections (saved as a request,
+  the brand is notified), just without a real payment. With test-mode keys
+  from your Razorpay dashboard, the full checkout flow works with test
+  cards and no real money moves. Real money only starts moving once you
+  put live keys in and complete Razorpay's business/KYC verification.
 
 ### Database
 

@@ -12,10 +12,12 @@ import {
   type Region,
   type Supplier,
 } from "@/data/suppliers";
+import type { CollectionCategory } from "@/data/collections";
 
 export type Role = "brand" | "manufacturer" | "retailer" | "admin";
 export type ListingStatus = "pending" | "approved" | "rejected";
 export type RfqStatus = "new" | "contacted" | "closed";
+export type OrderStatus = "created" | "paid" | "failed" | "cancelled";
 
 export interface UserRow {
   id: number;
@@ -57,6 +59,32 @@ export interface RfqRow {
   role: string;
   message: string;
   status: RfqStatus;
+  created_at: string;
+}
+
+export interface CollectionRow {
+  id: number;
+  slug: string;
+  owner_user_id: number;
+  name: string;
+  description: string;
+  category: CollectionCategory;
+  price_paise: number;
+  moq: number;
+  status: ListingStatus;
+  created_at: string;
+}
+
+export interface OrderRow {
+  id: number;
+  collection_id: number;
+  retailer_user_id: number;
+  quantity: number;
+  unit_price_paise: number;
+  total_amount_paise: number;
+  status: OrderStatus;
+  razorpay_order_id: string | null;
+  razorpay_payment_id: string | null;
   created_at: string;
 }
 
@@ -114,6 +142,32 @@ function openDatabase(): DatabaseSync {
       role TEXT NOT NULL,
       message TEXT NOT NULL,
       status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new','contacted','closed')),
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS collections (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      slug TEXT NOT NULL UNIQUE,
+      owner_user_id INTEGER NOT NULL REFERENCES users(id),
+      name TEXT NOT NULL,
+      description TEXT NOT NULL,
+      category TEXT NOT NULL,
+      price_paise INTEGER NOT NULL,
+      moq INTEGER NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE TABLE IF NOT EXISTS orders (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      collection_id INTEGER NOT NULL REFERENCES collections(id),
+      retailer_user_id INTEGER NOT NULL REFERENCES users(id),
+      quantity INTEGER NOT NULL,
+      unit_price_paise INTEGER NOT NULL,
+      total_amount_paise INTEGER NOT NULL,
+      status TEXT NOT NULL DEFAULT 'created' CHECK (status IN ('created','paid','failed','cancelled')),
+      razorpay_order_id TEXT,
+      razorpay_payment_id TEXT,
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
   `);
@@ -186,6 +240,17 @@ function slugify(name: string): string {
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
+}
+
+export function collectionRowToCollection(row: CollectionRow) {
+  return {
+    slug: row.slug,
+    name: row.name,
+    description: row.description,
+    category: row.category,
+    pricePaise: row.price_paise,
+    moq: row.moq,
+  };
 }
 
 export function supplierRowToSupplier(row: SupplierRow): Supplier {
@@ -415,4 +480,182 @@ export function listAllRfqs(): (RfqRow & { supplier_name: string | null })[] {
        ORDER BY rfqs.created_at DESC`,
     )
     .all() as unknown as (RfqRow & { supplier_name: string | null })[];
+}
+
+// --- Collections ---
+
+export interface CollectionInput {
+  name: string;
+  description: string;
+  category: CollectionCategory;
+  pricePaise: number;
+  moq: number;
+}
+
+export function listApprovedCollections(): CollectionRow[] {
+  return getDb()
+    .prepare("SELECT * FROM collections WHERE status = 'approved' ORDER BY created_at DESC")
+    .all() as unknown as CollectionRow[];
+}
+
+export function getCollectionBySlug(slug: string): CollectionRow | undefined {
+  return getDb().prepare("SELECT * FROM collections WHERE slug = ?").get(slug) as
+    | CollectionRow
+    | undefined;
+}
+
+export function listCollectionsByOwner(ownerUserId: number): CollectionRow[] {
+  return getDb()
+    .prepare("SELECT * FROM collections WHERE owner_user_id = ? ORDER BY created_at DESC")
+    .all(ownerUserId) as unknown as CollectionRow[];
+}
+
+export function listPendingCollections(): CollectionRow[] {
+  return getDb()
+    .prepare("SELECT * FROM collections WHERE status = 'pending' ORDER BY created_at ASC")
+    .all() as unknown as CollectionRow[];
+}
+
+export function createCollection(ownerUserId: number, input: CollectionInput): string {
+  const db = getDb();
+  let slug = slugify(input.name);
+  if (getCollectionBySlug(slug)) {
+    slug = `${slug}-${Date.now().toString(36)}`;
+  }
+  db.prepare(
+    `INSERT INTO collections
+      (slug, owner_user_id, name, description, category, price_paise, moq, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')`,
+  ).run(
+    slug,
+    ownerUserId,
+    input.name,
+    input.description,
+    input.category,
+    input.pricePaise,
+    input.moq,
+  );
+  return slug;
+}
+
+export function updateCollection(
+  id: number,
+  ownerUserId: number,
+  input: CollectionInput,
+): boolean {
+  const result = getDb()
+    .prepare(
+      `UPDATE collections SET
+        name = ?, description = ?, category = ?, price_paise = ?, moq = ?, status = 'pending'
+       WHERE id = ? AND owner_user_id = ?`,
+    )
+    .run(
+      input.name,
+      input.description,
+      input.category,
+      input.pricePaise,
+      input.moq,
+      id,
+      ownerUserId,
+    );
+  return result.changes > 0;
+}
+
+export function deleteCollection(id: number, ownerUserId: number): boolean {
+  const result = getDb()
+    .prepare("DELETE FROM collections WHERE id = ? AND owner_user_id = ?")
+    .run(id, ownerUserId);
+  return result.changes > 0;
+}
+
+export function setCollectionStatus(id: number, status: ListingStatus): void {
+  getDb().prepare("UPDATE collections SET status = ? WHERE id = ?").run(status, id);
+}
+
+// --- Orders ---
+
+export interface OrderInput {
+  collectionId: number;
+  retailerUserId: number;
+  quantity: number;
+  unitPricePaise: number;
+  totalAmountPaise: number;
+  razorpayOrderId: string;
+}
+
+export function createOrder(input: OrderInput): number {
+  const result = getDb()
+    .prepare(
+      `INSERT INTO orders
+        (collection_id, retailer_user_id, quantity, unit_price_paise, total_amount_paise, status, razorpay_order_id)
+       VALUES (?, ?, ?, ?, ?, 'created', ?)`,
+    )
+    .run(
+      input.collectionId,
+      input.retailerUserId,
+      input.quantity,
+      input.unitPricePaise,
+      input.totalAmountPaise,
+      input.razorpayOrderId,
+    );
+  return Number(result.lastInsertRowid);
+}
+
+export function getOrderById(id: number): OrderRow | undefined {
+  return getDb().prepare("SELECT * FROM orders WHERE id = ?").get(id) as
+    | OrderRow
+    | undefined;
+}
+
+export function setOrderPaymentResult(
+  id: number,
+  status: OrderStatus,
+  razorpayPaymentId: string | null,
+): void {
+  getDb()
+    .prepare("UPDATE orders SET status = ?, razorpay_payment_id = ? WHERE id = ?")
+    .run(status, razorpayPaymentId, id);
+}
+
+export function listOrdersForCollectionOwner(
+  ownerUserId: number,
+): (OrderRow & { collection_name: string })[] {
+  return getDb()
+    .prepare(
+      `SELECT orders.*, collections.name as collection_name
+       FROM orders
+       JOIN collections ON collections.id = orders.collection_id
+       WHERE collections.owner_user_id = ?
+       ORDER BY orders.created_at DESC`,
+    )
+    .all(ownerUserId) as unknown as (OrderRow & { collection_name: string })[];
+}
+
+export function listOrdersByRetailer(
+  retailerUserId: number,
+): (OrderRow & { collection_name: string })[] {
+  return getDb()
+    .prepare(
+      `SELECT orders.*, collections.name as collection_name
+       FROM orders
+       JOIN collections ON collections.id = orders.collection_id
+       WHERE orders.retailer_user_id = ?
+       ORDER BY orders.created_at DESC`,
+    )
+    .all(retailerUserId) as unknown as (OrderRow & { collection_name: string })[];
+}
+
+export function listAllOrders(): (OrderRow & {
+  collection_name: string;
+  retailer_email: string;
+})[] {
+  return getDb()
+    .prepare(
+      `SELECT orders.*, collections.name as collection_name, users.email as retailer_email
+       FROM orders
+       JOIN collections ON collections.id = orders.collection_id
+       JOIN users ON users.id = orders.retailer_user_id
+       ORDER BY orders.created_at DESC`,
+    )
+    .all() as unknown as (OrderRow & { collection_name: string; retailer_email: string })[];
 }

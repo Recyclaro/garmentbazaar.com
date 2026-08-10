@@ -1,4 +1,5 @@
 import type { Category } from "@/data/suppliers";
+import { hashSeed, svgUrl } from "./textureUtils";
 
 // Real product photos can't be fetched or uploaded in this environment, so
 // each category gets a gradient plus a subtle SVG weave/knit/grain pattern
@@ -6,17 +7,6 @@ import type { Category } from "@/data/suppliers";
 // swatch. A supplier's slug is hashed to deterministically pick a color
 // variant, which gives cards visual variety without pretending a photo is
 // real.
-function hashSeed(seed: string): number {
-  let hash = 0;
-  for (let i = 0; i < seed.length; i++) {
-    hash = (hash * 31 + seed.charCodeAt(i)) | 0;
-  }
-  return Math.abs(hash);
-}
-
-function svgUrl(svg: string): string {
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-}
 
 // Each texture is a small repeating SVG tile. Strokes/fills use a
 // translucent white so they read as a highlight/weave on top of whichever

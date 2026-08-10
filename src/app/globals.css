@@ -23,6 +23,24 @@
   --color-accent-500: #8b5cf6;
   --color-accent-600: #7c3aed;
   --color-accent-700: #6d28d9;
+
+  /* Rose: the retail/collections side of the platform (brands selling to
+     retailers) gets its own accent, distinct from the violet used for the
+     supplier/manufacturer marketplace — same brand family (the logo is
+     already pink), just a second identity so the two marketplaces read as
+     related but not identical. */
+  --color-rose-50: #fff1f2;
+  --color-rose-100: #ffe4e6;
+  --color-rose-200: #fecdd3;
+  --color-rose-300: #fda4af;
+  --color-rose-400: #fb7185;
+  --color-rose-500: #f43f5e;
+  --color-rose-600: #e11d48;
+  --color-rose-700: #be123c;
+
+  --color-success-50: #f0fdf4;
+  --color-success-600: #16a34a;
+  --color-success-700: #15803d;
 }
 
 html {

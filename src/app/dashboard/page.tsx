@@ -7,6 +7,8 @@ export default async function DashboardIndexPage() {
   switch (session.role) {
     case "manufacturer":
       redirect("/dashboard/manufacturer");
+    case "brand":
+      redirect("/dashboard/brand");
     case "admin":
       redirect("/dashboard/admin");
     default:

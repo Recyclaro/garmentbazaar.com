@@ -25,6 +25,7 @@ const solutions = [
 
 const navLinks = [
   { href: "/marketplace", label: "Marketplace" },
+  { href: "/collections", label: "Collections" },
   { href: "/platform", label: "Platform" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

@@ -1,14 +1,16 @@
 export default function Eyebrow({
   children,
   light = false,
+  className,
 }: {
   children: React.ReactNode;
   light?: boolean;
+  className?: string;
 }) {
   return (
     <span
       className={`inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] ${
-        light ? "text-accent-300" : "text-accent-600"
+        className ?? (light ? "text-accent-300" : "text-accent-600")
       }`}
     >
       <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
