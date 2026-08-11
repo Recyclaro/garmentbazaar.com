@@ -61,7 +61,10 @@ export default async function CollectionDetailPage({
             {collection.category}
           </span>
           <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-6">
-            <h1 className="text-balance font-serif text-2xl font-semibold text-white sm:text-3xl">
+            <p className="text-xs font-semibold uppercase tracking-wide text-white/80">
+              {collection.brandName}
+            </p>
+            <h1 className="text-balance mt-1 font-serif text-2xl font-semibold text-white sm:text-3xl">
               {collection.name}
             </h1>
           </div>

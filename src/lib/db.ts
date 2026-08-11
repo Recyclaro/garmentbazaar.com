@@ -12,7 +12,7 @@ import {
   type Region,
   type Supplier,
 } from "@/data/suppliers";
-import type { CollectionCategory } from "@/data/collections";
+import { seedCollections, type CollectionCategory } from "@/data/collections";
 
 export type Role = "brand" | "manufacturer" | "retailer" | "admin";
 export type ListingStatus = "pending" | "approved" | "rejected";
@@ -65,7 +65,8 @@ export interface RfqRow {
 export interface CollectionRow {
   id: number;
   slug: string;
-  owner_user_id: number;
+  owner_user_id: number | null;
+  brand_name: string;
   name: string;
   description: string;
   category: CollectionCategory;
@@ -148,7 +149,8 @@ function openDatabase(): DatabaseSync {
     CREATE TABLE IF NOT EXISTS collections (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       slug TEXT NOT NULL UNIQUE,
-      owner_user_id INTEGER NOT NULL REFERENCES users(id),
+      owner_user_id INTEGER REFERENCES users(id),
+      brand_name TEXT NOT NULL,
       name TEXT NOT NULL,
       description TEXT NOT NULL,
       category TEXT NOT NULL,
@@ -213,6 +215,32 @@ function seedIfEmpty(db: DatabaseSync) {
     for (const s of tirupurManufacturers) seedRow(s, "approved");
   }
 
+  const collectionCount = db
+    .prepare("SELECT COUNT(*) as count FROM collections")
+    .get() as { count: number };
+
+  if (collectionCount.count === 0) {
+    const insertCollection = db.prepare(`
+      INSERT INTO collections
+        (slug, owner_user_id, brand_name, name, description, category, price_paise, moq, status)
+      VALUES (?, NULL, ?, ?, ?, ?, ?, ?, 'approved')
+    `);
+    // Original demo listings (see seedCollections in data/collections.ts) so
+    // /collections isn't empty before real brands sign up — no owner, so
+    // they can't be edited from any dashboard, same as the demo suppliers.
+    for (const c of seedCollections) {
+      insertCollection.run(
+        c.slug,
+        c.brandName,
+        c.name,
+        c.description,
+        c.category,
+        c.pricePaise,
+        c.moq,
+      );
+    }
+  }
+
   const adminCount = db
     .prepare("SELECT COUNT(*) as count FROM users WHERE role = 'admin'")
     .get() as { count: number };
@@ -245,6 +273,7 @@ function slugify(name: string): string {
 export function collectionRowToCollection(row: CollectionRow) {
   return {
     slug: row.slug,
+    brandName: row.brand_name,
     name: row.name,
     description: row.description,
     category: row.category,
@@ -518,17 +547,21 @@ export function listPendingCollections(): CollectionRow[] {
 
 export function createCollection(ownerUserId: number, input: CollectionInput): string {
   const db = getDb();
+  const owner = getUserById(ownerUserId);
+  const brandName = owner?.company_name || owner?.name || "Unnamed Brand";
+
   let slug = slugify(input.name);
   if (getCollectionBySlug(slug)) {
     slug = `${slug}-${Date.now().toString(36)}`;
   }
   db.prepare(
     `INSERT INTO collections
-      (slug, owner_user_id, name, description, category, price_paise, moq, status)
-     VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')`,
+      (slug, owner_user_id, brand_name, name, description, category, price_paise, moq, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
   ).run(
     slug,
     ownerUserId,
+    brandName,
     input.name,
     input.description,
     input.category,

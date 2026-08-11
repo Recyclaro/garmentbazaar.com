@@ -23,6 +23,9 @@ export default function CollectionCard({ collection }: { collection: Collection 
             {collection.name}
           </h3>
         </Link>
+        <p className="mt-0.5 text-xs font-medium uppercase tracking-wide text-rose-600">
+          {collection.brandName}
+        </p>
         <p className="mt-1.5 line-clamp-2 text-sm leading-6 text-slate-500">
           {collection.description}
         </p>
