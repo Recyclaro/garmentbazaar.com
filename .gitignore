@@ -40,6 +40,9 @@ yarn-error.log*
 # local sqlite database
 /data/
 
+# brand-uploaded collection photos (real user content, not source code)
+/public/uploads/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

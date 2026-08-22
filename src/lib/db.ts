@@ -72,6 +72,7 @@ export interface CollectionRow {
   category: CollectionCategory;
   price_paise: number;
   moq: number;
+  image_path: string | null;
   status: ListingStatus;
   created_at: string;
 }
@@ -156,6 +157,7 @@ function openDatabase(): DatabaseSync {
       category TEXT NOT NULL,
       price_paise INTEGER NOT NULL,
       moq INTEGER NOT NULL,
+      image_path TEXT,
       status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','approved','rejected')),
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
@@ -279,6 +281,7 @@ export function collectionRowToCollection(row: CollectionRow) {
     category: row.category,
     pricePaise: row.price_paise,
     moq: row.moq,
+    imagePath: row.image_path,
   };
 }
 
@@ -519,6 +522,7 @@ export interface CollectionInput {
   category: CollectionCategory;
   pricePaise: number;
   moq: number;
+  imagePath?: string | null;
 }
 
 export function listApprovedCollections(): CollectionRow[] {
@@ -556,8 +560,8 @@ export function createCollection(ownerUserId: number, input: CollectionInput): s
   }
   db.prepare(
     `INSERT INTO collections
-      (slug, owner_user_id, brand_name, name, description, category, price_paise, moq, status)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
+      (slug, owner_user_id, brand_name, name, description, category, price_paise, moq, image_path, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
   ).run(
     slug,
     ownerUserId,
@@ -567,6 +571,7 @@ export function createCollection(ownerUserId: number, input: CollectionInput): s
     input.category,
     input.pricePaise,
     input.moq,
+    input.imagePath ?? null,
   );
   return slug;
 }
@@ -579,7 +584,8 @@ export function updateCollection(
   const result = getDb()
     .prepare(
       `UPDATE collections SET
-        name = ?, description = ?, category = ?, price_paise = ?, moq = ?, status = 'pending'
+        name = ?, description = ?, category = ?, price_paise = ?, moq = ?,
+        image_path = COALESCE(?, image_path), status = 'pending'
        WHERE id = ? AND owner_user_id = ?`,
     )
     .run(
@@ -588,6 +594,7 @@ export function updateCollection(
       input.category,
       input.pricePaise,
       input.moq,
+      input.imagePath ?? null,
       id,
       ownerUserId,
     );

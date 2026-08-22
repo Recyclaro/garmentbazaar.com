@@ -10,6 +10,7 @@ import {
   deleteCollection as dbDeleteCollection,
   getCollectionBySlug,
 } from "@/lib/db";
+import { saveCollectionImage } from "@/lib/uploads";
 import { collectionCategories, type CollectionCategory } from "@/data/collections";
 
 const CollectionSchema = z.object({
@@ -48,12 +49,18 @@ export async function createCollectionAction(
     return { errors: validated.error.flatten().fieldErrors };
   }
 
+  const imageResult = await saveCollectionImage(formData.get("image") as File | null);
+  if (imageResult.error) {
+    return { message: imageResult.error };
+  }
+
   const slug = dbCreateCollection(session.userId, {
     name: validated.data.name,
     description: validated.data.description,
     category: validated.data.category,
     pricePaise: Math.round(validated.data.price * 100),
     moq: validated.data.moq,
+    imagePath: imageResult.path ?? null,
   });
 
   revalidatePath("/collections");
@@ -78,12 +85,18 @@ export async function updateCollectionAction(
     return { errors: validated.error.flatten().fieldErrors };
   }
 
+  const imageResult = await saveCollectionImage(formData.get("image") as File | null);
+  if (imageResult.error) {
+    return { message: imageResult.error };
+  }
+
   dbUpdateCollection(existing.id, session.userId, {
     name: validated.data.name,
     description: validated.data.description,
     category: validated.data.category,
     pricePaise: Math.round(validated.data.price * 100),
     moq: validated.data.moq,
+    imagePath: imageResult.path,
   });
 
   revalidatePath("/collections");

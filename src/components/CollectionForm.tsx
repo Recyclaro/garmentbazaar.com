@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import Image from "next/image";
 import type { CollectionFormState } from "@/actions/collections";
 import { collectionCategories, type Collection } from "@/data/collections";
 
@@ -19,6 +20,12 @@ export default function CollectionForm({
   submitLabel?: string;
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
+  const [preview, setPreview] = useState<string | null>(initial?.imagePath ?? null);
+
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) setPreview(URL.createObjectURL(file));
+  }
 
   return (
     <form action={formAction} className="space-y-5">
@@ -27,6 +34,44 @@ export default function CollectionForm({
           {state.message}
         </p>
       )}
+
+      <div>
+        <label htmlFor="image" className="block text-sm font-medium text-ink">
+          Product photo
+        </label>
+        <div className="mt-1.5 flex items-center gap-4">
+          <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-dashed border-slate-300 bg-background">
+            {preview ? (
+              <Image
+                src={preview}
+                alt="Preview"
+                width={96}
+                height={96}
+                unoptimized
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <span className="px-2 text-center text-[11px] text-slate-400">
+                No photo yet
+              </span>
+            )}
+          </div>
+          <div>
+            <input
+              id="image"
+              name="image"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleImageChange}
+              className="block text-sm text-slate-600 file:mr-3 file:rounded-full file:border-0 file:bg-rose-50 file:px-3.5 file:py-2 file:text-sm file:font-semibold file:text-rose-700 hover:file:bg-rose-100"
+            />
+            <p className="mt-1 text-xs text-slate-500">
+              JPEG, PNG, or WebP, up to 5MB. A real photo of the product sells
+              much better than no photo.
+            </p>
+          </div>
+        </div>
+      </div>
 
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-ink">

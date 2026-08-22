@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Container from "@/components/Container";
 import OrderForm from "@/components/OrderForm";
@@ -54,9 +55,20 @@ export default async function CollectionDetailPage({
         </Link>
 
         <div
-          className="relative mt-6 h-56 w-full overflow-hidden rounded-3xl sm:h-72"
-          style={collectionSwatch(collection.category, collection.slug)}
+          className="relative mt-6 h-72 w-full overflow-hidden rounded-3xl sm:h-96"
+          style={collection.imagePath ? undefined : collectionSwatch(collection.category, collection.slug)}
         >
+          {collection.imagePath && (
+            <Image
+              src={collection.imagePath}
+              alt={collection.name}
+              fill
+              unoptimized
+              sizes="100vw"
+              className="object-cover"
+              priority
+            />
+          )}
           <span className="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-ink shadow-sm">
             {collection.category}
           </span>

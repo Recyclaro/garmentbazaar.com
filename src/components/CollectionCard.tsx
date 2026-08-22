@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Collection } from "@/data/collections";
 import { collectionSwatch } from "@/lib/collectionSwatch";
 import { formatPaise } from "@/lib/currency";
@@ -6,12 +7,22 @@ import { IconArrowRight } from "./Icons";
 
 export default function CollectionCard({ collection }: { collection: Collection }) {
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-md">
+    <div className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-900/5">
       <Link
         href={`/collections/${encodeURIComponent(collection.slug)}`}
-        className="relative block h-40 w-full"
-        style={collectionSwatch(collection.category, collection.slug)}
+        className="relative block h-48 w-full overflow-hidden"
+        style={collection.imagePath ? undefined : collectionSwatch(collection.category, collection.slug)}
       >
+        {collection.imagePath && (
+          <Image
+            src={collection.imagePath}
+            alt={collection.name}
+            fill
+            unoptimized
+            sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover transition duration-300 group-hover:scale-105"
+          />
+        )}
         <span className="absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-ink shadow-sm">
           {collection.category}
         </span>

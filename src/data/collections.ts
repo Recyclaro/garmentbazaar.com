@@ -25,6 +25,7 @@ export interface Collection {
   category: CollectionCategory;
   pricePaise: number;
   moq: number;
+  imagePath: string | null;
 }
 
 /**
@@ -45,6 +46,7 @@ export const seedCollections: Collection[] = [
     category: "Womenswear",
     pricePaise: 145000,
     moq: 25,
+    imagePath: null,
   },
   {
     slug: "handblock-cotton-dupatta-edit",
@@ -55,6 +57,7 @@ export const seedCollections: Collection[] = [
     category: "Accessories",
     pricePaise: 38000,
     moq: 50,
+    imagePath: null,
   },
   {
     slug: "everyday-oxford-shirts",
@@ -65,6 +68,7 @@ export const seedCollections: Collection[] = [
     category: "Menswear",
     pricePaise: 65000,
     moq: 40,
+    imagePath: null,
   },
   {
     slug: "junior-explorer-playwear",
@@ -75,6 +79,7 @@ export const seedCollections: Collection[] = [
     category: "Kidswear",
     pricePaise: 42000,
     moq: 60,
+    imagePath: null,
   },
   {
     slug: "organic-cotton-bedlinen-set",
@@ -85,6 +90,7 @@ export const seedCollections: Collection[] = [
     category: "Home & Lifestyle",
     pricePaise: 120000,
     moq: 15,
+    imagePath: null,
   },
   {
     slug: "botanical-bath-essentials-kit",
@@ -95,6 +101,7 @@ export const seedCollections: Collection[] = [
     category: "Beauty & Personal Care",
     pricePaise: 34000,
     moq: 30,
+    imagePath: null,
   },
   {
     slug: "canvas-slip-on-sneakers",
@@ -105,6 +112,7 @@ export const seedCollections: Collection[] = [
     category: "Footwear",
     pricePaise: 89000,
     moq: 20,
+    imagePath: null,
   },
   {
     slug: "handcrafted-leather-sandals",
@@ -115,6 +123,7 @@ export const seedCollections: Collection[] = [
     category: "Footwear",
     pricePaise: 110000,
     moq: 15,
+    imagePath: null,
   },
   {
     slug: "festive-chanderi-saree-collection",
@@ -125,6 +134,7 @@ export const seedCollections: Collection[] = [
     category: "Womenswear",
     pricePaise: 220000,
     moq: 12,
+    imagePath: null,
   },
   {
     slug: "rainy-day-raincoat-set",
@@ -135,5 +145,6 @@ export const seedCollections: Collection[] = [
     category: "Kidswear",
     pricePaise: 56000,
     moq: 35,
+    imagePath: null,
   },
 ];
