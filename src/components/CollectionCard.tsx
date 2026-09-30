@@ -6,11 +6,14 @@ import { formatPaise } from "@/lib/currency";
 import { IconArrowRight } from "./Icons";
 
 export default function CollectionCard({ collection }: { collection: Collection }) {
+  // Demo photos are small product cut-outs: show them whole on a light
+  // background. Photos brands upload fill the frame.
+  const demoPhoto = collection.imagePath?.startsWith("/images/products/") ?? false;
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-900/5">
       <Link
         href={`/collections/${encodeURIComponent(collection.slug)}`}
-        className="relative block h-48 w-full overflow-hidden"
+        className={`relative block h-48 w-full overflow-hidden ${demoPhoto ? "bg-[#f1efeb]" : ""}`}
         style={collection.imagePath ? undefined : collectionSwatch(collection.category, collection.slug)}
       >
         {collection.imagePath && (
@@ -20,7 +23,7 @@ export default function CollectionCard({ collection }: { collection: Collection 
             fill
             unoptimized
             sizes="(min-width: 1280px) 33vw, (min-width: 640px) 50vw, 100vw"
-            className="object-cover transition duration-300 group-hover:scale-105"
+            className={`${demoPhoto ? "object-contain" : "object-cover"} transition duration-300 group-hover:scale-105`}
           />
         )}
         <span className="absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-ink shadow-sm">

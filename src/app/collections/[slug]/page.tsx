@@ -55,7 +55,9 @@ export default async function CollectionDetailPage({
         </Link>
 
         <div
-          className="relative mt-6 h-72 w-full overflow-hidden rounded-3xl sm:h-96"
+          className={`relative mt-6 h-72 w-full overflow-hidden rounded-3xl sm:h-96 ${
+            collection.imagePath?.startsWith("/images/products/") ? "bg-[#f1efeb]" : ""
+          }`}
           style={collection.imagePath ? undefined : collectionSwatch(collection.category, collection.slug)}
         >
           {collection.imagePath && (
@@ -65,7 +67,11 @@ export default async function CollectionDetailPage({
               fill
               unoptimized
               sizes="100vw"
-              className="object-cover"
+              className={
+                collection.imagePath.startsWith("/images/products/")
+                  ? "object-contain"
+                  : "object-cover"
+              }
               priority
             />
           )}
