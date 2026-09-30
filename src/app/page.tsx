@@ -348,11 +348,11 @@ export default function Home() {
               <Link
                 key={d.name}
                 href={`/collections?category=${encodeURIComponent(d.name)}`}
-                className={`group ${i < 3 ? "lg:col-span-2" : ""}`}
+                className={`group ${i < 3 || i >= 9 ? "lg:col-span-2" : ""}`}
               >
                 <div
                   className={`relative overflow-hidden rounded-2xl bg-[#f1efeb] ${
-                    i < 3 ? "h-72 sm:h-80" : "h-52"
+                    i < 3 ? "h-72 sm:h-80" : i >= 9 ? "h-52 lg:h-64" : "h-52"
                   }`}
                 >
                   <Image

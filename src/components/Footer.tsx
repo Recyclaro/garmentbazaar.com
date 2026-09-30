@@ -18,8 +18,9 @@ const columns = [
     title: "Solutions",
     links: [
       { href: "/solutions/brands", label: "For Brands" },
-      { href: "/solutions/manufacturers", label: "For Manufacturers & Factories" },
       { href: "/solutions/retailers", label: "For Retailers" },
+      { href: "/solutions/manufacturers", label: "Fabric & Mills" },
+      { href: "/collections", label: "Shop Collections" },
     ],
   },
   {
