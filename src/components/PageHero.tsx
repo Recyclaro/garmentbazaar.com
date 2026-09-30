@@ -114,6 +114,7 @@ function Tile({ photo, tall = false }: { photo: HeroPhoto; tall?: boolean }) {
         fill
         unoptimized
         sizes="(min-width: 1024px) 22vw, 45vw"
+        priority
         className="object-contain"
       />
     </div>

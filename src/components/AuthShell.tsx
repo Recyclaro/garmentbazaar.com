@@ -60,6 +60,7 @@ export default function AuthShell({
                     fill
                     unoptimized
                     sizes="20vw"
+                    priority
                     className="object-contain"
                   />
                 </div>
