@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Container from "@/components/Container";
 import { getSupplierBySlug, supplierRowToSupplier } from "@/lib/db";
 import { categorySwatch } from "@/lib/categorySwatch";
+import { supplierImage } from "@/lib/supplierImage";
 import {
   IconArrowRight,
   IconCheck,
@@ -64,6 +66,16 @@ export default async function SupplierDetailPage({
           className="relative mt-6 h-56 w-full overflow-hidden rounded-3xl sm:h-72"
           style={categorySwatch(supplier.category, supplier.slug)}
         >
+          <div className="absolute inset-y-0 right-0 hidden w-2/5 bg-[#f1efeb] sm:block">
+            <Image
+              src={supplierImage(supplier.category, supplier.slug)}
+              alt=""
+              fill
+              unoptimized
+              sizes="40vw"
+              className="object-contain"
+            />
+          </div>
           {supplier.verified && (
             <span className="absolute left-4 top-4 inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-accent-700 shadow-sm">
               <IconCheck className="h-3.5 w-3.5" />

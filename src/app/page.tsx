@@ -18,8 +18,8 @@ const tiers = [
     step: "01 · Mills & factories",
     title: "Fabric and production",
     desc: "Verified mills and manufacturers with capacity, MOQs and specs listed.",
-    image: null,
-    swatch: "bg-amber-800",
+    image: "/images/products/fabric-cotton.jpg",
+    swatch: "",
   },
   {
     step: "02 · Brands",

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/Container";
 import Eyebrow from "@/components/Eyebrow";
+import PhotoStrip from "@/components/PhotoStrip";
 import {
   IconArrowRight,
   IconBoxes,
@@ -147,6 +148,17 @@ export default function BrandsPage() {
               </div>
             </div>
           </div>
+          <PhotoStrip
+            className="mt-14"
+            names={[
+              { file: "men-polo", label: "Menswear" },
+              { file: "women-coord", label: "Womenswear" },
+              { file: "kids-dress", label: "Kidswear" },
+              { file: "women-lehenga", label: "Ethnic & occasion" },
+              { file: "formal-shoes", label: "Footwear" },
+              { file: "handbag", label: "Accessories" },
+            ]}
+          />
         </Container>
       </section>
 

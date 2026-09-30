@@ -3,6 +3,7 @@ import Link from "next/link";
 import Container from "@/components/Container";
 import Eyebrow from "@/components/Eyebrow";
 import SupplierCard from "@/components/SupplierCard";
+import PhotoStrip from "@/components/PhotoStrip";
 import { IconArrowRight, IconCheck } from "@/components/Icons";
 import { listApprovedSuppliers, supplierRowToSupplier } from "@/lib/db";
 
@@ -117,6 +118,17 @@ export default function FabricMillsPage() {
               Sell fabric
             </Link>
           </div>
+          <PhotoStrip
+            className="mt-14"
+            names={[
+              { file: "fabric-cotton", label: "Cotton" },
+              { file: "fabric-denim", label: "Denim" },
+              { file: "fabric-knit", label: "Knit fabrics" },
+              { file: "fabric-synthetic", label: "Synthetics" },
+              { file: "fabric-linen", label: "Linen" },
+              { file: "fabric-sustainable", label: "Sustainable fabrics" },
+            ]}
+          />
         </Container>
       </section>
 

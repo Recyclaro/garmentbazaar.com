@@ -217,30 +217,34 @@ function seedIfEmpty(db: DatabaseSync) {
     for (const s of tirupurManufacturers) seedRow(s, "approved");
   }
 
-  const collectionCount = db
-    .prepare("SELECT COUNT(*) as count FROM collections")
-    .get() as { count: number };
-
-  if (collectionCount.count === 0) {
-    const insertCollection = db.prepare(`
-      INSERT INTO collections
-        (slug, owner_user_id, brand_name, name, description, category, price_paise, moq, status)
-      VALUES (?, NULL, ?, ?, ?, ?, ?, ?, 'approved')
-    `);
-    // Original demo listings (see seedCollections in data/collections.ts) so
-    // /collections isn't empty before real brands sign up — no owner, so
-    // they can't be edited from any dashboard, same as the demo suppliers.
-    for (const c of seedCollections) {
-      insertCollection.run(
-        c.slug,
-        c.brandName,
-        c.name,
-        c.description,
-        c.category,
-        c.pricePaise,
-        c.moq,
-      );
-    }
+  // Original demo listings (see seedCollections in data/collections.ts) so
+  // /collections isn't empty before real brands sign up — no owner, so they
+  // can't be edited from any dashboard, same as the demo suppliers.
+  // Runs on every start and is idempotent: new demo listings are added by
+  // slug (existing rows, including rejected ones, are left alone), and a
+  // demo listing with no photo gets its seed photo. Brand-owned listings
+  // (owner_user_id set) are never touched.
+  const insertCollection = db.prepare(`
+    INSERT OR IGNORE INTO collections
+      (slug, owner_user_id, brand_name, name, description, category, price_paise, moq, image_path, status)
+    VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, 'approved')
+  `);
+  const backfillImage = db.prepare(`
+    UPDATE collections SET image_path = ?
+    WHERE slug = ? AND owner_user_id IS NULL AND image_path IS NULL
+  `);
+  for (const c of seedCollections) {
+    insertCollection.run(
+      c.slug,
+      c.brandName,
+      c.name,
+      c.description,
+      c.category,
+      c.pricePaise,
+      c.moq,
+      c.imagePath,
+    );
+    if (c.imagePath) backfillImage.run(c.imagePath, c.slug);
   }
 
   const adminCount = db

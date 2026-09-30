@@ -1,6 +1,7 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Supplier } from "@/data/suppliers";
-import { categorySwatch } from "@/lib/categorySwatch";
+import { supplierImage } from "@/lib/supplierImage";
 import { IconCheck, IconMapPin, IconStar } from "./Icons";
 
 export default function SupplierCard({ supplier }: { supplier: Supplier }) {
@@ -10,9 +11,16 @@ export default function SupplierCard({ supplier }: { supplier: Supplier }) {
     <div className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-md">
       <Link
         href={`/marketplace/${encodeURIComponent(supplier.slug)}`}
-        className="relative block h-32 w-full"
-        style={categorySwatch(supplier.category, supplier.slug)}
+        className="relative block h-40 w-full overflow-hidden bg-[#f1efeb]"
       >
+        <Image
+          src={supplierImage(supplier.category, supplier.slug)}
+          alt=""
+          fill
+          unoptimized
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          className="object-contain"
+        />
         {supplier.verified && (
           <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-semibold text-accent-700 shadow-sm">
             <IconCheck className="h-3 w-3" />

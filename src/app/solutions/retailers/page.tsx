@@ -3,6 +3,7 @@ import Link from "next/link";
 import Container from "@/components/Container";
 import Eyebrow from "@/components/Eyebrow";
 import CollectionCard from "@/components/CollectionCard";
+import PhotoStrip from "@/components/PhotoStrip";
 import { IconArrowRight } from "@/components/Icons";
 import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
 
@@ -91,7 +92,19 @@ export default function RetailersPage() {
             </Link>
           </div>
 
-          <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <PhotoStrip
+            className="mt-12"
+            names={[
+              { file: "men-shirt", label: "Shirts" },
+              { file: "women-dress", label: "Dresses" },
+              { file: "kids-ethnic-girls", label: "Kids ethnic" },
+              { file: "women-saree", label: "Sarees" },
+              { file: "sneakers", label: "Sneakers" },
+              { file: "watch", label: "Watches" },
+            ]}
+          />
+
+          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {buyers.map((b) => (
               <div
                 key={b.title}
