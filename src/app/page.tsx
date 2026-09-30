@@ -1,399 +1,255 @@
 import Link from "next/link";
+import Image from "next/image";
 import Container from "@/components/Container";
 import Eyebrow from "@/components/Eyebrow";
-import CTASection from "@/components/CTASection";
-import HeroCollage from "@/components/HeroCollage";
 import {
   IconArrowRight,
-  IconBolt,
   IconBoxes,
-  IconBuilding,
-  IconCart,
   IconCheck,
-  IconFactory,
-  IconLayers,
+  IconSearch,
   IconShieldCheck,
-  IconSparkles,
-  IconStorefront,
   IconTarget,
-  IconTrendingUp,
   IconTruck,
-  IconUpload,
 } from "@/components/Icons";
 
-const stats = [
-  { value: "6", label: "AI-Powered Modules" },
-  { value: "3", label: "Connected Ecosystems" },
-  { value: "Minutes", label: "Onboarding Time" },
-  { value: "End-to-End", label: "Supply Chain View" },
-];
-
-const capabilities = [
+// Three tiers of the network, shown in the hero.
+const tiers = [
   {
-    icon: IconUpload,
-    title: "AI Product Onboarding",
-    desc: "Catalog new styles in minutes. AI extracts specs, fabric composition, sizing, and compliance data from supplier sheets, images, and tech packs.",
+    step: "01 · Mills & factories",
+    title: "Fabric and production",
+    desc: "Verified mills and manufacturers with capacity, MOQs and specs listed.",
+    image: null,
+    swatch: "bg-amber-800",
   },
   {
-    icon: IconCart,
-    title: "Intelligent Procurement",
-    desc: "AI matches buyers to the right manufacturers and raw material vendors based on capacity, quality history, lead time, and MOQ fit.",
+    step: "02 · Brands",
+    title: "Collections in sets",
+    desc: "Brands list collections with wholesale pricing and their own MOQ.",
+    image: "/images/catalogue/men-polo.jpg",
+    swatch: "",
   },
   {
-    icon: IconTrendingUp,
-    title: "Dynamic Pricing",
-    desc: "Cost and market-aware pricing engines benchmark quotes against fabric, labor, and freight indices in real time.",
-  },
-  {
-    icon: IconBoxes,
-    title: "Inventory Optimization",
-    desc: "Demand forecasting and reorder-point automation reduce stockouts and excess inventory across brands and retailers.",
-  },
-  {
-    icon: IconTruck,
-    title: "Supply Chain Orchestration",
-    desc: "End-to-end visibility from raw material to shipment, with AI flagging delays, quality risks, and capacity bottlenecks early.",
-  },
-  {
-    icon: IconTarget,
-    title: "Retailer Recommendations",
-    desc: "A recommendation engine matches retailers with fast-moving, regionally relevant products from vetted brands and manufacturers.",
+    step: "03 · Retail",
+    title: "Every shelf, every city",
+    desc: "Boutiques, chains, online sellers and export buyers order direct.",
+    image: "/images/catalogue/women-coord.jpg",
+    swatch: "",
   },
 ];
 
-const personas = [
+// One door per audience.
+const doors = [
   {
-    icon: IconBuilding,
-    title: "Brands",
-    desc: "Discover vetted manufacturers, automate quoting and quality checks, and launch new styles faster.",
-    href: "/solutions/brands",
+    label: "For brands",
+    title: "Reach stores without a sales force",
+    points: [
+      "List collections with your MOQ",
+      "Orders land in your dashboard",
+      "Source production on the same account",
+    ],
+    cta: "List your brand",
+    href: "/signup",
+    learnHref: "/solutions/brands",
+    tone: "text-accent-700",
+    button: "bg-accent-600 hover:bg-accent-700",
   },
   {
-    icon: IconFactory,
-    title: "Manufacturers & Factories",
-    desc: "Fill production capacity with matched orders, streamline compliance, and get paid on predictable terms.",
-    href: "/solutions/manufacturers",
+    label: "For retailers",
+    title: "Branded stock at wholesale price",
+    points: [
+      "Boutiques, chains and online sellers",
+      "Buy direct at the brand's MOQ",
+      "Every order tracked in one place",
+    ],
+    cta: "Start buying",
+    href: "/collections",
+    learnHref: "/solutions/retailers",
+    tone: "text-rose-700",
+    button: "bg-rose-600 hover:bg-rose-700",
   },
   {
-    icon: IconStorefront,
-    title: "Retailers",
-    desc: "Get AI-curated assortments and automated replenishment tuned to regional demand.",
-    href: "/solutions/retailers",
+    label: "For mills & factories",
+    title: "Steady orders from verified buyers",
+    points: [
+      "List capacity, fabrics and MOQs",
+      "Receive quote requests directly",
+      "Reviewed listings build buyer trust",
+    ],
+    cta: "List your factory",
+    href: "/signup",
+    learnHref: "/solutions/manufacturers",
+    tone: "text-amber-800",
+    button: "bg-amber-800 hover:bg-amber-900",
   },
+  {
+    label: "For export buyers",
+    title: "Source from India with confidence",
+    points: [
+      "Moderated brands and manufacturers",
+      "One point of contact for large orders",
+      "Browse the supplier marketplace",
+    ],
+    cta: "Request a quote",
+    href: "/contact",
+    learnHref: "/marketplace",
+    tone: "text-teal-800",
+    button: "bg-teal-700 hover:bg-teal-800",
+  },
+];
+
+// Catalogue tiles. Photos live in /public/images/catalogue.
+const categories = [
+  { name: "Menswear", image: "/images/catalogue/men.jpg" },
+  { name: "Womenswear", image: "/images/catalogue/women.jpg" },
+  { name: "Kidswear", image: "/images/catalogue/kids.jpg" },
+  { name: "Ethnic & occasion", image: "/images/catalogue/ethnic.jpg" },
+  { name: "Activewear", image: "/images/catalogue/active.jpg" },
+  { name: "Footwear", image: "/images/catalogue/footwear.jpg" },
+  { name: "Accessories", image: "/images/catalogue/watch.jpg" },
+  { name: "Seasonal wear", image: "/images/catalogue/seasonal.jpg" },
+  { name: "Uniforms & workwear", image: "/images/catalogue/uniform.jpg" },
 ];
 
 const steps = [
   {
     number: "01",
-    title: "Onboard",
-    desc: "Brands, manufacturers, and retailers onboard in days, not months. AI ingests catalogs, capacity, and compliance documents automatically.",
+    title: "Create your account",
+    desc: "Sign up as a brand, manufacturer or retailer. Listings are reviewed before they go live.",
   },
   {
     number: "02",
-    title: "Match",
-    desc: "AI matches sourcing needs with the best-fit supply partners using quality, cost, capacity, and lead-time signals.",
+    title: "Discover",
+    desc: "Browse brand collections and the supplier marketplace, filtered by category and MOQ.",
   },
   {
     number: "03",
-    title: "Transact",
-    desc: "Quoting, pricing, and order confirmation happen inside one workflow, with full audit trails and standardized terms.",
+    title: "Order or request a quote",
+    desc: "Order collections at the brand's MOQ, or send a quote request to a manufacturer.",
   },
   {
     number: "04",
-    title: "Fulfill",
-    desc: "Supply chain orchestration tracks production and logistics end-to-end, with AI surfacing risks before they cause delays.",
+    title: "Track in your dashboard",
+    desc: "Orders and quote requests stay in one place for buyers and sellers alike.",
   },
 ];
 
-const pillars = [
+const services = [
   {
-    icon: IconSparkles,
-    title: "AI-first, not AI-bolted-on",
-    desc: "Every core workflow — onboarding, matching, pricing, inventory — is built around automation from day one.",
+    icon: IconSearch,
+    title: "AI sourcing",
+    desc: "Match styles to suppliers on capacity, quality, lead time and MOQ fit.",
+    soon: false,
+  },
+  {
+    icon: IconTarget,
+    title: "Demand insights",
+    desc: "Reorder and sell-through signals fed back to brands and mills.",
+    soon: false,
+  },
+  {
+    icon: IconBoxes,
+    title: "GB Credit",
+    desc: "Buyers pay in 30 to 90 days; sellers get paid on dispatch.",
+    soon: true,
+  },
+  {
+    icon: IconTruck,
+    title: "GB Logistics",
+    desc: "Pickup, pan-India delivery and export freight at pooled rates.",
+    soon: true,
   },
   {
     icon: IconShieldCheck,
-    title: "Trust & verification",
-    desc: "Structured data and verification checks on manufacturers, factories, and compliance credentials.",
+    title: "GB Assure",
+    desc: "Pre-dispatch inspection and fabric lab tests on bulk orders.",
+    soon: true,
   },
-  {
-    icon: IconBolt,
-    title: "Speed to shelf",
-    desc: "Compress sourcing cycles from weeks to days by removing manual back-and-forth.",
-  },
-  {
-    icon: IconLayers,
-    title: "One ecosystem",
-    desc: "Brands, manufacturers, factories, and retailers operate on a shared, connected platform.",
-  },
+];
+
+const trust = [
+  "Every brand and factory listing is reviewed before it goes live",
+  "Separate accounts and dashboards for brands, manufacturers and retailers",
+  "Orders and quote requests recorded with a full history",
+  "Collections sold at the MOQ the brand sets, with no middlemen",
 ];
 
 export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-background">
-        <Container className="relative py-16 sm:py-24">
-          <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:items-center">
-            <div className="lg:col-span-6">
-              <Eyebrow>AI-First B2B Sourcing</Eyebrow>
-              <h1 className="text-balance mt-6 font-serif text-5xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-6xl">
-                Fashion sourcing,
+      <section className="bg-background">
+        <Container className="py-16 sm:py-24">
+          <div className="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:items-center">
+            <div className="lg:col-span-7">
+              <Eyebrow className="text-rose-700">
+                B2B for fashion, lifestyle &amp; fabric
+              </Eyebrow>
+              <h1 className="text-balance mt-6 font-serif text-5xl font-semibold leading-[1.03] tracking-tight text-ink sm:text-7xl">
+                From fabric to shelf.
                 <br />
-                <span className="relative inline-block">
-                  made intelligent.
-                  <span
-                    className="absolute inset-x-0 -bottom-1 h-1 rounded-full bg-accent-400/70"
-                    aria-hidden
-                  />
-                </span>
+                One network.
               </h1>
               <p className="text-balance mt-6 max-w-xl text-lg leading-8 text-slate-600">
-                GarmentBazaar connects brands, manufacturers, factories, and
-                retailers on one AI-powered platform — automating onboarding,
-                procurement, pricing, inventory, and supply chain decisions.
+                GarmentBazaar connects mills, manufacturers, brands and
+                retailers on one verified platform. Source production, sell
+                collections wholesale, and buy branded stock direct.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-accent-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-700"
+                  href="/collections"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-accent-600 px-7 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-accent-700"
                 >
-                  Request a Demo
+                  Start buying
                   <IconArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
-                  href="/marketplace"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-ink transition hover:bg-slate-50"
+                  href="/signup"
+                  className="inline-flex items-center justify-center rounded-full border border-ink px-7 py-3.5 text-base font-semibold text-ink transition hover:bg-white"
                 >
-                  Browse the Marketplace
+                  List your brand
                 </Link>
               </div>
-
-              <div className="mt-14 grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-4">
-                {stats.map((s) => (
-                  <div key={s.label}>
-                    <p className="font-serif text-3xl font-bold text-ink">
-                      {s.value}
-                    </p>
-                    <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                      {s.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="lg:col-span-6">
-              <HeroCollage />
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* Persona strip */}
-      <section className="bg-white py-14">
-        <Container>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {personas.map((p) => (
-              <Link
-                key={p.title}
-                href={p.href}
-                className="group rounded-2xl border border-slate-200 bg-background p-5 transition hover:border-accent-200 hover:bg-accent-50/60"
-              >
-                <p.icon className="h-6 w-6 text-accent-600" />
-                <h3 className="mt-3 text-sm font-semibold text-ink">{p.title}</h3>
-                <p className="mt-1 text-xs leading-5 text-slate-500">{p.desc}</p>
-                <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-accent-600 opacity-0 transition group-hover:opacity-100">
-                  Learn more <IconArrowRight className="h-3 w-3" />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* Problem / Solution */}
-      <section className="bg-background py-20 sm:py-28">
-        <Container>
-          <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-start">
-            <div>
-              <Eyebrow>The problem</Eyebrow>
-              <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink">
-                Fashion sourcing is still run on spreadsheets, WhatsApp, and guesswork
-              </h2>
-              <ul className="mt-8 space-y-4">
-                {[
-                  "Manual, relationship-driven vendor discovery with no standardized data",
-                  "Pricing negotiated ad hoc with little cost or market benchmarking",
-                  "Inventory decisions based on intuition, leading to stockouts and markdowns",
-                  "Supply chain visibility that ends the moment an order is placed",
-                ].map((item) => (
-                  <li key={item} className="flex gap-3 text-slate-600">
-                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-slate-400" />
-                    <span className="leading-7">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <Eyebrow>The GarmentBazaar approach</Eyebrow>
-              <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink">
-                One AI-powered platform, from raw material to retail shelf
-              </h2>
-              <ul className="mt-8 space-y-4">
-                {[
-                  "Structured, AI-verified data on every manufacturer, factory, and product",
-                  "Automated, benchmarked pricing across cost, quality, and lead time",
-                  "AI-driven demand forecasting and replenishment recommendations",
-                  "Continuous supply chain visibility with proactive risk alerts",
-                ].map((item) => (
-                  <li key={item} className="flex gap-3 text-slate-700">
-                    <IconCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent-600" />
-                    <span className="leading-7">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* Capabilities grid */}
-      <section id="capabilities" className="bg-white py-20 sm:py-28">
-        <Container>
-          <div className="mx-auto max-w-2xl text-center">
-            <Eyebrow>Core capabilities</Eyebrow>
-            <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-              AI embedded in every sourcing decision
-            </h2>
-            <p className="mt-4 text-base leading-7 text-slate-600">
-              From the first product upload to the final mile, GarmentBazaar
-              automates the decisions that used to take teams of people and weeks
-              of back-and-forth.
-            </p>
-          </div>
-          <div className="mt-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {capabilities.map((c) => (
-              <div
-                key={c.title}
-                className="rounded-2xl border border-slate-200 bg-background p-6 transition hover:border-accent-200 hover:shadow-sm"
-              >
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-ink">
-                  <c.icon className="h-5 w-5 text-accent-300" />
-                </div>
-                <h3 className="mt-5 text-base font-semibold text-ink">
-                  {c.title}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{c.desc}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-10 text-center">
-            <Link
-              href="/platform"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 hover:text-accent-600"
-            >
-              See the full platform
-              <IconArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </Container>
-      </section>
-
-      {/* How it works */}
-      <section className="bg-background py-20 sm:py-28">
-        <Container>
-          <div className="mx-auto max-w-2xl text-center">
-            <Eyebrow>How it works</Eyebrow>
-            <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-              Onboard, match, transact, fulfill
-            </h2>
-          </div>
-          <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {steps.map((s, i) => (
-              <div key={s.number} className="relative">
-                <div className="flex items-center gap-3">
-                  <span className="font-serif text-3xl font-bold text-accent-200">
-                    {s.number}
-                  </span>
-                  {i < steps.length - 1 && (
-                    <span className="hidden h-px flex-1 bg-slate-200 lg:block" />
-                  )}
-                </div>
-                <h3 className="mt-4 text-base font-semibold text-ink">
-                  {s.title}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{s.desc}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* Who it's for */}
-      <section className="bg-white py-20 sm:py-28">
-        <Container>
-          <div className="mx-auto max-w-2xl text-center">
-            <Eyebrow>Who it&apos;s for</Eyebrow>
-            <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-              Built for every side of the sourcing ecosystem
-            </h2>
-          </div>
-          <div className="mt-16 grid grid-cols-1 gap-6 lg:grid-cols-3">
-            {personas.map((p) => (
-              <div
-                key={p.title}
-                className="flex flex-col rounded-2xl border border-slate-200 bg-background p-8"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100">
-                  <p.icon className="h-6 w-6 text-accent-600" />
-                </div>
-                <h3 className="mt-6 text-lg font-semibold text-ink">
-                  {p.title}
-                </h3>
-                <p className="mt-3 flex-1 text-sm leading-6 text-slate-600">
-                  {p.desc}
-                </p>
-                <Link
-                  href={p.href}
-                  className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 hover:text-accent-600"
-                >
-                  See solutions for {p.title.toLowerCase()}
-                  <IconArrowRight className="h-4 w-4" />
-                </Link>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* Why AI-first */}
-      <section className="bg-background py-20 sm:py-28">
-        <Container>
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
-            <div className="lg:col-span-1">
-              <Eyebrow>Why AI-first</Eyebrow>
-              <h2 className="text-balance mt-4 font-serif text-3xl font-semibold tracking-tight text-ink">
-                Built to be intelligent from the ground up
-              </h2>
-              <p className="mt-4 text-sm leading-7 text-slate-600">
-                GarmentBazaar isn&apos;t a directory with AI features bolted on.
-                Automation and data intelligence are the foundation of how the
-                platform operates.
+              <p className="mt-6 flex flex-wrap gap-x-3 gap-y-1 text-sm text-slate-500">
+                <span>Brand-set MOQs</span>
+                <span aria-hidden>·</span>
+                <span>Reviewed listings</span>
+                <span aria-hidden>·</span>
+                <span>Direct from brands and factories</span>
               </p>
             </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:col-span-2">
-              {pillars.map((p) => (
-                <div key={p.title} className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-ink">
-                    <p.icon className="h-5 w-5 text-accent-300" />
-                  </div>
+
+            <div className="flex flex-col gap-3.5 lg:col-span-5">
+              {tiers.map((t, i) => (
+                <div
+                  key={t.step}
+                  className={`flex items-center gap-5 rounded-2xl border border-slate-200 bg-white p-5 ${
+                    i === 1 ? "lg:ml-8" : i === 2 ? "lg:ml-16" : ""
+                  }`}
+                >
+                  {t.image ? (
+                    <Image
+                      src={t.image}
+                      alt=""
+                      width={72}
+                      height={88}
+                      unoptimized
+                      className="h-22 w-18 shrink-0 rounded-xl bg-slate-100 object-cover"
+                    />
+                  ) : (
+                    <div
+                      className={`h-22 w-18 shrink-0 rounded-xl ${t.swatch}`}
+                      aria-hidden
+                    />
+                  )}
                   <div>
-                    <h3 className="text-sm font-semibold text-ink">
-                      {p.title}
-                    </h3>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      {t.step}
+                    </p>
+                    <p className="mt-1 font-serif text-xl font-semibold text-ink">
+                      {t.title}
+                    </p>
                     <p className="mt-1 text-sm leading-6 text-slate-600">
-                      {p.desc}
+                      {t.desc}
                     </p>
                   </div>
                 </div>
@@ -403,7 +259,217 @@ export default function Home() {
         </Container>
       </section>
 
-      <CTASection />
+      {/* Doors */}
+      <section id="doors" className="bg-white py-20 sm:py-24">
+        <Container>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <h2 className="text-balance font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+              One platform, four ways in
+            </h2>
+            <p className="max-w-md text-base leading-7 text-slate-600">
+              Pick your role. Each door opens a workspace built for how you buy
+              or sell.
+            </p>
+          </div>
+          <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {doors.map((d) => (
+              <div
+                key={d.label}
+                className="flex flex-col rounded-2xl border border-slate-200 bg-background p-7"
+              >
+                <p
+                  className={`text-xs font-bold uppercase tracking-[0.1em] ${d.tone}`}
+                >
+                  {d.label}
+                </p>
+                <h3 className="mt-4 font-serif text-2xl font-semibold leading-tight text-ink">
+                  {d.title}
+                </h3>
+                <ul className="mt-5 flex-1 space-y-2.5">
+                  {d.points.map((p) => (
+                    <li key={p} className="flex gap-2.5 text-sm leading-6 text-slate-600">
+                      <IconCheck className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-7 flex flex-wrap items-center gap-4">
+                  <Link
+                    href={d.href}
+                    className={`inline-flex items-center rounded-full px-5 py-2.5 text-sm font-semibold text-white transition ${d.button}`}
+                  >
+                    {d.cta}
+                  </Link>
+                  <Link
+                    href={d.learnHref}
+                    className="text-sm font-semibold text-ink underline-offset-4 hover:underline"
+                  >
+                    Learn more
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Catalogue */}
+      <section id="catalogue" className="bg-background py-20 sm:py-24">
+        <Container>
+          <div className="flex items-end justify-between gap-6">
+            <h2 className="font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+              Shop the catalogue
+            </h2>
+            <Link
+              href="/collections"
+              className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-accent-700 hover:text-accent-600"
+            >
+              View all collections
+              <IconArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
+            {categories.map((c) => (
+              <Link key={c.name} href="/collections" className="group">
+                <div className="relative h-60 overflow-hidden rounded-2xl bg-[#f0eeea]">
+                  <Image
+                    src={c.image}
+                    alt={c.name}
+                    fill
+                    unoptimized
+                    sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 50vw"
+                    className="object-contain transition duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <p className="mt-3 text-base font-semibold text-ink">{c.name}</p>
+              </Link>
+            ))}
+            <Link href="/marketplace" className="group">
+              <div className="flex h-60 items-end rounded-2xl bg-ink p-5 transition group-hover:bg-accent-700">
+                <p className="font-serif text-2xl font-semibold leading-tight text-white">
+                  Fabric, trims and production partners
+                </p>
+              </div>
+              <p className="mt-3 text-base font-semibold text-ink">
+                Fabrics &amp; manufacturers
+              </p>
+            </Link>
+          </div>
+        </Container>
+      </section>
+
+      {/* How it works */}
+      <section className="bg-white py-20 sm:py-24">
+        <Container>
+          <h2 className="font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+            How it works
+          </h2>
+          <ol className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {steps.map((s) => (
+              <li key={s.number} className="border-t-2 border-ink pt-5">
+                <p className="font-serif text-lg font-semibold text-rose-700">
+                  {s.number}
+                </p>
+                <h3 className="mt-2 text-xl font-semibold text-ink">{s.title}</h3>
+                <p className="mt-2 text-base leading-7 text-slate-600">{s.desc}</p>
+              </li>
+            ))}
+          </ol>
+        </Container>
+      </section>
+
+      {/* Services */}
+      <section id="services" className="bg-background py-20 sm:py-24">
+        <Container>
+          <div className="rounded-3xl bg-accent-50 p-8 sm:p-12">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+              <h2 className="text-balance max-w-xl font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+                Services built into every order
+              </h2>
+              <p className="max-w-md text-base leading-7 text-slate-700">
+                The marketplace moves the goods. The platform removes the
+                friction around them: finding, funding, shipping and checking.
+              </p>
+            </div>
+            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              {services.map((s) => (
+                <div key={s.title} className="rounded-2xl bg-white p-6">
+                  <div className="flex items-center justify-between gap-2">
+                    <s.icon className="h-6 w-6 text-accent-600" />
+                    {s.soon && (
+                      <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-600">
+                        Coming soon
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="mt-4 text-lg font-semibold text-ink">{s.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{s.desc}</p>
+                </div>
+              ))}
+            </div>
+            <Link
+              href="/platform"
+              className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 hover:text-accent-600"
+            >
+              See the full platform
+              <IconArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </Container>
+      </section>
+
+      {/* Trust */}
+      <section className="bg-white py-20 sm:py-24">
+        <Container>
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:items-center">
+            <h2 className="text-balance font-serif text-4xl font-semibold tracking-tight text-ink">
+              Trade with reviewed businesses only
+            </h2>
+            <ul className="space-y-4">
+              {trust.map((t) => (
+                <li key={t} className="flex gap-3 text-base text-slate-700">
+                  <IconCheck className="mt-0.5 h-5 w-5 shrink-0 text-success-600" />
+                  {t}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Container>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-ink">
+        <Container className="flex flex-col gap-8 py-16 sm:py-20 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h2 className="text-balance font-serif text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+              Join the fabric-to-shelf network
+            </h2>
+            <p className="mt-3 text-base text-slate-400">
+              Free to register as a brand, manufacturer or retailer.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-ink transition hover:bg-slate-100"
+            >
+              I&apos;m a retailer
+            </Link>
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+            >
+              I&apos;m a brand
+            </Link>
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+            >
+              I&apos;m a manufacturer
+            </Link>
+          </div>
+        </Container>
+      </section>
     </>
   );
 }
