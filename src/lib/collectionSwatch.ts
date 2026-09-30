@@ -49,6 +49,44 @@ const textures: Record<CollectionCategory, { svg: string; size: number }> = {
       <path d='M0 6 H12 M6 0 V12' stroke='rgba(255,255,255,0.2)' stroke-width='1'/>
     </svg>`,
   },
+  // New departments reuse the closest existing texture.
+  "Ethnic & Occasion": {
+    size: 26,
+    svg: `<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26'>
+      <path d='M0 13a13 13 0 0 1 26 0' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='1.5'/>
+    </svg>`,
+  },
+  Activewear: {
+    size: 14,
+    svg: `<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14'>
+      <line x1='2' y1='0' x2='2' y2='14' stroke='rgba(255,255,255,0.25)' stroke-width='1.4'/>
+    </svg>`,
+  },
+  "Innerwear & Sleepwear": {
+    size: 22,
+    svg: `<svg xmlns='http://www.w3.org/2000/svg' width='22' height='22'>
+      <circle cx='6' cy='6' r='3' fill='rgba(255,255,255,0.2)'/>
+      <circle cx='16' cy='14' r='2' fill='rgba(255,255,255,0.28)'/>
+    </svg>`,
+  },
+  "Maternity & Plus Size": {
+    size: 26,
+    svg: `<svg xmlns='http://www.w3.org/2000/svg' width='26' height='26'>
+      <path d='M0 13a13 13 0 0 1 26 0' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='1.5'/>
+    </svg>`,
+  },
+  "Bags & Luggage": {
+    size: 18,
+    svg: `<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18'>
+      <path d='M9 3 L13 9 L9 15 L5 9 Z' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='1.3'/>
+    </svg>`,
+  },
+  "Uniforms & Workwear": {
+    size: 12,
+    svg: `<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12'>
+      <path d='M0 6 H12 M6 0 V12' stroke='rgba(255,255,255,0.2)' stroke-width='1'/>
+    </svg>`,
+  },
   // Soft bokeh dots.
   "Beauty & Personal Care": {
     size: 22,
@@ -89,6 +127,30 @@ const variantsByCategory: Record<CollectionCategory, string[]> = {
     "linear-gradient(135deg, #365314 0%, #65a30d 55%, #d9f99d 100%)",
     "linear-gradient(115deg, #422006 0%, #92400e 55%, #fde68a 100%)",
     "linear-gradient(135deg, #134e4a 0%, #14b8a6 55%, #99f6e4 100%)",
+  ],
+  "Ethnic & Occasion": [
+    "linear-gradient(135deg, #7f1d1d 0%, #b91c1c 55%, #fcd34d 100%)",
+    "linear-gradient(115deg, #713f12 0%, #ca8a04 55%, #fef3c7 100%)",
+  ],
+  Activewear: [
+    "linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #bfdbfe 100%)",
+    "linear-gradient(115deg, #0f172a 0%, #334155 55%, #94a3b8 100%)",
+  ],
+  "Innerwear & Sleepwear": [
+    "linear-gradient(135deg, #9d174d 0%, #f472b6 55%, #fce7f3 100%)",
+    "linear-gradient(115deg, #57534e 0%, #a8a29e 55%, #f5f5f4 100%)",
+  ],
+  "Maternity & Plus Size": [
+    "linear-gradient(135deg, #be185d 0%, #f9a8d4 55%, #fdf2f8 100%)",
+    "linear-gradient(115deg, #3f3f46 0%, #71717a 55%, #e4e4e7 100%)",
+  ],
+  "Bags & Luggage": [
+    "linear-gradient(135deg, #4c1d95 0%, #7c3aed 55%, #ddd6fe 100%)",
+    "linear-gradient(115deg, #422006 0%, #92400e 55%, #fde68a 100%)",
+  ],
+  "Uniforms & Workwear": [
+    "linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 55%, #dbeafe 100%)",
+    "linear-gradient(115deg, #365314 0%, #84cc16 55%, #ecfccb 100%)",
   ],
   "Beauty & Personal Care": [
     "linear-gradient(135deg, #86198f 0%, #d946ef 55%, #f5d0fe 100%)",

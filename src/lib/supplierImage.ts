@@ -7,30 +7,32 @@ const byCategory: Record<string, string[]> = {
   "Fabric & Textiles": [
     "fabric-cotton",
     "fabric-denim",
+    "fabric-linen",
     "fabric-knit",
     "fabric-synthetic",
-    "fabric-linen",
     "fabric-sustainable",
-    "organic-cotton",
+    "eco-organic",
+    "eco-bamboo",
   ],
   Knitwear: [
+    "men-tshirt",
     "men-polo",
-    "men-active",
+    "men-sweatshirt",
     "men-hoodie",
-    "kids-tee",
+    "active-gym",
+    "kids-boys-tee",
+    "season-layering",
     "fabric-knit",
-    "promo-apparel",
-    "women-active",
   ],
-  "Surplus & Overstock": ["surplus", "bulk-orders", "upcycled"],
-  Denim: ["fabric-denim", "men-jeans", "women-jumpsuit"],
-  "Ethnic Wear": ["men-kurta", "women-kurti", "women-lehenga"],
-  Activewear: ["women-active", "men-active", "sports-shoes"],
-  Accessories: ["scarf", "backpack", "handbag"],
-  Wovens: ["men-shirt", "fabric-linen", "uniform-corporate"],
+  "Surplus & Overstock": ["season-knits", "eco-recycled", "eco-upcycled", "home-throws"],
+  Denim: ["fabric-denim", "men-jeans", "women-jeans", "kids-boys-jeans"],
+  "Ethnic Wear": ["ethnic-men", "ethnic-kurti", "ethnic-anarkali", "ethnic-festive"],
+  Activewear: ["active-tracksuit", "active-running", "active-yoga", "active-kids"],
+  Accessories: ["acc-scarf", "bag-backpack", "acc-belt", "acc-cap"],
+  Wovens: ["men-shirt", "fabric-linen", "uniform-corporate", "women-shirt"],
 };
 
-const fallback = ["fabric-cotton", "men-shirt", "fabric-knit", "bulk-orders"];
+const fallback = ["fabric-cotton", "men-shirt", "fabric-knit", "season-knits"];
 
 function hash(s: string): number {
   let h = 0;

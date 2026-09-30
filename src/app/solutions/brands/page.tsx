@@ -153,10 +153,10 @@ export default function BrandsPage() {
             names={[
               { file: "men-polo", label: "Menswear" },
               { file: "women-coord", label: "Womenswear" },
-              { file: "kids-dress", label: "Kidswear" },
-              { file: "women-lehenga", label: "Ethnic & occasion" },
-              { file: "formal-shoes", label: "Footwear" },
-              { file: "handbag", label: "Accessories" },
+              { file: "kids-girls-dress", label: "Kidswear" },
+              { file: "ethnic-lehenga", label: "Ethnic & occasion" },
+              { file: "shoes-formal", label: "Footwear" },
+              { file: "bag-handbag", label: "Bags" },
             ]}
           />
         </Container>

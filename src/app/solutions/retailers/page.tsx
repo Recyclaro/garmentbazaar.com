@@ -97,10 +97,10 @@ export default function RetailersPage() {
             names={[
               { file: "men-shirt", label: "Shirts" },
               { file: "women-dress", label: "Dresses" },
-              { file: "kids-ethnic-girls", label: "Kids ethnic" },
+              { file: "ethnic-anarkali", label: "Anarkalis" },
               { file: "women-saree", label: "Sarees" },
-              { file: "sneakers", label: "Sneakers" },
-              { file: "watch", label: "Watches" },
+              { file: "shoes-casual", label: "Sneakers" },
+              { file: "acc-watch", label: "Watches" },
             ]}
           />
 

@@ -2,6 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import Container from "@/components/Container";
 import Eyebrow from "@/components/Eyebrow";
+import CollectionCard from "@/components/CollectionCard";
+import PhotoStrip from "@/components/PhotoStrip";
+import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
+
+// The fresh-collections strip reads from the database, so render per request.
+export const dynamic = "force-dynamic";
 import {
   IconArrowRight,
   IconBoxes,
@@ -25,14 +31,14 @@ const tiers = [
     step: "02 · Brands",
     title: "Collections in sets",
     desc: "Brands list collections with wholesale pricing and their own MOQ.",
-    image: "/images/catalogue/men-polo.jpg",
+    image: "/images/products/men-polo.jpg",
     swatch: "",
   },
   {
     step: "03 · Retail",
     title: "Every shelf, every city",
     desc: "Boutiques, chains, online sellers and export buyers order direct.",
-    image: "/images/catalogue/women-coord.jpg",
+    image: "/images/products/women-coord.jpg",
     swatch: "",
   },
 ];
@@ -97,17 +103,21 @@ const doors = [
   },
 ];
 
-// Catalogue tiles. Photos live in /public/images/catalogue.
-const categories = [
-  { name: "Menswear", image: "/images/catalogue/men.jpg" },
-  { name: "Womenswear", image: "/images/catalogue/women.jpg" },
-  { name: "Kidswear", image: "/images/catalogue/kids.jpg" },
-  { name: "Ethnic & occasion", image: "/images/catalogue/ethnic.jpg" },
-  { name: "Activewear", image: "/images/catalogue/active.jpg" },
-  { name: "Footwear", image: "/images/catalogue/footwear.jpg" },
-  { name: "Accessories", image: "/images/catalogue/watch.jpg" },
-  { name: "Seasonal wear", image: "/images/catalogue/seasonal.jpg" },
-  { name: "Uniforms & workwear", image: "/images/catalogue/uniform.jpg" },
+// Department tiles. Each opens /collections filtered to that department;
+// photos live in public/images/products.
+const departments = [
+  { name: "Menswear", image: "hero-men" },
+  { name: "Womenswear", image: "hero-women" },
+  { name: "Kidswear", image: "hero-kids" },
+  { name: "Ethnic & Occasion", image: "ethnic-lehenga" },
+  { name: "Activewear", image: "active-yoga" },
+  { name: "Innerwear & Sleepwear", image: "inner-sleepwear" },
+  { name: "Maternity & Plus Size", image: "maternity-dress" },
+  { name: "Footwear", image: "shoes-sports" },
+  { name: "Bags & Luggage", image: "bag-handbag" },
+  { name: "Accessories", image: "acc-watch" },
+  { name: "Uniforms & Workwear", image: "uniform-hospitality" },
+  { name: "Home & Lifestyle", image: "home-bedlinen" },
 ];
 
 const steps = [
@@ -174,6 +184,11 @@ const trust = [
 ];
 
 export default function Home() {
+  const fresh = listApprovedCollections()
+    .map(collectionRowToCollection)
+    .filter((c) => c.imagePath)
+    .slice(0, 8);
+
   return (
     <>
       {/* Hero */}
@@ -318,7 +333,7 @@ export default function Home() {
         <Container>
           <div className="flex items-end justify-between gap-6">
             <h2 className="font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-              Shop the catalogue
+              Shop by department
             </h2>
             <Link
               href="/collections"
@@ -328,33 +343,88 @@ export default function Home() {
               <IconArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
-            {categories.map((c) => (
-              <Link key={c.name} href="/collections" className="group">
-                <div className="relative h-60 overflow-hidden rounded-2xl bg-[#f0eeea]">
+          <div className="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
+            {departments.map((d, i) => (
+              <Link
+                key={d.name}
+                href={`/collections?category=${encodeURIComponent(d.name)}`}
+                className={`group ${i < 3 ? "lg:col-span-2" : ""}`}
+              >
+                <div
+                  className={`relative overflow-hidden rounded-2xl bg-[#f1efeb] ${
+                    i < 3 ? "h-72 sm:h-80" : "h-52"
+                  }`}
+                >
                   <Image
-                    src={c.image}
-                    alt={c.name}
+                    src={`/images/products/${d.image}.jpg`}
+                    alt={d.name}
                     fill
                     unoptimized
-                    sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 50vw"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 33vw, 50vw"
                     className="object-contain transition duration-300 group-hover:scale-105"
                   />
                 </div>
-                <p className="mt-3 text-base font-semibold text-ink">{c.name}</p>
+                <p className="mt-3 flex items-center gap-1.5 text-base font-semibold text-ink">
+                  {d.name}
+                  <IconArrowRight className="h-3.5 w-3.5 opacity-0 transition group-hover:opacity-100" />
+                </p>
               </Link>
             ))}
-            <Link href="/marketplace" className="group">
-              <div className="flex h-60 items-end rounded-2xl bg-ink p-5 transition group-hover:bg-accent-700">
-                <p className="font-serif text-2xl font-semibold leading-tight text-white">
-                  Fabric, trims and production partners
-                </p>
-              </div>
-              <p className="mt-3 text-base font-semibold text-ink">
-                Fabrics &amp; manufacturers
-              </p>
+          </div>
+        </Container>
+      </section>
+
+      {/* Fresh collections */}
+      {fresh.length > 0 && (
+        <section className="bg-white py-20 sm:py-24">
+          <Container>
+            <div className="flex items-end justify-between gap-6">
+              <h2 className="font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+                Fresh collections
+              </h2>
+              <Link
+                href="/collections"
+                className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-rose-700 hover:text-rose-600"
+              >
+                Browse all
+                <IconArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {fresh.map((c) => (
+                <CollectionCard key={c.slug} collection={c} />
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
+
+      {/* Fabric & materials */}
+      <section className="bg-background py-20 sm:py-24">
+        <Container>
+          <div className="flex items-end justify-between gap-6">
+            <h2 className="font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+              Fabric &amp; materials
+            </h2>
+            <Link
+              href="/solutions/manufacturers"
+              className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-amber-800 hover:text-amber-900"
+            >
+              Source from mills
+              <IconArrowRight className="h-4 w-4" />
             </Link>
           </div>
+          <PhotoStrip
+            className="mt-10"
+            names={[
+              { file: "fabric-cotton", label: "Cotton" },
+              { file: "fabric-denim", label: "Denim" },
+              { file: "fabric-linen", label: "Linen" },
+              { file: "fabric-knit", label: "Knit fabrics" },
+              { file: "fabric-synthetic", label: "Synthetics" },
+              { file: "fabric-sustainable", label: "Sustainable fabrics" },
+            ]}
+          />
         </Container>
       </section>
 

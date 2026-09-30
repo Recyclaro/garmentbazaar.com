@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import CollectionsClient from "./CollectionsClient";
 import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
+import { collectionCategories } from "@/data/collections";
 
 export const metadata: Metadata = {
   title: "Collections",
@@ -12,7 +13,19 @@ export const metadata: Metadata = {
 // fresh from the database rather than serving a build-time snapshot.
 export const dynamic = "force-dynamic";
 
-export default function CollectionsPage() {
+export default async function CollectionsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { category } = await searchParams;
+  // ?category=Footwear opens the page pre-filtered; anything unknown is ignored.
+  const initialCategory = collectionCategories.find((c) => c === category) ?? "All";
   const collections = listApprovedCollections().map(collectionRowToCollection);
-  return <CollectionsClient collections={collections} />;
+  return (
+    <CollectionsClient
+      collections={collections}
+      initialCategory={initialCategory}
+    />
+  );
 }

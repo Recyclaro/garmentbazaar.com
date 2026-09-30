@@ -9,11 +9,13 @@ import { collectionCategories, type Collection, type CollectionCategory } from "
 
 export default function CollectionsClient({
   collections,
+  initialCategory = "All",
 }: {
   collections: Collection[];
+  initialCategory?: CollectionCategory | "All";
 }) {
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<CollectionCategory | "All">("All");
+  const [category, setCategory] = useState<CollectionCategory | "All">(initialCategory);
 
   function clearFilters() {
     setQuery("");
