@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Container from "@/components/Container";
-import Eyebrow from "@/components/Eyebrow";
+import PageHero from "@/components/PageHero";
 import CollectionCard from "@/components/CollectionCard";
 import { IconSearch, IconX } from "@/components/Icons";
 import { collectionCategories, type Collection, type CollectionCategory } from "@/data/collections";
@@ -37,17 +37,37 @@ export default function CollectionsClient({
   }, [query, category, collections]);
 
   return (
-    <section className="bg-background py-16 sm:py-20">
+    <>
+      <PageHero
+        tone="rose"
+        eyebrow="Brand collections"
+        title="Fashion & lifestyle, straight from the brand"
+        subtitle="Browse collections listed directly by brands and order at their minimum order quantity. No middleman, no back-and-forth."
+        photos={[
+          { file: "hero-women", alt: "Women's wear" },
+          { file: "men-jacket", alt: "Jacket" },
+          { file: "bag-handbag", alt: "Handbag" },
+          { file: "kids-girls-dress", alt: "Girls dress" },
+        ]}
+        badges={["Order at the brand's MOQ", "Reviewed listings"]}
+      />
+
+      <section className="bg-background pb-16 pt-10 sm:pb-20">
       <Container>
-        <div className="mx-auto max-w-2xl text-center">
-          <Eyebrow className="text-rose-600">Brand Collections</Eyebrow>
-          <h1 className="text-balance mt-4 font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            Fashion &amp; lifestyle, straight from the brand
-          </h1>
-          <p className="text-balance mx-auto mt-4 max-w-xl text-base leading-7 text-slate-600">
-            Browse collections listed directly by brands and order at their
-            minimum order quantity &mdash; no middleman, no back-and-forth.
-          </p>
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {["All" as const, ...collectionCategories].map((c) => (
+            <button
+              key={c}
+              onClick={() => setCategory(c)}
+              className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${
+                category === c
+                  ? "bg-ink text-white"
+                  : "bg-white text-slate-700 ring-1 ring-slate-200 hover:ring-slate-400"
+              }`}
+            >
+              {c === "All" ? "All departments" : c}
+            </button>
+          ))}
         </div>
 
         <div className="mx-auto mt-10 max-w-2xl">
@@ -140,5 +160,6 @@ export default function CollectionsClient({
         </div>
       </Container>
     </section>
+    </>
   );
 }

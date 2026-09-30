@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import PageHero from "@/components/PageHero";
 import Container from "@/components/Container";
 import Eyebrow from "@/components/Eyebrow";
 import CTASection from "@/components/CTASection";
@@ -113,24 +114,40 @@ const trust = [
   },
 ];
 
+// One colour per module, echoing the department bands.
+const moduleColors = [
+  "bg-accent-600",
+  "bg-[#b0164f]",
+  "bg-[#0f766e]",
+  "bg-[#c77d0a]",
+  "bg-[#16335e]",
+  "bg-[#b91c1c]",
+];
+const moduleBorders = [
+  "border-accent-600",
+  "border-[#b0164f]",
+  "border-[#0f766e]",
+  "border-[#c77d0a]",
+  "border-[#16335e]",
+  "border-[#b91c1c]",
+];
+
 export default function PlatformPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-background">
-        <Container className="relative py-20 sm:py-28">
-          <div className="mx-auto max-w-3xl text-center">
-            <Eyebrow>The Platform</Eyebrow>
-            <h1 className="text-balance mt-6 font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-              One AI engine, six connected sourcing capabilities
-            </h1>
-            <p className="text-balance mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-              GarmentBazaar applies AI at each stage of the sourcing lifecycle
-              — from listing a new product to fulfilling an order — so every
-              decision is backed by structured data instead of guesswork.
-            </p>
-          </div>
-        </Container>
-      </section>
+      <PageHero
+        tone="violet"
+        eyebrow="The platform"
+        title="One engine, six connected sourcing capabilities"
+        subtitle="GarmentBazaar applies AI at each stage of the sourcing lifecycle, from listing a new product to fulfilling an order, so every decision is backed by structured data."
+        photos={[
+          { file: "fabric-knit", alt: "Knit fabrics" },
+          { file: "men-shirt", alt: "Shirt" },
+          { file: "uniform-corporate", alt: "Uniform polo" },
+          { file: "women-coord", alt: "Co-ord set" },
+        ]}
+        badges={["Matching by MOQ and capacity", "Orders tracked end to end"]}
+      />
 
       <section className="bg-white py-20 sm:py-28">
         <Container>
@@ -144,8 +161,10 @@ export default function PlatformPage() {
                 <div
                   className={`lg:col-span-7 ${i % 2 === 1 ? "lg:order-2" : ""}`}
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-ink">
-                    <m.icon className="h-6 w-6 text-accent-300" />
+                  <div
+                    className={`flex h-12 w-12 items-center justify-center rounded-xl ${moduleColors[i % moduleColors.length]}`}
+                  >
+                    <m.icon className="h-6 w-6 text-white" />
                   </div>
                   <p className="mt-5 text-sm font-semibold uppercase tracking-wide text-accent-600">
                     {m.tagline}
@@ -160,7 +179,9 @@ export default function PlatformPage() {
                 <div
                   className={`lg:col-span-5 ${i % 2 === 1 ? "lg:order-1" : ""}`}
                 >
-                  <ul className="space-y-4 rounded-2xl border border-slate-200 bg-background p-6">
+                  <ul
+                    className={`space-y-4 rounded-2xl border-t-4 bg-background p-6 ring-1 ring-slate-200 ${moduleBorders[i % moduleBorders.length]}`}
+                  >
                     {m.points.map((pt) => (
                       <li key={pt} className="flex gap-3">
                         <IconCheck className="mt-0.5 h-5 w-5 shrink-0 text-accent-600" />

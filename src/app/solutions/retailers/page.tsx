@@ -1,9 +1,9 @@
+import PageHero from "@/components/PageHero";
+import DeptMarquee from "@/components/DeptMarquee";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/Container";
-import Eyebrow from "@/components/Eyebrow";
 import CollectionCard from "@/components/CollectionCard";
-import PhotoStrip from "@/components/PhotoStrip";
 import { IconArrowRight } from "@/components/Icons";
 import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
 
@@ -19,18 +19,22 @@ export const dynamic = "force-dynamic";
 const buyers = [
   {
     title: "Boutiques and MBOs",
+    band: "bg-[#b0164f]",
     desc: "Mix brands in one place and order only the MOQ each brand sets.",
   },
   {
     title: "Retail chains",
+    band: "bg-[#16335e]",
     desc: "Source seasonal lines and larger quantities direct from brands.",
   },
   {
     title: "Online and D2C sellers",
+    band: "bg-accent-600",
     desc: "Collections come with real product photos you can review before ordering.",
   },
   {
     title: "Export buyers",
+    band: "bg-[#0f766e]",
     desc: "Tell us what you need and we'll connect you with brands and factories.",
   },
 ];
@@ -65,53 +69,53 @@ export default function RetailersPage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-background">
-        <Container className="py-16 sm:py-24">
-          <Eyebrow className="text-rose-700">For retailers and buyers</Eyebrow>
-          <h1 className="text-balance mt-6 max-w-4xl font-serif text-5xl font-semibold leading-[1.04] tracking-tight text-ink sm:text-6xl">
-            Branded stock for your store, at wholesale price.
-          </h1>
-          <p className="text-balance mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-            Buy direct from verified brands at the MOQ they set, and get it
-            delivered to your door. No trips to the mandi.
-          </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/collections"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-rose-600 px-7 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-rose-700"
-            >
-              Start buying
-              <IconArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/signup"
-              className="inline-flex items-center justify-center rounded-full border border-ink px-7 py-3.5 text-base font-semibold text-ink transition hover:bg-white"
-            >
-              Create a free account
-            </Link>
-          </div>
+            {/* Hero */}
+      <PageHero
+        tone="rose"
+        eyebrow="For retailers and buyers"
+        title="Branded stock for your store, at wholesale price."
+        subtitle="Buy direct from verified brands at the MOQ they set, and get it delivered to your door. No trips to the mandi."
+        photos={[
+          { file: "women-dress", alt: "Dress" },
+          { file: "men-polo", alt: "Polo shirt" },
+          { file: "shoes-sports", alt: "Sports shoes" },
+          { file: "kids-girls-dress", alt: "Girls dress" },
+        ]}
+        badges={["Buy at the brand's MOQ", "No middlemen"]}
+      >
+        <Link
+          href="/collections"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-ink shadow-sm transition hover:bg-rose-50"
+        >
+          Start buying
+          <IconArrowRight className="h-4 w-4" />
+        </Link>
+        <Link
+          href="/signup"
+          className="inline-flex items-center justify-center rounded-full border border-white/50 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/10"
+        >
+          Create a free account
+        </Link>
+      </PageHero>
 
-          <PhotoStrip
-            className="mt-12"
-            names={[
-              { file: "men-shirt", label: "Shirts" },
-              { file: "women-dress", label: "Dresses" },
-              { file: "ethnic-anarkali", label: "Anarkalis" },
-              { file: "women-saree", label: "Sarees" },
-              { file: "shoes-casual", label: "Sneakers" },
-              { file: "acc-watch", label: "Watches" },
-            ]}
-          />
+      <div className="mt-10">
+        <DeptMarquee />
+      </div>
 
-          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Buyer types */}
+      <section className="bg-white py-16 sm:py-20">
+        <Container>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {buyers.map((b) => (
               <div
                 key={b.title}
-                className="rounded-2xl border border-slate-200 bg-white p-6"
+                className="overflow-hidden rounded-2xl border border-slate-200 bg-background transition hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-900/5"
               >
-                <h2 className="text-lg font-semibold text-ink">{b.title}</h2>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{b.desc}</p>
+                <div className={`h-1.5 ${b.band}`} />
+                <div className="p-6">
+                  <h2 className="text-lg font-semibold text-ink">{b.title}</h2>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{b.desc}</p>
+                </div>
               </div>
             ))}
           </div>

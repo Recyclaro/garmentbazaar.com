@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import PageHero from "@/components/PageHero";
+import StatRibbon from "@/components/StatRibbon";
 import Container from "@/components/Container";
 import Eyebrow from "@/components/Eyebrow";
 import CTASection from "@/components/CTASection";
@@ -38,22 +40,29 @@ const values = [
   },
 ];
 
+// The stats ribbon reads from the database, so render per request.
+export const dynamic = "force-dynamic";
+
 export default function AboutPage() {
   return (
     <>
-      <section className="relative overflow-hidden bg-background">
-        <Container className="relative py-20 sm:py-28">
-          <div className="mx-auto max-w-3xl text-center">
-            <Eyebrow>About GarmentBazaar</Eyebrow>
-            <h1 className="text-balance mt-6 font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-              Building the AI-first backbone of fashion sourcing
-            </h1>
-            <p className="text-balance mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-              GarmentBazaar exists to connect brands, manufacturers, factories,
-              and retailers across India&apos;s fashion and lifestyle ecosystem
-              on a single, intelligent platform.
-            </p>
-          </div>
+      <PageHero
+        tone="navy"
+        eyebrow="About GarmentBazaar"
+        title="Building the backbone of fashion sourcing"
+        subtitle="GarmentBazaar connects brands, manufacturers, factories and retailers across India's fashion and lifestyle ecosystem on a single, intelligent platform."
+        photos={[
+          { file: "hero-men", alt: "Men's wear" },
+          { file: "fabric-cotton", alt: "Cotton fabric" },
+          { file: "ethnic-saree", alt: "Saree" },
+          { file: "hero-kids", alt: "Kids' wear" },
+        ]}
+        badges={["Fabric to shelf", "Brands · Mills · Retail"]}
+      />
+
+      <section className="bg-ink py-14 sm:py-16">
+        <Container>
+          <StatRibbon />
         </Container>
       </section>
 

@@ -8,7 +8,7 @@ export default function SupplierCard({ supplier }: { supplier: Supplier }) {
   const hasReviews = supplier.reviews > 0;
 
   return (
-    <div className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition hover:shadow-md">
+    <div className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
       <Link
         href={`/marketplace/${encodeURIComponent(supplier.slug)}`}
         className="relative block h-40 w-full overflow-hidden bg-[#f1efeb]"

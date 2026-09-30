@@ -1,7 +1,7 @@
+import PageHero from "@/components/PageHero";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/Container";
-import Eyebrow from "@/components/Eyebrow";
 import SupplierCard from "@/components/SupplierCard";
 import PhotoStrip from "@/components/PhotoStrip";
 import { IconArrowRight, IconCheck } from "@/components/Icons";
@@ -92,34 +92,39 @@ export default function FabricMillsPage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="bg-background">
-        <Container className="py-16 sm:py-24">
-          <Eyebrow className="text-amber-800">Fabric &amp; mills</Eyebrow>
-          <h1 className="text-balance mt-6 max-w-4xl font-serif text-5xl font-semibold leading-[1.04] tracking-tight text-ink sm:text-6xl">
-            Fabric and production, sourced from verified mills.
-          </h1>
-          <p className="text-balance mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-            Mills, fabric suppliers and garment factories sell to brands on the
-            same platform those brands use to sell to retailers.
-          </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/marketplace"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-ink px-7 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-slate-800"
-            >
-              Source fabric
-              <IconArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/signup"
-              className="inline-flex items-center justify-center rounded-full bg-amber-800 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-amber-900"
-            >
-              Sell fabric
-            </Link>
-          </div>
+            {/* Hero */}
+      <PageHero
+        tone="teal"
+        eyebrow="Fabric & mills"
+        title="Fabric and production, sourced from verified mills."
+        subtitle="Mills, fabric suppliers and garment factories sell to brands on the same platform those brands use to sell to retailers."
+        photos={[
+          { file: "fabric-denim", alt: "Denim fabric" },
+          { file: "fabric-knit", alt: "Knit fabrics" },
+          { file: "fabric-cotton", alt: "Cotton fabric" },
+          { file: "fabric-linen", alt: "Linen fabric" },
+        ]}
+        badges={["Receive quote requests", "Listings reviewed"]}
+      >
+        <Link
+          href="/marketplace"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-ink shadow-sm transition hover:bg-teal-50"
+        >
+          Source fabric
+          <IconArrowRight className="h-4 w-4" />
+        </Link>
+        <Link
+          href="/signup"
+          className="inline-flex items-center justify-center rounded-full border border-white/50 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/10"
+        >
+          Sell fabric
+        </Link>
+      </PageHero>
+
+      {/* Fabric types */}
+      <section className="bg-background pt-16">
+        <Container>
           <PhotoStrip
-            className="mt-14"
             names={[
               { file: "fabric-cotton", label: "Cotton" },
               { file: "fabric-denim", label: "Denim" },

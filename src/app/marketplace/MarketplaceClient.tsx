@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Container from "@/components/Container";
-import Eyebrow from "@/components/Eyebrow";
+import PageHero from "@/components/PageHero";
 import SupplierCard from "@/components/SupplierCard";
 import { IconSearch, IconX } from "@/components/Icons";
 import {
@@ -62,20 +62,23 @@ export default function MarketplaceClient({
   }, [query, category, region, selectedCerts, suppliers]);
 
   return (
-    <section className="bg-background py-16 sm:py-20">
-      <Container>
-        <div className="mx-auto max-w-2xl text-center">
-          <Eyebrow>Supplier Directory</Eyebrow>
-          <h1 className="text-balance mt-4 font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            Vetted manufacturers across India&apos;s textile hubs
-          </h1>
-          <p className="text-balance mx-auto mt-4 max-w-xl text-base leading-7 text-slate-600">
-            Filter by category, region, or certification, then request a
-            quote directly. Every listing shown here is a sample — connect
-            your real supplier network to replace it.
-          </p>
-        </div>
+    <>
+      <PageHero
+        tone="teal"
+        eyebrow="Supplier directory"
+        title="Manufacturers and mills across India's textile hubs"
+        subtitle="Filter by category, region or certification, then request a quote directly. Listings shown here include samples while the network grows."
+        photos={[
+          { file: "fabric-denim", alt: "Denim fabric" },
+          { file: "uniform-hospitality", alt: "Chef uniform" },
+          { file: "fabric-knit", alt: "Knit fabrics" },
+          { file: "men-tshirt", alt: "T-shirt" },
+        ]}
+        badges={["Request quotes directly", "Filter by certification"]}
+      />
 
+      <section className="bg-background pb-16 pt-10 sm:pb-20">
+      <Container>
         <div className="mx-auto mt-10 max-w-2xl">
           <div className="relative">
             <IconSearch className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
@@ -219,5 +222,6 @@ export default function MarketplaceClient({
         </div>
       </Container>
     </section>
+    </>
   );
 }

@@ -1,8 +1,9 @@
+import PageHero from "@/components/PageHero";
+import DeptBand from "@/components/DeptBand";
+import { departments } from "@/data/departments";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Container from "@/components/Container";
-import Eyebrow from "@/components/Eyebrow";
-import PhotoStrip from "@/components/PhotoStrip";
 import {
   IconArrowRight,
   IconBoxes,
@@ -92,73 +93,75 @@ const dashboard = [
 export default function BrandsPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-background">
-        <Container className="py-16 sm:py-24">
-          <div className="grid grid-cols-1 gap-14 lg:grid-cols-12 lg:items-center">
-            <div className="lg:col-span-7">
-              <Eyebrow>For brands and labels</Eyebrow>
-              <h1 className="text-balance mt-6 font-serif text-5xl font-semibold leading-[1.04] tracking-tight text-ink sm:text-6xl">
-                Put your brand on shelves across India, and beyond.
-              </h1>
-              <p className="text-balance mt-6 max-w-xl text-lg leading-8 text-slate-600">
-                Reach verified boutiques, retail chains, online sellers and
-                export buyers from one dashboard. No field sales team needed.
-              </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/signup"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-accent-600 px-7 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-accent-700"
-                >
-                  List your brand
-                  <IconArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex items-center justify-center rounded-full border border-ink px-7 py-3.5 text-base font-semibold text-ink transition hover:bg-white"
-                >
-                  Talk to our team
-                </Link>
-              </div>
-            </div>
+            {/* Hero */}
+      <PageHero
+        tone="violet"
+        eyebrow="For brands and labels"
+        title="Put your brand on shelves across India, and beyond."
+        subtitle="Reach verified boutiques, retail chains, online sellers and export buyers from one dashboard. No field sales team needed."
+        photos={[
+          { file: "men-suit", alt: "Tailored suit" },
+          { file: "women-coord", alt: "Co-ord set" },
+          { file: "bag-handbag", alt: "Handbag" },
+          { file: "ethnic-lehenga", alt: "Lehenga" },
+        ]}
+        badges={["Sell at your own MOQ", "Listings reviewed"]}
+      >
+        <Link
+          href="/signup"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-ink shadow-sm transition hover:bg-accent-50"
+        >
+          List your brand
+          <IconArrowRight className="h-4 w-4" />
+        </Link>
+        <Link
+          href="/contact"
+          className="inline-flex items-center justify-center rounded-full border border-white/50 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/10"
+        >
+          Talk to our team
+        </Link>
+      </PageHero>
 
-            <div className="lg:col-span-5">
-              <div className="rounded-3xl border border-slate-200 bg-white p-7">
-                <p className="text-sm font-semibold text-ink">
-                  Your brand dashboard shows
+      {/* Dashboard + departments */}
+      <section className="bg-background py-20 sm:py-24">
+        <Container>
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+            <div className="lg:col-span-4">
+              <div className="h-full rounded-3xl bg-ink p-7 text-white">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-300">
+                  Your brand dashboard
                 </p>
-                <ul className="mt-5 space-y-3.5">
+                <ul className="mt-6 space-y-3">
                   {dashboard.map((d) => (
                     <li
                       key={d}
-                      className="flex items-center gap-3 rounded-xl bg-background px-4 py-3 text-sm text-slate-700"
+                      className="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3 text-sm"
                     >
-                      <IconCheck className="h-4 w-4 shrink-0 text-accent-600" />
+                      <IconCheck className="h-4 w-4 shrink-0 text-accent-300" />
                       {d}
                     </li>
                   ))}
                 </ul>
                 <Link
                   href="/collections"
-                  className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 hover:text-accent-600"
+                  className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-200 hover:text-white"
                 >
                   See brands already listing
                   <IconArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </div>
+            <div className="lg:col-span-8">
+              <h2 className="font-serif text-3xl font-semibold tracking-tight text-ink">
+                Departments you can sell in
+              </h2>
+              <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+                {departments.slice(0, 4).map((d) => (
+                  <DeptBand key={d.name} dept={d} />
+                ))}
+              </div>
+            </div>
           </div>
-          <PhotoStrip
-            className="mt-14"
-            names={[
-              { file: "men-polo", label: "Menswear" },
-              { file: "women-coord", label: "Womenswear" },
-              { file: "kids-girls-dress", label: "Kidswear" },
-              { file: "ethnic-lehenga", label: "Ethnic & occasion" },
-              { file: "shoes-formal", label: "Footwear" },
-              { file: "bag-handbag", label: "Bags" },
-            ]}
-          />
         </Container>
       </section>
 
@@ -175,7 +178,9 @@ export default function BrandsPage() {
                 className="rounded-2xl border border-slate-200 bg-background p-7"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <b.icon className="h-6 w-6 text-accent-600" />
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
+                    <b.icon className="h-5 w-5" />
+                  </span>
                   {b.soon && (
                     <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-slate-600">
                       Coming soon
