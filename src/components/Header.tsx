@@ -9,17 +9,17 @@ const solutions = [
   {
     href: "/solutions/brands",
     label: "For Brands",
-    desc: "Source faster with AI-vetted manufacturers",
-  },
-  {
-    href: "/solutions/manufacturers",
-    label: "For Manufacturers & Factories",
-    desc: "Fill capacity with matched, ready-to-produce orders",
+    desc: "Sell collections wholesale to retailers across India",
   },
   {
     href: "/solutions/retailers",
     label: "For Retailers",
-    desc: "Stock the right products, automatically",
+    desc: "Buy branded stock direct, at the brand's MOQ",
+  },
+  {
+    href: "/solutions/manufacturers",
+    label: "Fabric & Mills",
+    desc: "Mills, fabric suppliers and factories selling to brands",
   },
 ];
 

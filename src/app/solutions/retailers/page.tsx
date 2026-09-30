@@ -1,60 +1,220 @@
 import type { Metadata } from "next";
-import SolutionPage from "@/components/SolutionPage";
-import {
-  IconBoxes,
-  IconTarget,
-  IconTrendingUp,
-  IconTruck,
-} from "@/components/Icons";
+import Link from "next/link";
+import Container from "@/components/Container";
+import Eyebrow from "@/components/Eyebrow";
+import CollectionCard from "@/components/CollectionCard";
+import { IconArrowRight } from "@/components/Icons";
+import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Solutions for Retailers",
+  title: "For Retailers",
   description:
-    "GarmentBazaar helps retailers stock the right products automatically with AI-curated assortments and inventory optimization.",
+    "Buy branded fashion and lifestyle stock at wholesale price, direct from brands, at each brand's minimum order quantity.",
 };
 
+// The live collections strip reads from the database, so render per request.
+export const dynamic = "force-dynamic";
+
+const buyers = [
+  {
+    title: "Boutiques and MBOs",
+    desc: "Mix brands in one place and order only the MOQ each brand sets.",
+  },
+  {
+    title: "Retail chains",
+    desc: "Source seasonal lines and larger quantities direct from brands.",
+  },
+  {
+    title: "Online and D2C sellers",
+    desc: "Collections come with real product photos you can review before ordering.",
+  },
+  {
+    title: "Export buyers",
+    desc: "Tell us what you need and we'll connect you with brands and factories.",
+  },
+];
+
+const steps = [
+  {
+    number: "01",
+    title: "Create a retailer account",
+    desc: "Sign up with your store details. It's free.",
+  },
+  {
+    number: "02",
+    title: "Browse collections",
+    desc: "Filter by category and compare price per unit and MOQ.",
+  },
+  {
+    number: "03",
+    title: "Order direct from the brand",
+    desc: "Place your order at the brand's MOQ. No middlemen.",
+  },
+  {
+    number: "04",
+    title: "Track it in your dashboard",
+    desc: "Your full order history stays in one place for reorders.",
+  },
+];
+
 export default function RetailersPage() {
+  const fresh = listApprovedCollections()
+    .map(collectionRowToCollection)
+    .slice(0, 4);
+
   return (
-    <SolutionPage
-      eyebrow="For Retailers"
-      title="Stock the right products, automatically"
-      subtitle="Get AI-curated assortments from vetted brands and manufacturers, tuned to regional demand, with inventory recommendations that keep shelves full without overstocking."
-      painPoints={[
-        "Assortment decisions are based on gut feel rather than regional demand data",
-        "Discovering new brands and products means sifting through countless catalogs",
-        "Reorder timing is reactive, leading to stockouts or excess inventory",
-        "Little insight into which products are outperforming across similar stores",
-      ]}
-      solutionPoints={[
-        "AI recommends assortments based on regional demand patterns and category performance",
-        "A curated shortlist of relevant products replaces manual catalog browsing",
-        "Automated reorder point recommendations reduce stockouts and overstock",
-        "Performance benchmarking shows what's working across comparable retailers",
-      ]}
-      features={[
-        {
-          icon: IconTarget,
-          title: "Retailer Recommendations",
-          desc: "Get matched with fast-moving, regionally relevant products from vetted brands and manufacturers.",
-        },
-        {
-          icon: IconBoxes,
-          title: "Inventory Optimization",
-          desc: "SKU-level demand forecasting drives reorder point and allocation recommendations.",
-        },
-        {
-          icon: IconTrendingUp,
-          title: "Performance Benchmarking",
-          desc: "See how products and categories are performing across similar retail partners.",
-        },
-        {
-          icon: IconTruck,
-          title: "Supply Chain Visibility",
-          desc: "Track incoming orders and shipments end-to-end so replenishment stays on schedule.",
-        },
-      ]}
-      ctaTitle="Build a smarter assortment"
-      ctaSubtitle="Tell us about your stores and category mix, and we'll show you how AI-curated sourcing keeps shelves full."
-    />
+    <>
+      {/* Hero */}
+      <section className="bg-background">
+        <Container className="py-16 sm:py-24">
+          <Eyebrow className="text-rose-700">For retailers and buyers</Eyebrow>
+          <h1 className="text-balance mt-6 max-w-4xl font-serif text-5xl font-semibold leading-[1.04] tracking-tight text-ink sm:text-6xl">
+            Branded stock for your store, at wholesale price.
+          </h1>
+          <p className="text-balance mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+            Buy direct from verified brands at the MOQ they set, and get it
+            delivered to your door. No trips to the mandi.
+          </p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/collections"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-rose-600 px-7 py-3.5 text-base font-semibold text-white shadow-sm transition hover:bg-rose-700"
+            >
+              Start buying
+              <IconArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center rounded-full border border-ink px-7 py-3.5 text-base font-semibold text-ink transition hover:bg-white"
+            >
+              Create a free account
+            </Link>
+          </div>
+
+          <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {buyers.map((b) => (
+              <div
+                key={b.title}
+                className="rounded-2xl border border-slate-200 bg-white p-6"
+              >
+                <h2 className="text-lg font-semibold text-ink">{b.title}</h2>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{b.desc}</p>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Live collections */}
+      {fresh.length > 0 && (
+        <section className="bg-white py-20 sm:py-24">
+          <Container>
+            <div className="flex items-end justify-between gap-6">
+              <h2 className="font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+                Fresh from brands
+              </h2>
+              <Link
+                href="/collections"
+                className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-rose-700 hover:text-rose-600"
+              >
+                All collections
+                <IconArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {fresh.map((c) => (
+                <CollectionCard key={c.slug} collection={c} />
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
+
+      {/* GB Credit */}
+      <section className="bg-background py-20 sm:py-24">
+        <Container>
+          <div className="flex flex-col gap-10 rounded-3xl bg-ink p-8 sm:p-12 lg:flex-row lg:items-center">
+            <div className="flex-1">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-rose-300">
+                  GB Credit
+                </span>
+                <span className="rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
+                  Coming soon
+                </span>
+              </div>
+              <h2 className="text-balance mt-4 font-serif text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+                Stock up today. Pay after it sells.
+              </h2>
+              <p className="mt-4 max-w-xl text-base leading-7 text-slate-400">
+                Credit periods for verified retailers through lending partners,
+                chosen at checkout.
+              </p>
+            </div>
+            <div className="flex flex-col gap-4 lg:w-80">
+              <div className="grid grid-cols-3 gap-2">
+                {["30 days", "60 days", "90 days"].map((d) => (
+                  <span
+                    key={d}
+                    className="rounded-xl border border-white/20 py-3 text-center text-sm font-semibold text-white"
+                  >
+                    {d}
+                  </span>
+                ))}
+              </div>
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-ink transition hover:bg-slate-100"
+              >
+                Tell me when it launches
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* How buying works */}
+      <section className="bg-white py-20 sm:py-24">
+        <Container>
+          <h2 className="font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+            How buying works
+          </h2>
+          <ol className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {steps.map((s) => (
+              <li key={s.number} className="border-t-2 border-ink pt-5">
+                <p className="font-serif text-lg font-semibold text-rose-700">
+                  {s.number}
+                </p>
+                <h3 className="mt-2 text-xl font-semibold text-ink">{s.title}</h3>
+                <p className="mt-2 text-base leading-7 text-slate-600">{s.desc}</p>
+              </li>
+            ))}
+          </ol>
+        </Container>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-rose-700">
+        <Container className="flex flex-col gap-8 py-16 sm:py-20 lg:flex-row lg:items-center lg:justify-between">
+          <h2 className="text-balance font-serif text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            Open your buyer account
+          </h2>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link
+              href="/signup"
+              className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-ink transition hover:bg-slate-100"
+            >
+              Create account
+            </Link>
+            <Link
+              href="/collections"
+              className="inline-flex items-center justify-center rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+            >
+              Browse collections
+            </Link>
+          </div>
+        </Container>
+      </section>
+    </>
   );
 }
