@@ -783,3 +783,63 @@ export function listAllOrders(): (OrderRow & {
     )
     .all() as unknown as (OrderRow & { collection_name: string; retailer_email: string })[];
 }
+
+// ---------- Growth numbers for the admin marketing hub (admin-only page).
+
+export interface GrowthSnapshot {
+  thisWeek: Record<string, number>;
+  lastWeek: Record<string, number>;
+  totals: Record<string, number>;
+  pendingCollections: number;
+  pendingSuppliers: number;
+  retailersNotOnboarded: number;
+  retailersOnboardedNoOrder: number;
+  brandsWithoutCollections: {
+    id: number;
+    name: string;
+    company_name: string | null;
+    city: string | null;
+    phone: string | null;
+    created_at: string;
+  }[];
+}
+
+export function getGrowthSnapshot(): GrowthSnapshot {
+  const db = getDb();
+  const n = (sql: string) => Number((db.prepare(sql).get() as { n: number | null }).n ?? 0);
+  const window = (from: string, to: string) => ({
+    retailerSignups: n(`SELECT COUNT(*) n FROM users WHERE role='retailer' AND created_at >= datetime('now','${from}') AND created_at < datetime('now','${to}')`),
+    brandSignups: n(`SELECT COUNT(*) n FROM users WHERE role='brand' AND created_at >= datetime('now','${from}') AND created_at < datetime('now','${to}')`),
+    manufacturerSignups: n(`SELECT COUNT(*) n FROM users WHERE role='manufacturer' AND created_at >= datetime('now','${from}') AND created_at < datetime('now','${to}')`),
+    newCollections: n(`SELECT COUNT(*) n FROM collections WHERE owner_user_id IS NOT NULL AND created_at >= datetime('now','${from}') AND created_at < datetime('now','${to}')`),
+    orders: n(`SELECT COUNT(*) n FROM orders WHERE created_at >= datetime('now','${from}') AND created_at < datetime('now','${to}')`),
+    paidRupees: Math.round(n(`SELECT SUM(total_amount_paise) n FROM orders WHERE status='paid' AND created_at >= datetime('now','${from}') AND created_at < datetime('now','${to}')`) / 100),
+    quoteRequests: n(`SELECT COUNT(*) n FROM rfqs WHERE created_at >= datetime('now','${from}') AND created_at < datetime('now','${to}')`),
+  });
+
+  return {
+    thisWeek: window("-7 days", "+1 day"),
+    lastWeek: window("-14 days", "-7 days"),
+    totals: {
+      retailers: n("SELECT COUNT(*) n FROM users WHERE role='retailer'"),
+      brands: n("SELECT COUNT(*) n FROM users WHERE role='brand'"),
+      manufacturers: n("SELECT COUNT(*) n FROM users WHERE role='manufacturer'"),
+      liveCollections: n("SELECT COUNT(*) n FROM collections WHERE status='approved'"),
+      brandCollections: n("SELECT COUNT(*) n FROM collections WHERE status='approved' AND owner_user_id IS NOT NULL"),
+      orders: n("SELECT COUNT(*) n FROM orders"),
+    },
+    pendingCollections: n("SELECT COUNT(*) n FROM collections WHERE status='pending'"),
+    pendingSuppliers: n("SELECT COUNT(*) n FROM suppliers WHERE status='pending'"),
+    retailersNotOnboarded: n("SELECT COUNT(*) n FROM users WHERE role='retailer' AND onboarding IS NULL"),
+    retailersOnboardedNoOrder: n(
+      "SELECT COUNT(*) n FROM users u WHERE role='retailer' AND onboarding IS NOT NULL AND NOT EXISTS (SELECT 1 FROM orders o WHERE o.retailer_user_id = u.id)",
+    ),
+    brandsWithoutCollections: db
+      .prepare(
+        `SELECT id, name, company_name, city, phone, created_at FROM users u
+         WHERE role='brand' AND NOT EXISTS (SELECT 1 FROM collections c WHERE c.owner_user_id = u.id)
+         ORDER BY created_at DESC LIMIT 25`,
+      )
+      .all() as unknown as GrowthSnapshot["brandsWithoutCollections"],
+  };
+}

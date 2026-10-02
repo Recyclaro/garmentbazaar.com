@@ -24,8 +24,18 @@ agent works; the scheduled task only points here.
   Never present them as live.
 
 Never invent statistics, customer counts, testimonials, discounts,
-partnerships, delivery times or prices. Live numbers come only from the
-metrics endpoint. Never name or compare competitors.
+partnerships, delivery times or prices. Never name or compare competitors.
+
+## Important: this repo is public
+
+Anything committed here is visible to everyone on GitHub. Commit only
+content meant to be public (guides, social drafts, the weekly activity
+summary). Never commit prospect names, email addresses, message text,
+or business numbers (signups, orders, revenue). Those live in Gmail and
+in the site's private admin hub (`/dashboard/admin/marketing`).
+
+The agent cannot reach garmentbazaar.com from the cloud, so it works
+from this repo and the web, not from live site data.
 
 ## Daily jobs (in this order)
 
@@ -50,47 +60,56 @@ metrics endpoint. Never name or compare competitors.
 
 - Write `marketing/social/<YYYY-MM-DD>.json` (`SocialBatch`) with 3-4
   posts: one WhatsApp broadcast (short, friendly, can mix Hindi/English),
-  one Instagram caption with 5-8 hashtags, one LinkedIn post (for brands
-  or retailers, alternate days), optionally one Facebook post.
-- Promote today's guide and one or two real collections from
-  `newestCollections` in the metrics feed, with their real price per
-  piece and MOQ. Links must be `https://garmentbazaar.com/...` URLs.
-- `image` (optional) must be an existing product image stem.
+  one Instagram caption with 5-8 hashtags, one LinkedIn post (alternate
+  days between retailers and brands), optionally one Facebook post.
+- Promote today's guide, a department page (`/wholesale/<slug>`), a
+  budget link (`/collections?price=under-500`) or a free tool (stock
+  planner, margin calculator, mandi trip calculator on the homepage).
+- Do not advertise individual collections, brands or prices: the agent
+  cannot see live listings, and the catalogue in `src/data` includes
+  demo listings.
+- Links must be `https://garmentbazaar.com/...` URLs. `image` (optional)
+  must be an existing product image stem.
 
-### 3. Outreach (drafts only, never sent)
+### 3. Outreach (Gmail drafts only, never sent)
 
 - Find 5 new prospects. Alternate days: retailers (boutiques,
   multi-brand stores in Tier 2-4 towns) and brands (Indian apparel and
   lifestyle labels that sell through retailers). On Fridays, 2 of the 5
   may be mills or manufacturers.
 - Use only business contact details the business itself publishes on
-  its website or official listing (e.g. info@ or sales@ addresses or a
-  contact form). Never collect personal phone numbers, personal emails
-  or social media DMs. Skip a business if no public business contact
-  exists.
-- Skip anyone already in `marketing/outreach/*.json`.
-- For each prospect with a public business email, create a **Gmail
-  draft** (do not send) from the account owner. Short (under 150 words),
-  personal to their business, one clear ask (create a free account at
+  its website or official listing (e.g. info@ or sales@ addresses).
+  Never collect personal phone numbers, personal emails or social media
+  DMs. Skip a business if no public business email exists.
+- Subject line is always `GarmentBazaar for <Business name>`. Before
+  drafting, search Gmail (drafts and sent) for that subject and skip any
+  business already contacted.
+- Create a **Gmail draft** (do not send) for each: under 150 words,
+  personal to their business, one clear ask (free account at
   `https://garmentbazaar.com/signup?role=retailer` or `?role=brand`),
   plain text, signed "Team GarmentBazaar", ending with: "Not interested?
   Just reply and we won't write again."
-- Log all 5 in `marketing/outreach/<YYYY-MM-DD>.json` (`OutreachBatch`),
-  `status` = `gmail-draft` or `logged` (no email found or Gmail not
-  available). Do not store email addresses or message bodies in the repo.
+- Do not write prospects to the repo. List them (business, city,
+  website) in the run summary only.
+- If Gmail is not available in the run, list the 5 prospects with their
+  public contact page in the run summary instead.
 
-### 4. Weekly growth report (Mondays only)
+### 4. Weekly activity summary (Mondays only)
 
-- Fetch the metrics feed and compare with the previous report in
-  `marketing/reports/`.
-- Write `marketing/reports/<YYYY-MM-DD>.json` (`GrowthReport`): `period`
-  like "Week of 6 Oct 2026", 6-10 metrics (numbers only), 3-5
-  highlights, 3-5 concrete next actions for the founder.
-- End the run summary with the report's highlights and actions.
+- Write `marketing/reports/<YYYY-MM-DD>.json` (`GrowthReport`) about the
+  agent's own work over the past 7 days: `period` like "Week of 6 Oct
+  2026"; `metrics` with activity numbers only (guidesPublished,
+  socialPosts, outreachDrafts, backlogTopicsLeft); 3-5 `highlights`
+  (which guides went live and why they matter); 3-5 `nextActions`
+  (topics and outreach focus for the coming week).
+- No business numbers, no prospect names.
+- Put the same summary at the end of the run summary, plus a reminder to
+  check live numbers at https://garmentbazaar.com/dashboard/admin/marketing.
 
 ## Publishing rules
 
-- Only add or edit files in `src/content/guides/` and `marketing/`.
+- Only add or edit files in `src/content/guides/`, `marketing/social/`,
+  `marketing/reports/` and `marketing/guide-backlog.json`.
   Never change application code, config, dependencies or other content.
 - `npm run content:check` must pass before every commit.
 - One commit per run, message starting `marketing: `.

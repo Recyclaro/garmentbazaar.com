@@ -41,21 +41,9 @@ export interface SocialBatch {
   posts: SocialPost[];
 }
 
-export interface Prospect {
-  name: string;
-  type: "brand" | "retailer" | "manufacturer";
-  city: string;
-  website: string;
-  contactUrl: string;
-  why: string;
-  status: "gmail-draft" | "logged";
-}
-
-export interface OutreachBatch {
-  date: string;
-  prospects: Prospect[];
-}
-
+// Weekly marketing activity summary written by the agent. Activity only
+// (guides, drafts, outreach counts): the repo is public, so business
+// numbers stay on the live site's admin hub.
 export interface GrowthReport {
   date: string;
   period: string;

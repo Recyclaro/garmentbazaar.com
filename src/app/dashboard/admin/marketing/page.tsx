@@ -1,8 +1,13 @@
 import Link from "next/link";
 import { requireRole } from "@/lib/dal";
-import { guides, outreachBatches, reports, socialBatches } from "@/content/generated";
-import { SectionHead, StatTile } from "@/components/DashUI";
+import { getGrowthSnapshot } from "@/lib/db";
+import { guides, reports, socialBatches } from "@/content/generated";
+import { SectionHead } from "@/components/DashUI";
 import CopyButton from "@/components/CopyButton";
+
+// Admin-only. Growth numbers are computed here from the live database and
+// never leave the server; the agent's public-safe output (guides, social
+// drafts, weekly activity) comes from the repo.
 
 const channelStyle: Record<string, string> = {
   whatsapp: "bg-green-50 text-green-800 ring-green-200",
@@ -11,24 +16,66 @@ const channelStyle: Record<string, string> = {
   facebook: "bg-indigo-50 text-indigo-800 ring-indigo-200",
 };
 
+const metricLabels: Record<string, string> = {
+  retailerSignups: "Retailer signups",
+  brandSignups: "Brand signups",
+  manufacturerSignups: "Manufacturer signups",
+  newCollections: "Collections from brands",
+  orders: "Orders",
+  paidRupees: "Paid value (₹)",
+  quoteRequests: "Quote requests",
+};
+
 function when(d: string) {
-  return new Date(d + "T00:00:00Z").toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+  return new Date(d.length === 10 ? d + "T00:00:00Z" : d.replace(" ", "T") + "Z").toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+  });
+}
+
+function Delta({ now, before }: { now: number; before: number }) {
+  if (now === before) return <span className="text-xs text-slate-400">same as last week</span>;
+  const up = now > before;
+  return (
+    <span className={`text-xs font-semibold ${up ? "text-green-700" : "text-red-700"}`}>
+      {up ? "▲" : "▼"} {Math.abs(now - before).toLocaleString("en-IN")} vs last week
+    </span>
+  );
 }
 
 export default async function MarketingHubPage() {
   await requireRole("admin");
-  const report = reports[0];
+  const g = getGrowthSnapshot();
   const today = socialBatches[0];
-  const prospects = outreachBatches.flatMap((b) => b.prospects.map((p) => ({ ...p, date: b.date })));
+  const report = reports[0];
+
+  // Plain rules that turn the numbers into today's to-do list.
+  const actions: { text: string; href?: string }[] = [];
+  if (g.pendingCollections + g.pendingSuppliers > 0)
+    actions.push({
+      text: `Approve ${g.pendingCollections + g.pendingSuppliers} listing${g.pendingCollections + g.pendingSuppliers === 1 ? "" : "s"} waiting for review. Brands go quiet if they wait.`,
+      href: "/dashboard/admin",
+    });
+  if (g.brandsWithoutCollections.length > 0)
+    actions.push({
+      text: `${g.brandsWithoutCollections.length} brand${g.brandsWithoutCollections.length === 1 ? " has" : "s have"} signed up but not listed a collection. WhatsApp them below and offer to help.`,
+    });
+  if (g.retailersNotOnboarded > 0)
+    actions.push({ text: `${g.retailersNotOnboarded} retailer${g.retailersNotOnboarded === 1 ? "" : "s"} skipped setup. They see generic picks until they tell us what they stock.` });
+  if (g.retailersOnboardedNoOrder > 0)
+    actions.push({ text: `${g.retailersOnboardedNoOrder} set-up retailer${g.retailersOnboardedNoOrder === 1 ? " hasn't" : "s haven't"} ordered yet. Share a low-MOQ pick with them.` });
+  if (g.totals.brandCollections < 20)
+    actions.push({ text: `Only ${g.totals.brandCollections} live collections come from real brands. Brand supply is the bottleneck: focus outreach on brands this week.` });
+  if (today) actions.push({ text: "Post today's ready-made social drafts below (tap Copy)." });
 
   return (
     <div className="space-y-10">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#b0164f]">Marketing agent</p>
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#b0164f]">Growth</p>
           <h2 className="font-serif text-3xl font-semibold text-ink">Marketing hub</h2>
           <p className="mt-1 text-sm text-slate-600">
-            Everything the daily agent has produced. Updated after each run.
+            Live numbers from the platform, plus what the daily marketing agent produced.
           </p>
         </div>
         <Link href="/dashboard/admin" className="text-sm font-semibold text-accent-700 hover:underline">
@@ -36,51 +83,84 @@ export default async function MarketingHubPage() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <StatTile label="Guides live" value={guides.length} hint={guides[0] ? `Latest ${when(guides[0].date)}` : undefined} tone="bg-[#b0164f]" />
-        <StatTile label="Social drafts" value={socialBatches.reduce((n, b) => n + b.posts.length, 0)} hint="Last 14 days" tone="bg-[#f4c430]" />
-        <StatTile label="Prospects contacted" value={prospects.length} hint={`${prospects.filter((p) => p.status === "gmail-draft").length} Gmail drafts`} tone="bg-[#0f766e]" />
-        <StatTile label="Reports" value={reports.length} tone="bg-[#16335e]" />
-      </div>
-
-      {/* Weekly report */}
+      {/* This week */}
       <section>
-        <SectionHead title={report ? `Growth report · ${report.period}` : "Growth report"} />
-        {report ? (
-          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
-            <div className="rounded-2xl bg-white p-5 ring-1 ring-slate-200 lg:col-span-1">
-              <dl className="grid grid-cols-2 gap-3">
-                {Object.entries(report.metrics).map(([k, v]) => (
-                  <div key={k}>
-                    <dt className="text-xs text-slate-500">{k}</dt>
-                    <dd className="text-xl font-semibold text-ink">{v.toLocaleString("en-IN")}</dd>
-                  </div>
-                ))}
-              </dl>
+        <SectionHead title="Last 7 days" />
+        <div className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {Object.entries(g.thisWeek).map(([k, v]) => (
+            <div key={k} className="rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+              <p className="text-xs font-medium text-slate-500">{metricLabels[k] ?? k}</p>
+              <p className="mt-1 font-serif text-3xl font-semibold text-ink">{v.toLocaleString("en-IN")}</p>
+              <Delta now={v} before={g.lastWeek[k] ?? 0} />
             </div>
-            <div className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
-              <p className="text-sm font-semibold text-ink">Highlights</p>
-              <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-slate-700">
-                {report.highlights.map((h) => (
-                  <li key={h}>{h}</li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-2xl bg-amber-50 p-5 ring-1 ring-amber-200">
-              <p className="text-sm font-semibold text-amber-900">Do next</p>
-              <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-amber-900">
-                {report.nextActions.map((h) => (
-                  <li key={h}>{h}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
+          ))}
+        </div>
+        <p className="mt-3 text-xs text-slate-500">
+          All time: {g.totals.retailers} retailers · {g.totals.brands} brands · {g.totals.manufacturers} manufacturers ·{" "}
+          {g.totals.liveCollections} live collections ({g.totals.brandCollections} from brands) · {g.totals.orders} orders
+        </p>
+      </section>
+
+      {/* Do next */}
+      <section>
+        <SectionHead title="Do next" />
+        {actions.length ? (
+          <ol className="mt-4 space-y-2">
+            {actions.map((a, i) => (
+              <li key={i} className="flex items-start gap-3 rounded-2xl bg-amber-50 p-4 text-sm text-amber-950 ring-1 ring-amber-200">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-ink">
+                  {i + 1}
+                </span>
+                <span className="flex-1">{a.text}</span>
+                {a.href && (
+                  <Link href={a.href} className="shrink-0 font-semibold underline">
+                    Open
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ol>
         ) : (
-          <p className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-500">
-            The first weekly report arrives on Monday.
-          </p>
+          <p className="mt-4 rounded-2xl bg-green-50 p-4 text-sm text-green-900 ring-1 ring-green-200">Nothing urgent today.</p>
         )}
       </section>
+
+      {/* Follow up */}
+      {g.brandsWithoutCollections.length > 0 && (
+        <section>
+          <SectionHead title="Brands to help list" />
+          <ul className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+            {g.brandsWithoutCollections.map((b) => {
+              const msg = encodeURIComponent(
+                `Hi ${b.name.split(/\s+/)[0]}, this is the GarmentBazaar team. Thanks for joining! Can we help you list your first collection? It takes about 5 minutes: https://garmentbazaar.com/dashboard/brand/new`,
+              );
+              return (
+                <li key={b.id} className="flex items-center justify-between gap-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200">
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold text-ink">{b.company_name || b.name}</p>
+                    <p className="text-xs text-slate-500">
+                      {b.name}
+                      {b.city ? ` · ${b.city}` : ""} · joined {when(b.created_at)}
+                    </p>
+                  </div>
+                  {b.phone ? (
+                    <a
+                      href={`https://wa.me/91${b.phone}?text=${msg}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 rounded-full bg-green-600 px-4 py-2 text-xs font-semibold text-white hover:bg-green-700"
+                    >
+                      WhatsApp
+                    </a>
+                  ) : (
+                    <span className="shrink-0 text-xs text-slate-400">No mobile</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       {/* Social */}
       <section>
@@ -109,61 +189,53 @@ export default async function MarketingHubPage() {
         )}
       </section>
 
-      {/* Outreach */}
+      {/* Agent weekly activity */}
       <section>
-        <SectionHead title="Outreach log" />
-        {prospects.length ? (
-          <div className="mt-4 overflow-x-auto rounded-2xl bg-white ring-1 ring-slate-200">
-            <table className="w-full min-w-[640px] text-left text-sm">
-              <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
-                <tr>
-                  <th className="px-4 py-3">Date</th>
-                  <th className="px-4 py-3">Business</th>
-                  <th className="px-4 py-3">Type</th>
-                  <th className="px-4 py-3">City</th>
-                  <th className="px-4 py-3">Why</th>
-                  <th className="px-4 py-3">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {prospects.slice(0, 60).map((p, i) => (
-                  <tr key={`${p.name}-${i}`}>
-                    <td className="px-4 py-3 text-slate-500">{when(p.date)}</td>
-                    <td className="px-4 py-3">
-                      <a href={p.website} target="_blank" rel="noopener noreferrer" className="font-medium text-ink hover:underline">
-                        {p.name}
-                      </a>
-                    </td>
-                    <td className="px-4 py-3 capitalize text-slate-600">{p.type}</td>
-                    <td className="px-4 py-3 text-slate-600">{p.city}</td>
-                    <td className="max-w-xs px-4 py-3 text-slate-600">{p.why}</td>
-                    <td className="px-4 py-3">
-                      <a href={p.contactUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-accent-700 hover:underline">
-                        {p.status === "gmail-draft" ? "Draft in Gmail" : "Contact page"}
-                      </a>
-                    </td>
-                  </tr>
+        <SectionHead title={report ? `Agent activity · ${report.period}` : "Agent activity"} />
+        {report ? (
+          <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <dl className="grid grid-cols-2 gap-3 rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+              {Object.entries(report.metrics).map(([k, v]) => (
+                <div key={k}>
+                  <dt className="text-xs text-slate-500">{k}</dt>
+                  <dd className="text-xl font-semibold text-ink">{v}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+              <p className="text-sm font-semibold text-ink">Done this week</p>
+              <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-slate-700">
+                {report.highlights.map((h) => (
+                  <li key={h}>{h}</li>
                 ))}
-              </tbody>
-            </table>
+              </ul>
+            </div>
+            <div className="rounded-2xl bg-white p-5 ring-1 ring-slate-200">
+              <p className="text-sm font-semibold text-ink">Planned next</p>
+              <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-slate-700">
+                {report.nextActions.map((h) => (
+                  <li key={h}>{h}</li>
+                ))}
+              </ul>
+            </div>
           </div>
         ) : (
           <p className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-500">
-            Prospects appear after the agent&apos;s first run. Emails wait as drafts in Gmail; nothing is sent without you.
+            The agent&apos;s first weekly summary arrives on Monday. Outreach emails wait as drafts in your Gmail.
           </p>
         )}
       </section>
 
       {/* Guides */}
       <section>
-        <SectionHead title="Published guides" />
+        <SectionHead title={`Published guides (${guides.length})`} />
         <ul className="mt-4 space-y-2">
-          {guides.map((g) => (
-            <li key={g.slug} className="flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 ring-1 ring-slate-200">
-              <Link href={`/guides/${g.slug}`} className="min-w-0 truncate font-medium text-ink hover:underline">
-                {g.title}
+          {guides.map((x) => (
+            <li key={x.slug} className="flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-3 ring-1 ring-slate-200">
+              <Link href={`/guides/${x.slug}`} className="min-w-0 truncate font-medium text-ink hover:underline">
+                {x.title}
               </Link>
-              <span className="shrink-0 text-xs text-slate-500">{when(g.date)}</span>
+              <span className="shrink-0 text-xs text-slate-500">{when(x.date)}</span>
             </li>
           ))}
         </ul>
