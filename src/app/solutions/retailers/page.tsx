@@ -1,4 +1,6 @@
 import PageHero from "@/components/PageHero";
+import MarginCalculator from "@/components/MarginCalculator";
+import { priceBands } from "@/lib/priceBands";
 import DeptMarquee from "@/components/DeptMarquee";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -47,8 +49,8 @@ const steps = [
   },
   {
     number: "02",
-    title: "Browse collections",
-    desc: "Filter by category and compare price per unit and MOQ.",
+    title: "Pick your stock",
+    desc: "Filter by department and budget. Price and MOQ are on every card.",
   },
   {
     number: "03",
@@ -62,6 +64,13 @@ const steps = [
   },
 ];
 
+const budgetTones = [
+  "bg-[#f4c430] text-ink",
+  "bg-[#b0164f] text-white",
+  "bg-[#0f766e] text-white",
+  "bg-[#16335e] text-white",
+];
+
 export default function RetailersPage() {
   const fresh = listApprovedCollections()
     .map(collectionRowToCollection)
@@ -73,15 +82,15 @@ export default function RetailersPage() {
       <PageHero
         tone="rose"
         eyebrow="For retailers and buyers"
-        title="Branded stock for your store, at wholesale price."
-        subtitle="Buy direct from verified brands at the MOQ they set, and get it delivered to your door. No trips to the mandi."
+        title="Your store. Their brands. Wholesale prices."
+        subtitle="Restock from reviewed brands in a few taps. See the price per piece before you order, buy only the MOQ the brand sets, and track every order in one place."
         photos={[
           { file: "women-dress", alt: "Dress" },
           { file: "men-polo", alt: "Polo shirt" },
           { file: "shoes-sports", alt: "Sports shoes" },
           { file: "kids-girls-dress", alt: "Girls dress" },
         ]}
-        badges={["Buy at the brand's MOQ", "No middlemen"]}
+        badges={["Price per piece up front", "No middlemen"]}
       >
         <Link
           href="/collections"
@@ -128,7 +137,7 @@ export default function RetailersPage() {
           <Container>
             <div className="flex items-end justify-between gap-6">
               <h2 className="font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-                Fresh from brands
+                Latest from brands
               </h2>
               <Link
                 href="/collections"
@@ -146,6 +155,34 @@ export default function RetailersPage() {
           </Container>
         </section>
       )}
+
+      {/* Shop by budget */}
+      <section className="bg-background py-20 sm:py-24">
+        <Container>
+          <h2 className="font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+            Shop by budget
+          </h2>
+          <div className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {priceBands.map((b, i) => (
+              <Link
+                key={b.key}
+                href={`/collections?price=${b.key}`}
+                className={`group rounded-2xl p-6 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 ${budgetTones[i]}`}
+              >
+                <p className="text-sm font-semibold opacity-80">Per piece</p>
+                <p className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">{b.label}</p>
+                <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold">
+                  Shop now
+                  <IconArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+                </span>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-14">
+            <MarginCalculator />
+          </div>
+        </Container>
+      </section>
 
       {/* GB Credit */}
       <section className="bg-background py-20 sm:py-24">
@@ -194,7 +231,7 @@ export default function RetailersPage() {
       <section className="bg-white py-20 sm:py-24">
         <Container>
           <h2 className="font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            How buying works
+            Restock in four taps
           </h2>
           <ol className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((s) => (
@@ -214,7 +251,7 @@ export default function RetailersPage() {
       <section className="bg-rose-700">
         <Container className="flex flex-col gap-8 py-16 sm:py-20 lg:flex-row lg:items-center lg:justify-between">
           <h2 className="text-balance font-serif text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-            Open your buyer account
+            Your next bestseller is already here.
           </h2>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link

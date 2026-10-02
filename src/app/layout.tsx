@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
 import { getCurrentUser } from "@/lib/dal";
 
@@ -68,6 +69,7 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-ink">
+        <AnnouncementBar />
         <Header user={user ? { name: user.name, role: user.role } : null} />
         <main className="flex-1">{children}</main>
         <Footer />

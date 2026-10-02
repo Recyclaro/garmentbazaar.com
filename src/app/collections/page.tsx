@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import CollectionsClient from "./CollectionsClient";
 import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
 import { collectionCategories } from "@/data/collections";
+import { priceBands } from "@/lib/priceBands";
 
 export const metadata: Metadata = {
-  title: "Collections",
+  title: "Shop Wholesale Collections",
   description:
     "Browse fashion and lifestyle collections listed directly by brands. Filter by category, then order at the brand's minimum order quantity (MOQ).",
 };
@@ -18,14 +19,18 @@ export default async function CollectionsPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { category } = await searchParams;
+  const { category, price, sort } = await searchParams;
   // ?category=Footwear opens the page pre-filtered; anything unknown is ignored.
   const initialCategory = collectionCategories.find((c) => c === category) ?? "All";
+  // ?price=under-500 opens it on a budget band.
+  const initialPrice = priceBands.find((b) => b.key === price)?.key ?? "all";
   const collections = listApprovedCollections().map(collectionRowToCollection);
   return (
     <CollectionsClient
       collections={collections}
       initialCategory={initialCategory}
+      initialPrice={initialPrice}
+      initialSort={sort === "price-asc" || sort === "price-desc" || sort === "moq-asc" ? sort : "new"}
     />
   );
 }

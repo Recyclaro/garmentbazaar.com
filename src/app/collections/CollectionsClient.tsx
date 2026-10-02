@@ -6,50 +6,75 @@ import PageHero from "@/components/PageHero";
 import CollectionCard from "@/components/CollectionCard";
 import { IconSearch, IconX } from "@/components/Icons";
 import { collectionCategories, type Collection, type CollectionCategory } from "@/data/collections";
+import { priceBands, inBand } from "@/lib/priceBands";
+
+type SortKey = "new" | "price-asc" | "price-desc" | "moq-asc";
+
+const sorts: { key: SortKey; label: string }[] = [
+  { key: "new", label: "Newest" },
+  { key: "price-asc", label: "Price: low to high" },
+  { key: "price-desc", label: "Price: high to low" },
+  { key: "moq-asc", label: "Smallest MOQ" },
+];
 
 export default function CollectionsClient({
   collections,
   initialCategory = "All",
+  initialPrice = "all",
+  initialSort = "new",
 }: {
   collections: Collection[];
   initialCategory?: CollectionCategory | "All";
+  initialPrice?: string;
+  initialSort?: SortKey;
 }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<CollectionCategory | "All">(initialCategory);
+  const [price, setPrice] = useState<string>(initialPrice);
+  const [sort, setSort] = useState<SortKey>(initialSort);
 
   function clearFilters() {
     setQuery("");
     setCategory("All");
+    setPrice("all");
   }
 
-  const hasActiveFilters = query !== "" || category !== "All";
+  const hasActiveFilters = query !== "" || category !== "All" || price !== "all";
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return collections.filter((c) => {
+    const band = priceBands.find((b) => b.key === price);
+    const list = collections.filter((c) => {
       if (category !== "All" && c.category !== category) return false;
+      if (band && !inBand(c.pricePaise, band)) return false;
       if (q) {
-        const haystack = [c.name, c.category, c.description].join(" ").toLowerCase();
+        const haystack = [c.name, c.brandName, c.category, c.description]
+          .join(" ")
+          .toLowerCase();
         if (!haystack.includes(q)) return false;
       }
       return true;
     });
-  }, [query, category, collections]);
+    if (sort === "price-asc") return [...list].sort((a, b) => a.pricePaise - b.pricePaise);
+    if (sort === "price-desc") return [...list].sort((a, b) => b.pricePaise - a.pricePaise);
+    if (sort === "moq-asc") return [...list].sort((a, b) => a.moq - b.moq);
+    return list;
+  }, [query, category, price, sort, collections]);
 
   return (
     <>
       <PageHero
         tone="rose"
-        eyebrow="Brand collections"
-        title="Fashion & lifestyle, straight from the brand"
-        subtitle="Browse collections listed directly by brands and order at their minimum order quantity. No middleman, no back-and-forth."
+        eyebrow="Shop wholesale"
+        title="Fresh stock, straight from the brand."
+        subtitle="Browse collections from reviewed brands, see the wholesale price per piece up front, and order at the brand's MOQ. No middleman, no haggling."
         photos={[
           { file: "hero-women", alt: "Women's wear" },
           { file: "men-jacket", alt: "Jacket" },
           { file: "bag-handbag", alt: "Handbag" },
           { file: "kids-girls-dress", alt: "Girls dress" },
         ]}
-        badges={["Order at the brand's MOQ", "Reviewed listings"]}
+        badges={["Prices shown up front", "Reviewed brands only"]}
       />
 
       <section className="bg-background pb-16 pt-10 sm:pb-20">
@@ -77,7 +102,7 @@ export default function CollectionsClient({
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search collection name or category..."
+              placeholder="Search kurtas, sneakers, a brand name..."
               className="w-full rounded-full border border-slate-300 bg-white py-3 pl-12 pr-4 text-sm text-ink shadow-sm outline-none placeholder:text-slate-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
             />
           </div>
@@ -99,6 +124,27 @@ export default function CollectionsClient({
             </div>
 
             <div className="mt-6">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                Budget per piece
+              </p>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                {[{ key: "all", short: "Any price" }, ...priceBands].map((b) => (
+                  <button
+                    key={b.key}
+                    onClick={() => setPrice(b.key)}
+                    className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                      price === b.key
+                        ? "bg-[#b0164f] text-white"
+                        : "bg-white text-slate-700 ring-1 ring-slate-200 hover:ring-slate-400"
+                    }`}
+                  >
+                    {b.short}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-8">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                 Category
               </p>
@@ -131,9 +177,25 @@ export default function CollectionsClient({
           </aside>
 
           <div className="lg:col-span-9">
-            <p className="text-sm text-slate-500">
-              {filtered.length} collection{filtered.length === 1 ? "" : "s"}
-            </p>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm text-slate-500">
+                {filtered.length} collection{filtered.length === 1 ? "" : "s"}
+              </p>
+              <label className="flex items-center gap-2 text-sm text-slate-600">
+                Sort by
+                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value as SortKey)}
+                  className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-ink outline-none focus:border-rose-500"
+                >
+                  {sorts.map((o) => (
+                    <option key={o.key} value={o.key}>
+                      {o.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
             {filtered.length > 0 ? (
               <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {filtered.map((c) => (
