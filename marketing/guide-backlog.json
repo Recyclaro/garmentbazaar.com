@@ -1,0 +1,229 @@
+{
+  "note": "The marketing agent picks the first 'todo' topic each day, then sets it to 'done' with the slug it published. Add topics freely.",
+  "topics": [
+    {
+      "id": 1,
+      "audience": "retailers",
+      "department": "Ethnic & Occasion",
+      "topic": "Wholesale kurtis: how to pick styles that sell in your town",
+      "status": "todo"
+    },
+    {
+      "id": 2,
+      "audience": "retailers",
+      "department": "Kidswear",
+      "topic": "Stocking kidswear for school reopening season",
+      "status": "todo"
+    },
+    {
+      "id": 3,
+      "audience": "retailers",
+      "department": null,
+      "topic": "How to price clothes in your shop for a healthy margin",
+      "status": "todo"
+    },
+    {
+      "id": 4,
+      "audience": "retailers",
+      "department": null,
+      "topic": "Dead stock in a clothing shop: how to prevent it and clear it",
+      "status": "todo"
+    },
+    {
+      "id": 5,
+      "audience": "retailers",
+      "department": "Menswear",
+      "topic": "Menswear basics every small-town shop should carry",
+      "status": "todo"
+    },
+    {
+      "id": 6,
+      "audience": "retailers",
+      "department": "Footwear",
+      "topic": "Adding footwear to your clothing shop: a starter plan",
+      "status": "todo"
+    },
+    {
+      "id": 7,
+      "audience": "retailers",
+      "department": null,
+      "topic": "WhatsApp selling for clothing shops: a practical playbook",
+      "status": "todo"
+    },
+    {
+      "id": 8,
+      "audience": "retailers",
+      "department": "Womenswear",
+      "topic": "Western wear for Tier 2 and Tier 3 towns: what customers want",
+      "status": "todo"
+    },
+    {
+      "id": 9,
+      "audience": "retailers",
+      "department": null,
+      "topic": "GST basics for small clothing retailers buying wholesale",
+      "status": "todo"
+    },
+    {
+      "id": 10,
+      "audience": "retailers",
+      "department": null,
+      "topic": "How to plan a season's buying budget for your shop",
+      "status": "todo"
+    },
+    {
+      "id": 11,
+      "audience": "retailers",
+      "department": "Accessories",
+      "topic": "Accessories that lift your average bill",
+      "status": "todo"
+    },
+    {
+      "id": 12,
+      "audience": "retailers",
+      "department": "Innerwear & Sleepwear",
+      "topic": "Innerwear and nightwear: steady sellers for every shop",
+      "status": "todo"
+    },
+    {
+      "id": 13,
+      "audience": "retailers",
+      "department": "Uniforms & Workwear",
+      "topic": "School uniform programmes: a guide for local retailers",
+      "status": "todo"
+    },
+    {
+      "id": 14,
+      "audience": "retailers",
+      "department": "Activewear",
+      "topic": "Activewear demand beyond the metros",
+      "status": "todo"
+    },
+    {
+      "id": 15,
+      "audience": "retailers",
+      "department": null,
+      "topic": "Visual merchandising on a small budget",
+      "status": "todo"
+    },
+    {
+      "id": 16,
+      "audience": "retailers",
+      "department": "Maternity & Plus Size",
+      "topic": "Plus size and maternity wear: an underserved opportunity",
+      "status": "todo"
+    },
+    {
+      "id": 17,
+      "audience": "retailers",
+      "department": null,
+      "topic": "How to read a wholesale listing: price, MOQ and size ratios",
+      "status": "todo"
+    },
+    {
+      "id": 18,
+      "audience": "retailers",
+      "department": "Home & Lifestyle",
+      "topic": "Home textiles as a second income stream for clothing shops",
+      "status": "todo"
+    },
+    {
+      "id": 19,
+      "audience": "retailers",
+      "department": null,
+      "topic": "Wedding season stock planning for boutiques",
+      "status": "todo"
+    },
+    {
+      "id": 20,
+      "audience": "retailers",
+      "department": null,
+      "topic": "Winter wear stocking guide for North India retailers",
+      "status": "todo"
+    },
+    {
+      "id": 21,
+      "audience": "retailers",
+      "department": null,
+      "topic": "Summer collections: what to stock when temperatures rise",
+      "status": "todo"
+    },
+    {
+      "id": 22,
+      "audience": "retailers",
+      "department": null,
+      "topic": "Online vs mandi buying: a cost comparison for shop owners",
+      "status": "todo"
+    },
+    {
+      "id": 23,
+      "audience": "retailers",
+      "department": null,
+      "topic": "Building repeat customers in a small-town clothing shop",
+      "status": "todo"
+    },
+    {
+      "id": 24,
+      "audience": "retailers",
+      "department": "Bags & Luggage",
+      "topic": "Bags and luggage for travel and wedding seasons",
+      "status": "todo"
+    },
+    {
+      "id": 25,
+      "audience": "retailers",
+      "department": null,
+      "topic": "How to test a new brand in your shop with low risk",
+      "status": "todo"
+    },
+    {
+      "id": 26,
+      "audience": "brands",
+      "department": null,
+      "topic": "How to sell your clothing brand to retailers across India",
+      "status": "todo"
+    },
+    {
+      "id": 27,
+      "audience": "brands",
+      "department": null,
+      "topic": "Setting the right MOQ for your wholesale collections",
+      "status": "todo"
+    },
+    {
+      "id": 28,
+      "audience": "brands",
+      "department": null,
+      "topic": "Product photos that help retailers order your collection",
+      "status": "todo"
+    },
+    {
+      "id": 29,
+      "audience": "brands",
+      "department": null,
+      "topic": "Pricing your collection for wholesale buyers",
+      "status": "todo"
+    },
+    {
+      "id": 30,
+      "audience": "brands",
+      "department": null,
+      "topic": "Reaching Tier 2 and Tier 3 retailers without a sales team",
+      "status": "todo"
+    },
+    {
+      "id": 31,
+      "audience": "mills",
+      "department": null,
+      "topic": "How fabric mills can find brand buyers online",
+      "status": "todo"
+    },
+    {
+      "id": 32,
+      "audience": "mills",
+      "department": null,
+      "topic": "Clearing surplus fabric and overstock without deep losses",
+      "status": "todo"
+    }
+  ]
+}

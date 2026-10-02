@@ -26,7 +26,36 @@ export interface UserRow {
   password_hash: string;
   role: Role;
   company_name: string | null;
+  phone: string | null;
+  city: string | null;
+  /** JSON of the onboarding answers (see OnboardingAnswers); null until done. */
+  onboarding: string | null;
   created_at: string;
+}
+
+export interface OnboardingAnswers {
+  storeType?: string;
+  departments?: string[];
+  budget?: string;
+  moq?: string;
+  channels?: string[];
+  makes?: string[];
+  completedAt?: string;
+}
+
+export function parseOnboarding(raw: string | null | undefined): OnboardingAnswers | null {
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as OnboardingAnswers;
+  } catch {
+    return null;
+  }
+}
+
+export function saveOnboarding(userId: number, answers: OnboardingAnswers): void {
+  getDb()
+    .prepare("UPDATE users SET onboarding = ? WHERE id = ?")
+    .run(JSON.stringify({ ...answers, completedAt: new Date().toISOString() }), userId);
 }
 
 export interface SupplierRow {
@@ -176,8 +205,20 @@ function openDatabase(): DatabaseSync {
     );
   `);
 
+  migrateUsers(db);
   seedIfEmpty(db);
   return db;
+}
+
+// Columns added after launch. ALTER TABLE ADD COLUMN only when missing, so
+// it is safe to run on every start against the live database.
+function migrateUsers(db: DatabaseSync) {
+  const cols = new Set(
+    (db.prepare("PRAGMA table_info(users)").all() as { name: string }[]).map((c) => c.name),
+  );
+  if (!cols.has("phone")) db.exec("ALTER TABLE users ADD COLUMN phone TEXT");
+  if (!cols.has("city")) db.exec("ALTER TABLE users ADD COLUMN city TEXT");
+  if (!cols.has("onboarding")) db.exec("ALTER TABLE users ADD COLUMN onboarding TEXT");
 }
 
 function seedIfEmpty(db: DatabaseSync) {
@@ -338,10 +379,12 @@ export function createUser(input: {
   passwordHash: string;
   role: Role;
   companyName: string;
+  phone?: string | null;
+  city?: string | null;
 }): number {
   const result = getDb()
     .prepare(
-      `INSERT INTO users (name, email, password_hash, role, company_name) VALUES (?, ?, ?, ?, ?)`,
+      `INSERT INTO users (name, email, password_hash, role, company_name, phone, city) VALUES (?, ?, ?, ?, ?, ?, ?)`,
     )
     .run(
       input.name,
@@ -349,6 +392,8 @@ export function createUser(input: {
       input.passwordHash,
       input.role,
       input.companyName,
+      input.phone ?? null,
+      input.city ?? null,
     );
   return Number(result.lastInsertRowid);
 }

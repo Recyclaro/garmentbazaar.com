@@ -66,7 +66,7 @@ export default function SmallTownSection({ minMoq }: { minMoq: number | null }) 
             </ul>
 
             <Link
-              href="/signup"
+              href="/signup?role=retailer"
               className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#b0164f] px-7 py-3.5 text-base font-semibold text-white transition hover:bg-[#8e1140]"
             >
               Open my shop&apos;s free account

@@ -1,0 +1,95 @@
+{
+  "slug": "what-is-moq-wholesale-clothing",
+  "title": "What Is MOQ in Wholesale Clothing? A Retailer's Guide",
+  "description": "MOQ explained for shop owners: what minimum order quantity means, why brands set it, and how to use small MOQs to test new styles with less risk.",
+  "date": "2026-10-01",
+  "audience": "retailers",
+  "department": null,
+  "keywords": [
+    "what is MOQ",
+    "minimum order quantity clothing",
+    "low MOQ wholesale clothing",
+    "MOQ meaning for retailers",
+    "small MOQ suppliers India"
+  ],
+  "hero": "men-polo",
+  "readingMinutes": 6,
+  "sections": [
+    {
+      "heading": "MOQ in one line",
+      "body": [
+        "MOQ stands for minimum order quantity: the smallest number of pieces a brand or supplier will sell you in a single order of one collection or style. If a collection has an MOQ of 30, you can order 30 pieces or more, but not 29.",
+        "On GarmentBazaar the MOQ is shown on every collection card and on the order form, next to the wholesale price per piece, so you always know the smallest order you can place before you start."
+      ]
+    },
+    {
+      "heading": "Why brands set an MOQ",
+      "body": [
+        "Every order a brand packs and ships has a fixed cost: picking the stock, packing it, making the invoice and arranging transport. Very small orders can cost the brand more to handle than they earn. An MOQ keeps each order worth processing.",
+        "Some collections are also packed in size ratios or sets, for example a mix of S, M, L and XL in fixed proportions. The MOQ then reflects how many pieces make up a sensible set for a shop."
+      ]
+    },
+    {
+      "heading": "How to work out what an MOQ will cost you",
+      "body": [
+        "Multiply the wholesale price per piece by the MOQ. A collection priced at ₹400 per piece with an MOQ of 30 needs a minimum order of ₹12,000 before taxes and freight. Doing this sum for a few collections tells you quickly how many different lines your budget can cover.",
+        "The stock planner on the GarmentBazaar homepage does this for you: enter your buying budget and it shows how many collections and pieces it can buy at live MOQs."
+      ],
+      "bullets": [
+        "Minimum order value = price per piece × MOQ",
+        "Add GST and freight to see your true cost",
+        "Compare the total against what the lot will earn on your shelf"
+      ]
+    },
+    {
+      "heading": "Why small MOQs are good for your shop",
+      "body": [
+        "A small MOQ lets you try a new style without filling your stockroom. If it sells, you reorder; if it does not, you have only a few pieces to clear. Over a season this means less dead stock and fewer end-of-season discounts.",
+        "Small MOQs also help you keep your range fresh. Instead of buying a large quantity of a few styles, you can carry more styles in smaller quantities, which gives customers more reasons to visit."
+      ]
+    },
+    {
+      "heading": "Ordering above the MOQ",
+      "body": [
+        "The MOQ is a floor, not a ceiling. Once a style proves itself, ordering two or three times the MOQ can make sense, especially before a festival or wedding season when you know demand will rise.",
+        "The GarmentBazaar order form has one-tap buttons for the MOQ, twice the MOQ and three times the MOQ, plus plus and minus buttons for any amount in between. Your dashboard shows each past order's MOQ, which makes reordering your best sellers quick."
+      ]
+    },
+    {
+      "heading": "Using MOQ to compare collections fairly",
+      "body": [
+        "Two collections at a similar price per piece can need very different amounts of money if their MOQs differ. A ₹350 collection with an MOQ of 60 needs a larger first order than a ₹450 collection with an MOQ of 20. When your budget is tight, the minimum order value often matters more than the headline price.",
+        "A practical habit is to shortlist collections you like, note each one's minimum order value, and then fill your budget with the mix that gives you the widest range of styles. You can sort the shop by Smallest MOQ to find lines that are easy to test, and filter by budget per piece to stay inside the price range your customers expect."
+      ],
+      "bullets": [
+        "Compare minimum order value, not just price per piece",
+        "Use Smallest MOQ sorting to find easy-to-test lines",
+        "Balance a few premium lines with several low-MOQ ones"
+      ]
+    },
+    {
+      "heading": "A simple MOQ routine for busy shop owners",
+      "body": [
+        "Start every new style at the MOQ. Check sales after two to three weeks. Reorder the styles that sold more than half their stock, at a higher quantity if the season is still strong. Drop the styles that barely moved and try something new in their place."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "Can I order less than the MOQ?",
+      "a": "No. The MOQ is the smallest order the brand accepts for that collection. If the MOQ is too high for you, look for a similar collection with a smaller MOQ using the Smallest MOQ sort on the shop page."
+    },
+    {
+      "q": "Is the MOQ per size or per collection?",
+      "a": "On GarmentBazaar the MOQ is the total number of pieces for the collection. The listing description explains any size ratio or set the brand uses."
+    },
+    {
+      "q": "Do bigger orders get a lower price?",
+      "a": "The price per piece shown on a listing applies to every order. If you plan a large order, you can contact the brand through GarmentBazaar to discuss it."
+    }
+  ],
+  "cta": {
+    "label": "See collections with the smallest MOQ",
+    "href": "/collections?sort=moq-asc"
+  }
+}

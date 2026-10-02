@@ -27,6 +27,9 @@ export const getCurrentUser = cache(async () => {
     email: user.email,
     role: user.role,
     companyName: user.company_name,
+    phone: user.phone,
+    city: user.city,
+    onboarding: user.onboarding,
   };
 });
 

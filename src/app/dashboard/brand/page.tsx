@@ -1,7 +1,13 @@
 import Image from "next/image";
+import SetupChecklist from "@/components/SetupChecklist";
 import Link from "next/link";
 import { requireRole } from "@/lib/dal";
-import { listCollectionsByOwner, listOrdersForCollectionOwner } from "@/lib/db";
+import {
+  getUserById,
+  listCollectionsByOwner,
+  listOrdersForCollectionOwner,
+  parseOnboarding,
+} from "@/lib/db";
 import { formatPaise } from "@/lib/currency";
 import {
   EmptyState,
@@ -53,6 +59,8 @@ export default async function BrandDashboardPage({
 
   // Nudges based on the brand's own listings.
   const noPhoto = collections.filter((c) => !c.image_path);
+  const me = getUserById(session.userId);
+  const profile = parseOnboarding(me?.onboarding);
   const rejected = collections.filter((c) => c.status === "rejected");
 
   const actions = [
@@ -72,6 +80,22 @@ export default async function BrandDashboardPage({
             : "Collection updated. Changes go live after a quick re-review."}
         </div>
       )}
+
+      <SetupChecklist
+        title="Get your brand selling"
+        steps={[
+          { label: "Create your account", done: true },
+          { label: "Tell us what you sell", done: Boolean(profile?.completedAt), href: "/onboarding", cta: "2 min" },
+          { label: "List your first collection", done: collections.length > 0, href: "/dashboard/brand/new", cta: "Add" },
+          {
+            label: "Add a photo to every collection",
+            done: collections.length > 0 && noPhoto.length === 0,
+            href: noPhoto[0] ? `/dashboard/brand/${noPhoto[0].slug}/edit` : "/dashboard/brand/new",
+            cta: "Add photo",
+          },
+          { label: "Get your first order", done: orders.length > 0, href: "/collections", cta: "See shop" },
+        ]}
+      />
 
       {/* Quick actions */}
       <div className="-mx-6 flex gap-3 overflow-x-auto px-6 pb-1 sm:mx-0 sm:grid sm:grid-cols-4 sm:px-0">

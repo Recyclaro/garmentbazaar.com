@@ -8,6 +8,8 @@ import { IconCart, IconSearch, IconStorefront, IconBoxes } from "./Icons";
 // buys and their orders with a thumb. Hidden from md up.
 export default function MobileNav({ loggedIn }: { loggedIn: boolean }) {
   const path = usePathname() ?? "/";
+  // Onboarding has its own sticky Next button; keep the screen focused.
+  if (path.startsWith("/onboarding")) return null;
   const tabs = [
     { href: "/", label: "Home", icon: IconStorefront, active: path === "/" },
     {

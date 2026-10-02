@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireRole } from "@/lib/dal";
 import { listPendingSuppliers, listPendingCollections, listAllRfqs, listAllOrders } from "@/lib/db";
 import {
@@ -24,6 +25,17 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-10">
+      <Link
+        href="/dashboard/admin/marketing"
+        className="flex items-center justify-between gap-4 rounded-2xl bg-[#b0164f] px-5 py-4 text-white transition hover:bg-[#8e1140]"
+      >
+        <span>
+          <span className="block text-xs font-bold uppercase tracking-wide text-rose-100">Marketing agent</span>
+          <span className="block text-lg font-semibold">Open the marketing hub: posts, outreach, reports</span>
+        </span>
+        <span aria-hidden>→</span>
+      </Link>
+
       <section>
         <h2 className="text-lg font-semibold text-ink">
           Pending listings ({pending.length})

@@ -109,7 +109,7 @@ export default function BrandsPage() {
         badges={["Sell at your own MOQ", "Listings reviewed"]}
       >
         <Link
-          href="/signup"
+          href="/signup?role=brand"
           className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-ink shadow-sm transition hover:bg-accent-50"
         >
           List your brand
@@ -229,7 +229,7 @@ export default function BrandsPage() {
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/signup"
+              href="/signup?role=brand"
               className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-ink transition hover:bg-slate-100"
             >
               List your brand

@@ -1,7 +1,10 @@
 import CardRail from "@/components/CardRail";
+import SetupChecklist from "@/components/SetupChecklist";
 import Link from "next/link";
 import { verifySession } from "@/lib/dal";
 import {
+  getUserById,
+  parseOnboarding,
   listRfqsFromUser,
   listOrdersByRetailer,
   listApprovedCollections,
@@ -11,7 +14,7 @@ import { formatPaise } from "@/lib/currency";
 import { priceBands } from "@/lib/priceBands";
 import CollectionCard from "@/components/CollectionCard";
 import { EmptyState, OrderList, SectionHead, StatTile } from "@/components/DashUI";
-import { IconArrowRight, IconCart, IconFactory, IconSearch } from "@/components/Icons";
+import { IconArrowRight, IconCart, IconCheck, IconFactory, IconSearch } from "@/components/Icons";
 
 function when(iso: string) {
   return new Date(iso.replace(" ", "T") + "Z").toLocaleDateString("en-IN", {
@@ -20,8 +23,15 @@ function when(iso: string) {
   });
 }
 
-export default async function BuyerDashboardPage() {
+export default async function BuyerDashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ welcome?: string }>;
+}) {
   const session = await verifySession();
+  const { welcome } = await searchParams;
+  const me = getUserById(session.userId);
+  const profile = parseOnboarding(me?.onboarding);
   const isRetailer = session.role === "retailer";
   const rfqs = listRfqsFromUser(session.userId);
   const orders = isRetailer ? listOrdersByRetailer(session.userId) : [];
@@ -38,7 +48,10 @@ export default async function BuyerDashboardPage() {
   // Picks: same departments they already buy, minus what they've ordered;
   // newest listings with photos when there's no history yet.
   const ordered = new Set(orders.map((o) => o.collection_slug));
-  const likes = new Set(orders.map((o) => o.collection_category));
+  // Departments they buy from, else the ones they picked at onboarding.
+  const likes = new Set(
+    orders.length ? orders.map((o) => o.collection_category) : (profile?.departments ?? []),
+  );
   const live = isRetailer
     ? listApprovedCollections()
         .map(collectionRowToCollection)
@@ -56,6 +69,28 @@ export default async function BuyerDashboardPage() {
 
   return (
     <div className="space-y-10">
+      {welcome && (
+        <div className="flex items-start gap-3 rounded-2xl bg-green-50 p-4 text-sm text-green-900 ring-1 ring-green-200">
+          <IconCheck className="mt-0.5 h-5 w-5 shrink-0 text-green-700" />
+          <p>
+            <span className="font-semibold">You&apos;re all set.</span> We&apos;ve picked stock from
+            the departments you chose. Tap any collection to see the price per piece and MOQ.
+          </p>
+        </div>
+      )}
+
+      {isRetailer && (
+        <SetupChecklist
+          title="Finish setting up your shop"
+          steps={[
+            { label: "Create your account", done: true },
+            { label: "Tell us what you stock", done: Boolean(profile?.completedAt), href: "/onboarding", cta: "2 min" },
+            { label: "Add your mobile for WhatsApp updates", done: Boolean(me?.phone), href: "/onboarding", cta: "Add" },
+            { label: "Place your first order", done: orders.length > 0, href: "/collections?sort=moq-asc", cta: "Shop" },
+          ]}
+        />
+      )}
+
       {/* Quick actions */}
       <div className="-mx-6 flex gap-3 overflow-x-auto px-6 pb-1 sm:mx-0 sm:grid sm:grid-cols-4 sm:px-0">
         {(isRetailer ? actions : actions.slice(3)).map((a) => (

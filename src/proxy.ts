@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { decrypt } from "@/lib/session";
 
-const protectedPrefixes = ["/dashboard"];
+const protectedPrefixes = ["/dashboard", "/onboarding"];
 const authRoutes = ["/login", "/signup"];
 
 export async function proxy(request: NextRequest) {
@@ -25,5 +25,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/signup"],
+  matcher: ["/dashboard/:path*", "/onboarding", "/login", "/signup"],
 };

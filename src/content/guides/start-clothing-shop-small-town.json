@@ -1,0 +1,90 @@
+{
+  "slug": "start-clothing-shop-small-town",
+  "title": "How to Start a Clothing Shop in a Tier 2 or Tier 3 Town",
+  "description": "A practical guide to opening a clothing store in a smaller Indian city: choosing what to stock, budgeting your first order and buying wholesale.",
+  "date": "2026-10-02",
+  "audience": "retailers",
+  "department": null,
+  "keywords": [
+    "start clothing shop small town",
+    "clothing business tier 2 city",
+    "wholesale clothes for new shop",
+    "first stock for garment shop",
+    "readymade garment shop India"
+  ],
+  "hero": "hero-women",
+  "readingMinutes": 7,
+  "sections": [
+    {
+      "heading": "Start with the customers already walking past",
+      "body": [
+        "The best clothing shops in smaller towns are built around the people who already live nearby, not around what is trending in the metros. Before you buy a single piece, spend a week noticing who passes the spot you have in mind: office-goers, college students, families shopping for weddings, or farmers coming in on market day.",
+        "Write down what they wear today and what they complain they cannot find locally. Gaps are your opportunity. A town full of young families may have plenty of sarees but very few good kidswear options; a college area may be short of affordable, branded casual wear."
+      ],
+      "bullets": [
+        "Count footfall at different times of day and on weekends",
+        "Visit the two or three nearest competitors and note their price range",
+        "Ask friends and relatives what they travel to the city to buy"
+      ]
+    },
+    {
+      "heading": "Pick a focus instead of trying to sell everything",
+      "body": [
+        "New shops often spread their money across too many categories and end up with a thin, confusing range. You will sell more with a clear focus, such as women's ethnic wear, men's casual wear or kidswear, and a full set of sizes and colours within it.",
+        "Once the first focus is selling steadily, you can add a neighbouring department. A women's ethnic wear shop can later add dupattas and accessories; a menswear shop can add footwear or innerwear."
+      ]
+    },
+    {
+      "heading": "Budget your first order in small, testable lots",
+      "body": [
+        "Your first stock order is a guess about what your customers want, so treat it as a test. Instead of buying large quantities of a few styles, buy smaller quantities of more styles and watch which ones sell first.",
+        "On GarmentBazaar every collection shows the wholesale price per piece and the brand's minimum order quantity (MOQ) before you sign up. That makes it easy to plan: multiply the price by the MOQ to see what one collection costs, then decide how many different collections your budget can cover. The stock planner on the homepage does this sum for you.",
+        "Keep part of your budget aside for reordering. The styles that sell out in the first few weeks are the ones you want to buy again quickly, before the season moves on."
+      ],
+      "bullets": [
+        "Test several styles at the MOQ rather than a few styles in bulk",
+        "Hold back some money for reorders of what sells",
+        "Track which sizes go first so your next order is better balanced"
+      ]
+    },
+    {
+      "heading": "Buy direct to protect your margin",
+      "body": [
+        "In the usual supply chain, clothes pass from the brand to a distributor and then a wholesaler before reaching your shop, and each step adds its own margin. Buying directly from the brand removes those steps, which gives you room to price competitively and still earn a healthy margin.",
+        "Buying online also saves the cost of travelling to a big-city market to restock. Train fares, hotel stays and the sales you lose while your shutter is down add up quickly over a year. The mandi trip calculator on GarmentBazaar helps you work out what those trips really cost your shop."
+      ]
+    },
+    {
+      "heading": "Set your prices with a simple margin check",
+      "body": [
+        "Before you order, decide what you will sell each piece for. Compare that selling price with the wholesale price to see your margin per piece. If the margin is thin, look for a different collection or a lower price band rather than hoping to make it up later.",
+        "Remember to account for GST, freight and your own running costs such as rent, electricity and staff. The margin calculator on GarmentBazaar shows profit, margin and markup for any line once you enter the wholesale price, your selling price and the number of pieces."
+      ]
+    },
+    {
+      "heading": "Make your shop easy to find and easy to trust",
+      "body": [
+        "Customers in smaller towns often decide where to shop through word of mouth and WhatsApp. Keep a WhatsApp catalogue of your best pieces, share new arrivals with regular customers, and ask happy buyers to recommend you.",
+        "A clean, well-lit shop with clearly displayed prices builds trust. Branded stock helps too, because customers recognise names they have seen online and know what quality to expect."
+      ]
+    }
+  ],
+  "faq": [
+    {
+      "q": "How much stock do I need to open a small clothing shop?",
+      "a": "It depends on your shop size and focus. Start with enough styles to fill your main display in every key size, buy each at the brand's MOQ, and keep money aside to reorder the pieces that sell first."
+    },
+    {
+      "q": "Can I buy branded clothes wholesale in a small town?",
+      "a": "Yes. On GarmentBazaar you browse and order online from anywhere in India, and the wholesale price per piece on a listing is the same for every buyer, wherever your shop is."
+    },
+    {
+      "q": "What is a good first department for a new shop?",
+      "a": "Choose the department where you see the clearest local gap and that you understand well. Many new shops start with women's ethnic wear, men's casual wear or kidswear, then expand once sales are steady."
+    }
+  ],
+  "cta": {
+    "label": "Browse wholesale stock",
+    "href": "/collections?sort=moq-asc"
+  }
+}

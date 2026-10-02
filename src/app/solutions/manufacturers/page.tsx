@@ -115,7 +115,7 @@ export default function FabricMillsPage() {
           <IconArrowRight className="h-4 w-4" />
         </Link>
         <Link
-          href="/signup"
+          href="/signup?role=manufacturer"
           className="inline-flex items-center justify-center rounded-full border border-white/50 px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/10"
         >
           Sell fabric
@@ -254,7 +254,7 @@ export default function FabricMillsPage() {
           </h2>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/signup"
+              href="/signup?role=manufacturer"
               className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-ink transition hover:bg-slate-100"
             >
               List your mill or factory

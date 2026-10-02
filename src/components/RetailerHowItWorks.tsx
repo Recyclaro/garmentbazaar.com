@@ -111,7 +111,7 @@ export default function RetailerHowItWorks({
 
         <div className="mt-10 flex flex-col gap-3 sm:flex-row">
           <Link
-            href="/signup"
+            href="/signup?role=retailer"
             className="inline-flex items-center justify-center gap-2 rounded-full bg-[#b0164f] px-7 py-3.5 text-base font-semibold text-white transition hover:bg-[#8e1140]"
           >
             Open a free buyer account

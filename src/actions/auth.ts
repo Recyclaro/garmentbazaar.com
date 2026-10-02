@@ -13,7 +13,13 @@ const SignupSchema = z.object({
   role: z.enum(["brand", "manufacturer", "retailer"], {
     message: "Select an account type.",
   }),
-  companyName: z.string().trim().min(1, "Company name is required."),
+  companyName: z.string().trim().min(1, "Business name is required."),
+  // Indian mobile, used for WhatsApp updates. +91, spaces and dashes allowed.
+  phone: z
+    .string()
+    .transform((v) => v.replace(/[\s-]/g, "").replace(/^(\+?91)(?=\d{10}$)/, ""))
+    .pipe(z.string().regex(/^[6-9]\d{9}$/, "Enter a 10-digit mobile number.")),
+  city: z.string().trim().min(2, "Enter your city or town.").max(60),
 });
 
 export interface AuthFormState {
@@ -31,13 +37,15 @@ export async function signup(
     password: formData.get("password"),
     role: formData.get("role"),
     companyName: formData.get("companyName"),
+    phone: formData.get("phone") ?? "",
+    city: formData.get("city") ?? "",
   });
 
   if (!validated.success) {
     return { errors: validated.error.flatten().fieldErrors };
   }
 
-  const { name, email, password, role, companyName } = validated.data;
+  const { name, email, password, role, companyName, phone, city } = validated.data;
 
   if (getUserByEmail(email)) {
     return { message: "An account with that email already exists." };
@@ -50,10 +58,12 @@ export async function signup(
     passwordHash,
     role: role as Role,
     companyName,
+    phone,
+    city,
   });
 
   await createSession({ userId, role: role as Role, name });
-  redirect("/dashboard");
+  redirect("/onboarding");
 }
 
 const LoginSchema = z.object({

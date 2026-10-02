@@ -21,6 +21,7 @@ const columns = [
       { href: "/solutions/retailers", label: "For Retailers" },
       { href: "/solutions/manufacturers", label: "Fabric & Mills" },
       { href: "/collections", label: "Shop Collections" },
+      { href: "/guides", label: "Retailer Guides" },
     ],
   },
   {
