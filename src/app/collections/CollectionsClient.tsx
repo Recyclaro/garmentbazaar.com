@@ -75,11 +75,12 @@ export default function CollectionsClient({
           { file: "kids-girls-dress", alt: "Girls dress" },
         ]}
         badges={["Prices shown up front", "Reviewed brands only"]}
+        collageOnMobile={false}
       />
 
-      <section className="bg-background pb-16 pt-10 sm:pb-20">
+      <section className="bg-background pb-16 pt-6 sm:pb-20 sm:pt-10">
       <Container>
-        <div className="flex gap-2 overflow-x-auto pb-2">
+        <div className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-2 sm:mx-0 sm:px-0">
           {["All" as const, ...collectionCategories].map((c) => (
             <button
               key={c}
@@ -95,7 +96,7 @@ export default function CollectionsClient({
           ))}
         </div>
 
-        <div className="mx-auto mt-10 max-w-2xl">
+        <div className="mx-auto mt-4 max-w-2xl sm:mt-8">
           <div className="relative">
             <IconSearch className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
             <input
@@ -103,13 +104,37 @@ export default function CollectionsClient({
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search kurtas, sneakers, a brand name..."
-              className="w-full rounded-full border border-slate-300 bg-white py-3 pl-12 pr-4 text-sm text-ink shadow-sm outline-none placeholder:text-slate-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
+              className="w-full rounded-full border border-slate-300 bg-white py-3 pl-12 pr-4 text-base text-ink sm:text-sm shadow-sm outline-none placeholder:text-slate-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
             />
           </div>
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-12">
-          <aside className="lg:col-span-3">
+        <div className="-mx-6 mt-4 flex gap-2 overflow-x-auto px-6 pb-1 lg:hidden">
+          {[{ key: "all", short: "Any price" }, ...priceBands].map((b) => (
+            <button
+              key={b.key}
+              onClick={() => setPrice(b.key)}
+              className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${
+                price === b.key
+                  ? "bg-[#b0164f] text-white"
+                  : "bg-white text-slate-700 ring-1 ring-slate-200"
+              }`}
+            >
+              {b.short}
+            </button>
+          ))}
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="shrink-0 rounded-full px-4 py-2 text-sm font-semibold text-rose-700"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        <div className="mt-6 grid grid-cols-1 gap-10 sm:mt-12 lg:grid-cols-12">
+          <aside className="hidden lg:col-span-3 lg:block">
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-ink">Filters</h2>
               {hasActiveFilters && (

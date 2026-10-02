@@ -23,7 +23,7 @@ export default function MarginCalculator() {
   const healthy = margin >= 40;
 
   const field =
-    "mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-lg font-semibold text-ink outline-none focus:border-[#b0164f] focus:ring-2 focus:ring-[#b0164f]/20";
+    "mt-1.5 w-full rounded-xl border border-slate-300 bg-white px-3 py-3 text-lg font-semibold text-ink outline-none focus:border-[#b0164f] focus:ring-2 focus:ring-[#b0164f]/20";
 
   return (
     <div className="grid grid-cols-1 overflow-hidden rounded-3xl bg-white ring-1 ring-slate-200 lg:grid-cols-2">
@@ -39,9 +39,9 @@ export default function MarginCalculator() {
           with your shelf price and see your margin before you order.
         </p>
 
-        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
-          <label className="text-sm font-medium text-slate-700">
-            Wholesale price (₹)
+        <div className="mt-8 grid grid-cols-3 gap-3 sm:gap-5">
+          <label className="text-xs font-medium text-slate-700 sm:text-sm">
+            Wholesale ₹
             <input
               type="number"
               min={0}
@@ -51,8 +51,8 @@ export default function MarginCalculator() {
               className={field}
             />
           </label>
-          <label className="text-sm font-medium text-slate-700">
-            Your selling price (₹)
+          <label className="text-xs font-medium text-slate-700 sm:text-sm">
+            You sell at ₹
             <input
               type="number"
               min={0}
@@ -62,7 +62,7 @@ export default function MarginCalculator() {
               className={field}
             />
           </label>
-          <label className="text-sm font-medium text-slate-700">
+          <label className="text-xs font-medium text-slate-700 sm:text-sm">
             Pieces
             <input
               type="number"
@@ -92,18 +92,18 @@ export default function MarginCalculator() {
           <p className="mt-1 font-serif text-5xl font-semibold sm:text-6xl">
             {rupees(profit)}
           </p>
-          <div className="mt-8 grid grid-cols-3 gap-3">
-            <div className="rounded-2xl bg-white/10 p-4">
+          <div className="mt-8 grid grid-cols-3 gap-2 sm:gap-3">
+            <div className="rounded-2xl bg-white/10 p-3 sm:p-4">
               <p className="text-xs text-rose-100">Margin</p>
-              <p className="mt-1 text-2xl font-semibold">{margin.toFixed(0)}%</p>
+              <p className="mt-1 text-lg font-semibold sm:text-2xl">{margin.toFixed(0)}%</p>
             </div>
-            <div className="rounded-2xl bg-white/10 p-4">
+            <div className="rounded-2xl bg-white/10 p-3 sm:p-4">
               <p className="text-xs text-rose-100">Markup</p>
-              <p className="mt-1 text-2xl font-semibold">{markup.toFixed(0)}%</p>
+              <p className="mt-1 text-lg font-semibold sm:text-2xl">{markup.toFixed(0)}%</p>
             </div>
-            <div className="rounded-2xl bg-white/10 p-4">
+            <div className="rounded-2xl bg-white/10 p-3 sm:p-4">
               <p className="text-xs text-rose-100">You invest</p>
-              <p className="mt-1 text-2xl font-semibold">{rupees(outlay)}</p>
+              <p className="mt-1 text-lg font-semibold sm:text-2xl">{rupees(outlay)}</p>
             </div>
           </div>
           <p className="mt-6 text-sm text-rose-50">

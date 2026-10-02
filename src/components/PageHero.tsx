@@ -29,6 +29,7 @@ export default function PageHero({
   photos,
   badges = [],
   children,
+  collageOnMobile = true,
 }: {
   tone: HeroTone;
   eyebrow: string;
@@ -40,6 +41,8 @@ export default function PageHero({
   badges?: string[];
   /** Buttons or other actions under the subtitle. */
   children?: ReactNode;
+  /** Set false to skip the photo collage on phones (keeps content above the fold). */
+  collageOnMobile?: boolean;
 }) {
   const t = tones[tone];
   const [p1, p2, p3, p4] = photos;
@@ -76,7 +79,7 @@ export default function PageHero({
               )}
             </div>
 
-            <div className="relative lg:col-span-6">
+            <div className={`relative lg:col-span-6 ${collageOnMobile ? "" : "hidden sm:block"}`}>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-4">
                   {p1 && <Tile photo={p1} tall />}

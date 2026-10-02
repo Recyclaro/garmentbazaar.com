@@ -672,32 +672,53 @@ export function setOrderPaymentResult(
     .run(status, razorpayPaymentId, id);
 }
 
-export function listOrdersForCollectionOwner(
-  ownerUserId: number,
-): (OrderRow & { collection_name: string })[] {
+// Order rows joined with what dashboards show next to them.
+export interface OrderWithCollection extends OrderRow {
+  collection_name: string;
+  collection_slug: string;
+  collection_image: string | null;
+  collection_category: string;
+  brand_name: string;
+}
+
+export interface OrderWithRetailer extends OrderWithCollection {
+  retailer_name: string;
+  retailer_company: string | null;
+}
+
+export function listOrdersForCollectionOwner(ownerUserId: number): OrderWithRetailer[] {
   return getDb()
     .prepare(
-      `SELECT orders.*, collections.name as collection_name
+      `SELECT orders.*, collections.name as collection_name,
+              collections.slug as collection_slug,
+              collections.image_path as collection_image,
+              collections.category as collection_category,
+              collections.brand_name as brand_name,
+              users.name as retailer_name,
+              users.company_name as retailer_company
        FROM orders
        JOIN collections ON collections.id = orders.collection_id
+       JOIN users ON users.id = orders.retailer_user_id
        WHERE collections.owner_user_id = ?
        ORDER BY orders.created_at DESC`,
     )
-    .all(ownerUserId) as unknown as (OrderRow & { collection_name: string })[];
+    .all(ownerUserId) as unknown as OrderWithRetailer[];
 }
 
-export function listOrdersByRetailer(
-  retailerUserId: number,
-): (OrderRow & { collection_name: string })[] {
+export function listOrdersByRetailer(retailerUserId: number): OrderWithCollection[] {
   return getDb()
     .prepare(
-      `SELECT orders.*, collections.name as collection_name
+      `SELECT orders.*, collections.name as collection_name,
+              collections.slug as collection_slug,
+              collections.image_path as collection_image,
+              collections.category as collection_category,
+              collections.brand_name as brand_name
        FROM orders
        JOIN collections ON collections.id = orders.collection_id
        WHERE orders.retailer_user_id = ?
        ORDER BY orders.created_at DESC`,
     )
-    .all(retailerUserId) as unknown as (OrderRow & { collection_name: string })[];
+    .all(retailerUserId) as unknown as OrderWithCollection[];
 }
 
 export function listAllOrders(): (OrderRow & {

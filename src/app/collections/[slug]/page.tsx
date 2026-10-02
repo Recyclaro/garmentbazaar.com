@@ -1,3 +1,4 @@
+import MobileBuyBar, { MobileBarSpacer } from "@/components/MobileBuyBar";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
@@ -98,7 +99,7 @@ export default async function CollectionDetailPage({
             </p>
           </div>
 
-          <div className="lg:col-span-4">
+          <div id="order" className="scroll-mt-24 lg:col-span-4">
             <div className="rounded-3xl border border-slate-200 bg-white p-6">
               <div className="flex items-baseline justify-between">
                 <span className="text-2xl font-bold text-ink">
@@ -122,6 +123,20 @@ export default async function CollectionDetailPage({
           </div>
         </div>
       </Container>
+      <MobileBarSpacer />
+      <MobileBuyBar
+        info={
+          <>
+            <p className="truncate text-base font-bold text-ink">
+              {formatPaise(collection.pricePaise)}
+              <span className="text-xs font-normal text-slate-500"> /piece</span>
+            </p>
+            <p className="text-xs text-slate-500">MOQ {collection.moq} pieces</p>
+          </>
+        }
+        cta="Order now"
+        href="#order"
+      />
     </section>
   );
 }

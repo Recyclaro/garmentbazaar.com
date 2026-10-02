@@ -149,7 +149,7 @@ export default function OrderForm({
           step={1}
           value={quantity}
           onChange={(e) => setQuantity(Math.max(0, Number(e.target.value)))}
-          className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm text-ink shadow-sm outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
+          className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-3 text-base text-ink shadow-sm sm:py-2.5 sm:text-sm outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
         />
         <p className="mt-1 text-xs text-slate-500">Minimum {moq} units.</p>
         {state?.errors?.quantity && (

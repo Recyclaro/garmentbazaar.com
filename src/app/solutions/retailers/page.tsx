@@ -1,3 +1,5 @@
+import CardRail from "@/components/CardRail";
+import MobileBuyBar, { MobileBarSpacer } from "@/components/MobileBuyBar";
 import PageHero from "@/components/PageHero";
 import MarginCalculator from "@/components/MarginCalculator";
 import { priceBands } from "@/lib/priceBands";
@@ -147,11 +149,11 @@ export default function RetailersPage() {
                 <IconArrowRight className="h-4 w-4" />
               </Link>
             </div>
-            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <CardRail>
               {fresh.map((c) => (
                 <CollectionCard key={c.slug} collection={c} />
               ))}
-            </div>
+            </CardRail>
           </Container>
         </section>
       )}
@@ -269,6 +271,12 @@ export default function RetailersPage() {
           </div>
         </Container>
       </section>
+      <MobileBarSpacer />
+      <MobileBuyBar
+        cta="Start buying"
+        href="/collections"
+        secondary={{ label: "Under ₹500", href: "/collections?price=under-500" }}
+      />
     </>
   );
 }
