@@ -7,18 +7,17 @@ import CollectionCard from "@/components/CollectionCard";
 import DeptBand from "@/components/DeptBand";
 import DeptMarquee from "@/components/DeptMarquee";
 import MarginCalculator from "@/components/MarginCalculator";
+import StockPlanner from "@/components/StockPlanner";
+import RetailerHowItWorks from "@/components/RetailerHowItWorks";
+import DirectAdvantage from "@/components/DirectAdvantage";
 import { departments } from "@/data/departments";
 import { priceBands, inBand } from "@/lib/priceBands";
 import { formatPaise } from "@/lib/currency";
 import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
 import {
   IconArrowRight,
-  IconBoxes,
-  IconCart,
   IconCheck,
-  IconShieldCheck,
   IconStorefront,
-  IconTruck,
 } from "@/components/Icons";
 
 // Live counts, prices and fresh listings all come from the database.
@@ -26,32 +25,6 @@ export const dynamic = "force-dynamic";
 
 const img = (file: string) => `/images/products/${file}.jpg`;
 
-const reasons = [
-  {
-    icon: IconTruck,
-    title: "Skip the mandi run",
-    desc: "Browse and order from your phone. No travel, no waiting at the counter.",
-    tile: "bg-amber-100 text-amber-800",
-  },
-  {
-    icon: IconBoxes,
-    title: "Order what you can sell",
-    desc: "Brands set small MOQs, so you can test a new line without filling the stockroom.",
-    tile: "bg-rose-100 text-rose-700",
-  },
-  {
-    icon: IconCart,
-    title: "Price on every tag",
-    desc: "Wholesale price per piece is shown up front. No haggling, no surprise quotes.",
-    tile: "bg-teal-100 text-teal-800",
-  },
-  {
-    icon: IconShieldCheck,
-    title: "Real brands, reviewed",
-    desc: "Every brand and listing is checked by our team before it reaches you.",
-    tile: "bg-accent-100 text-accent-700",
-  },
-];
 
 // One photo and colour per budget band.
 const bandLook: Record<string, { photo: string; bg: string; text: string; sub: string }> = {
@@ -84,28 +57,6 @@ const stores = [
   },
 ];
 
-const steps = [
-  {
-    title: "Open a free buyer account",
-    desc: "Sign up as a retailer with your store details.",
-    color: "bg-[#b0164f]",
-  },
-  {
-    title: "Pick your stock",
-    desc: "Filter by department and budget. Price and MOQ are on every card.",
-    color: "bg-[#c77d0a]",
-  },
-  {
-    title: "Order direct from the brand",
-    desc: "Place your order at the brand's MOQ. No middleman in between.",
-    color: "bg-[#0f766e]",
-  },
-  {
-    title: "Track and reorder",
-    desc: "Every order sits in your dashboard, ready for the next restock.",
-    color: "bg-[#16335e]",
-  },
-];
 
 export default function Home() {
   const all = listApprovedCollections().map(collectionRowToCollection);
@@ -113,6 +64,20 @@ export default function Home() {
   const brands = new Set(all.map((c) => c.brandName)).size;
   const minMoq = all.length ? Math.min(...all.map((c) => c.moq)) : null;
   const minPrice = all.length ? Math.min(...all.map((c) => c.pricePaise)) : null;
+  const median = (xs: number[]) => {
+    const v = [...xs].sort((x, y) => x - y);
+    return v.length ? v[Math.floor((v.length - 1) / 2)] : 0;
+  };
+  const plannerBands = priceBands.map((b) => {
+    const inside = all.filter((c) => inBand(c.pricePaise, b));
+    return {
+      key: b.key,
+      label: b.label,
+      count: inside.length,
+      medianOrder: median(inside.map((c) => c.pricePaise * c.moq)),
+      medianMoq: median(inside.map((c) => c.moq)),
+    };
+  });
   const bands = priceBands.map((b) => ({
     ...b,
     count: all.filter((c) => inBand(c.pricePaise, b)).length,
@@ -162,6 +127,13 @@ export default function Home() {
                     Shop under ₹500
                   </Link>
                 </div>
+                <Link
+                  href="#how-it-works"
+                  className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-amber-300 underline-offset-4 hover:underline"
+                >
+                  See how it works and how you earn more
+                  <IconArrowRight className="h-4 w-4 rotate-90" />
+                </Link>
                 <ul className="mt-8 flex flex-wrap gap-2">
                   {[
                     `${all.length} collections live`,
@@ -234,38 +206,11 @@ export default function Home() {
         <DeptMarquee />
       </div>
 
-      {/* Why retailers switch */}
-      <section className="bg-white py-20 sm:py-24">
-        <Container>
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <h2 className="text-balance max-w-2xl font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-              Wholesale buying, minus the hassle
-            </h2>
-            <p className="max-w-md text-base leading-7 text-slate-600">
-              Everything a shop owner hates about restocking, fixed in one
-              place.
-            </p>
-          </div>
-          <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {reasons.map((r) => (
-              <div
-                key={r.title}
-                className="rounded-2xl border border-slate-200 bg-background p-7 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10"
-              >
-                <span
-                  className={`flex h-12 w-12 items-center justify-center rounded-2xl ${r.tile}`}
-                >
-                  <r.icon className="h-6 w-6" />
-                </span>
-                <h3 className="mt-5 font-serif text-2xl font-semibold text-ink">
-                  {r.title}
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{r.desc}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
+      {/* How it works for retailers */}
+      <RetailerHowItWorks collections={all.length} departments={departments.length} />
+
+      {/* Why direct pays */}
+      <DirectAdvantage />
 
       {/* Shop by budget */}
       <section className="bg-background py-20 sm:py-24">
@@ -372,10 +317,23 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* Margin calculator */}
-      <section className="bg-white py-20 sm:py-24">
+      {/* Profit & planning toolkit */}
+      <section id="planner" className="scroll-mt-24 bg-white py-20 sm:py-24">
         <Container>
-          <MarginCalculator />
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#0f766e]">
+            Free retailer tools
+          </p>
+          <h2 className="text-balance mt-2 max-w-2xl font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
+            Plan smarter. Earn more per piece.
+          </h2>
+          <p className="mt-3 max-w-2xl text-base leading-7 text-slate-600">
+            Work out how far your budget goes, then check the margin on any
+            line before you order.
+          </p>
+          <div className="mt-10 space-y-8">
+            <StockPlanner bands={plannerBands} />
+            <MarginCalculator />
+          </div>
         </Container>
       </section>
 
@@ -412,39 +370,6 @@ export default function Home() {
               </Link>
             ))}
           </div>
-        </Container>
-      </section>
-
-      {/* How buying works */}
-      <section className="bg-white py-20 sm:py-24">
-        <Container>
-          <h2 className="font-serif text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-            Restock in four taps
-          </h2>
-          <ol className="relative mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <span
-              className="absolute left-0 right-0 top-6 hidden h-0.5 bg-slate-200 lg:block"
-              aria-hidden
-            />
-            {steps.map((s, i) => (
-              <li key={s.title} className="relative">
-                <span
-                  className={`relative flex h-12 w-12 items-center justify-center rounded-full font-serif text-lg font-semibold text-white ring-8 ring-white ${s.color}`}
-                >
-                  {i + 1}
-                </span>
-                <h3 className="mt-5 text-xl font-semibold text-ink">{s.title}</h3>
-                <p className="mt-2 text-base leading-7 text-slate-600">{s.desc}</p>
-              </li>
-            ))}
-          </ol>
-          <Link
-            href="/signup"
-            className="mt-12 inline-flex items-center gap-2 rounded-full bg-[#b0164f] px-7 py-3.5 text-base font-semibold text-white transition hover:bg-[#8e1140]"
-          >
-            Open my buyer account
-            <IconArrowRight className="h-4 w-4" />
-          </Link>
         </Container>
       </section>
 
