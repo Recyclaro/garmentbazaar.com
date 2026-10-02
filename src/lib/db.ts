@@ -311,6 +311,22 @@ function seedIfEmpty(db: DatabaseSync) {
       `INSERT INTO users (name, email, password_hash, role, company_name) VALUES (?, ?, ?, 'admin', ?)`,
     ).run("GarmentBazaar Admin", email, passwordHash, "GarmentBazaar");
   }
+
+  // ADMIN_PASSWORD in the hosting panel is the source of truth for the admin
+  // login. The account may have been created before it was set (with the
+  // default password), so bring the stored hash in line on every start.
+  if (process.env.ADMIN_PASSWORD) {
+    const email = process.env.ADMIN_EMAIL || "admin@garmentbazaar.com";
+    const admin = db
+      .prepare("SELECT id, password_hash FROM users WHERE email = ? AND role = 'admin'")
+      .get(email) as { id: number; password_hash: string } | undefined;
+    if (admin && !bcrypt.compareSync(process.env.ADMIN_PASSWORD, admin.password_hash)) {
+      db.prepare("UPDATE users SET password_hash = ? WHERE id = ?").run(
+        bcrypt.hashSync(process.env.ADMIN_PASSWORD, 10),
+        admin.id,
+      );
+    }
+  }
 }
 
 export function getDb(): DatabaseSync {
