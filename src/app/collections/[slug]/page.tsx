@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Container from "@/components/Container";
+import JsonLd, { SITE_URL } from "@/components/JsonLd";
 import OrderForm from "@/components/OrderForm";
 import { getCollectionBySlug, collectionRowToCollection } from "@/lib/db";
 import { collectionSwatch } from "@/lib/collectionSwatch";
@@ -29,9 +30,17 @@ export async function generateMetadata({
   const { slug } = await params;
   const collection = getPublicCollection(slug);
   if (!collection) return { title: "Collection not found" };
+  const price = formatPaise(collection.pricePaise);
   return {
-    title: collection.name,
-    description: `${collection.name} — ${collection.category} collection. ${collection.description}`,
+    title: `${collection.name} Wholesale by ${collection.brandName} | ${price}/piece, MOQ ${collection.moq}`,
+    description: `Buy ${collection.name} wholesale from ${collection.brandName} at ${price} per piece, minimum order ${collection.moq} pieces. ${collection.description}`,
+    alternates: { canonical: `/collections/${collection.slug}` },
+    openGraph: {
+      title: `${collection.name} | ${price}/piece wholesale`,
+      description: collection.description,
+      url: `/collections/${collection.slug}`,
+      ...(collection.imagePath ? { images: [{ url: collection.imagePath, alt: collection.name }] } : {}),
+    },
   };
 }
 
@@ -46,6 +55,43 @@ export default async function CollectionDetailPage({
 
   return (
     <section className="bg-background py-12 sm:py-16">
+      <JsonLd
+        data={[
+          {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: collection.name,
+            description: collection.description,
+            category: collection.category,
+            brand: { "@type": "Brand", name: collection.brandName },
+            url: `${SITE_URL}/collections/${collection.slug}`,
+            ...(collection.imagePath ? { image: `${SITE_URL}${collection.imagePath}` } : {}),
+            offers: {
+              "@type": "Offer",
+              priceCurrency: "INR",
+              price: (collection.pricePaise / 100).toFixed(2),
+              availability: "https://schema.org/InStock",
+              url: `${SITE_URL}/collections/${collection.slug}`,
+              eligibleQuantity: {
+                "@type": "QuantitativeValue",
+                minValue: collection.moq,
+                unitCode: "H87",
+              },
+              businessFunction: "http://purl.org/goodrelations/v1#Sell",
+              eligibleCustomerType: "http://purl.org/goodrelations/v1#Business",
+            },
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+              { "@type": "ListItem", position: 2, name: "Shop", item: `${SITE_URL}/collections` },
+              { "@type": "ListItem", position: 3, name: collection.name, item: `${SITE_URL}/collections/${collection.slug}` },
+            ],
+          },
+        ]}
+      />
       <Container>
         <Link
           href="/collections"

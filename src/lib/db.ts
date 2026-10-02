@@ -678,6 +678,7 @@ export interface OrderWithCollection extends OrderRow {
   collection_slug: string;
   collection_image: string | null;
   collection_category: string;
+  collection_moq: number;
   brand_name: string;
 }
 
@@ -693,6 +694,7 @@ export function listOrdersForCollectionOwner(ownerUserId: number): OrderWithReta
               collections.slug as collection_slug,
               collections.image_path as collection_image,
               collections.category as collection_category,
+              collections.moq as collection_moq,
               collections.brand_name as brand_name,
               users.name as retailer_name,
               users.company_name as retailer_company
@@ -712,6 +714,7 @@ export function listOrdersByRetailer(retailerUserId: number): OrderWithCollectio
               collections.slug as collection_slug,
               collections.image_path as collection_image,
               collections.category as collection_category,
+              collections.moq as collection_moq,
               collections.brand_name as brand_name
        FROM orders
        JOIN collections ON collections.id = orders.collection_id

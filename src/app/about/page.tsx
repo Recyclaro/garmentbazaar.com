@@ -12,7 +12,8 @@ import {
 } from "@/components/Icons";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About GarmentBazaar",
+  alternates: { canonical: "/about" },
   description:
     "GarmentBazaar's mission is to become the AI-first B2B fashion sourcing platform for India's fashion and lifestyle ecosystem.",
 };

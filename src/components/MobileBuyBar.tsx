@@ -16,7 +16,7 @@ export default function MobileBuyBar({
   secondary?: { label: string; href: string };
 }) {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur md:hidden">
+    <div className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-40 border-t border-slate-200 bg-white/95 px-4 pb-3 pt-3 shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur md:hidden">
       <div className="flex items-center gap-3">
         {info && <div className="min-w-0 flex-1">{info}</div>}
         {secondary && (

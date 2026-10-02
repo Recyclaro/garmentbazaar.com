@@ -16,7 +16,8 @@ import {
 } from "@/components/Icons";
 
 export const metadata: Metadata = {
-  title: "For Brands",
+  title: "Sell Your Brand Wholesale to Retailers Across India",
+  alternates: { canonical: "/solutions/brands" },
   description:
     "List your fashion and lifestyle collections on GarmentBazaar and sell wholesale to boutiques, retail chains, online sellers and export buyers across India.",
 };

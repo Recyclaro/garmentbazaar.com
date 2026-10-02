@@ -3,6 +3,8 @@ import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import AnnouncementBar from "@/components/AnnouncementBar";
+import JsonLd from "@/components/JsonLd";
+import MobileNav from "@/components/MobileNav";
 import Footer from "@/components/Footer";
 import { getCurrentUser } from "@/lib/dal";
 
@@ -23,26 +25,38 @@ const playfairDisplay = Playfair_Display({
 
 const siteUrl = "https://garmentbazaar.com";
 
+const siteTitle = "GarmentBazaar | Wholesale Clothing for Retailers, Direct from Brands";
+const siteDescription =
+  "Buy branded clothing, footwear and accessories wholesale, direct from brands. Price per piece shown up front, small MOQs, 12 departments. B2B fashion marketplace for boutiques, stores and online sellers in India.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "GarmentBazaar — The AI-First B2B Fashion Sourcing Platform",
+    default: siteTitle,
     template: "%s | GarmentBazaar",
   },
-  description:
-    "GarmentBazaar is an AI-powered B2B sourcing and supply chain platform connecting brands, manufacturers, factories, and retailers across India's fashion and lifestyle ecosystem.",
+  description: siteDescription,
+  applicationName: "GarmentBazaar",
   keywords: [
-    "B2B fashion sourcing",
-    "garment manufacturing platform",
-    "AI supply chain",
-    "apparel sourcing India",
-    "textile procurement",
-    "retail inventory optimization",
+    "wholesale clothing for retailers",
+    "B2B fashion marketplace India",
+    "buy branded clothes wholesale",
+    "wholesale garments online",
+    "wholesale kurtis",
+    "wholesale menswear",
+    "wholesale womenswear",
+    "wholesale kidswear",
+    "wholesale footwear",
+    "low MOQ clothing suppliers",
+    "boutique wholesale suppliers",
+    "garment manufacturers India",
+    "fabric suppliers India",
   ],
+  alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
   openGraph: {
-    title: "GarmentBazaar — The AI-First B2B Fashion Sourcing Platform",
-    description:
-      "AI-powered sourcing, procurement, pricing, and supply chain orchestration for India's fashion and lifestyle ecosystem.",
+    title: siteTitle,
+    description: siteDescription,
     url: siteUrl,
     siteName: "GarmentBazaar",
     locale: "en_IN",
@@ -50,10 +64,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GarmentBazaar — The AI-First B2B Fashion Sourcing Platform",
-    description:
-      "AI-powered sourcing, procurement, pricing, and supply chain orchestration for India's fashion and lifestyle ecosystem.",
+    title: siteTitle,
+    description: siteDescription,
   },
+  category: "shopping",
 };
 
 export default async function RootLayout({
@@ -69,10 +83,38 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-ink">
+        <JsonLd
+          data={[
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "GarmentBazaar",
+              url: siteUrl,
+              logo: `${siteUrl}/icon`,
+              email: "hello@garmentbazaar.com",
+              description: siteDescription,
+              areaServed: "IN",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "GarmentBazaar",
+              url: siteUrl,
+              inLanguage: "en-IN",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: `${siteUrl}/collections?q={search_term_string}`,
+                "query-input": "required name=search_term_string",
+              },
+            },
+          ]}
+        />
         <AnnouncementBar />
         <Header user={user ? { name: user.name, role: user.role } : null} />
         <main className="flex-1">{children}</main>
         <Footer />
+        <div className="h-16 md:hidden" aria-hidden />
+        <MobileNav loggedIn={Boolean(user)} />
       </body>
     </html>
   );

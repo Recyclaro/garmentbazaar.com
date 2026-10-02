@@ -138,27 +138,79 @@ export default function OrderForm({
   return (
     <form action={formAction} className="space-y-4">
       <div>
-        <label htmlFor="quantity" className="block text-sm font-medium text-ink">
-          Quantity
-        </label>
-        <input
-          id="quantity"
-          name="quantity"
-          type="number"
-          min={moq}
-          step={1}
-          value={quantity}
-          onChange={(e) => setQuantity(Math.max(0, Number(e.target.value)))}
-          className="mt-1.5 block w-full rounded-lg border border-slate-300 px-3.5 py-3 text-base text-ink shadow-sm sm:py-2.5 sm:text-sm outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
-        />
-        <p className="mt-1 text-xs text-slate-500">Minimum {moq} units.</p>
+        <div className="flex items-center justify-between gap-3">
+          <label htmlFor="quantity" className="block text-sm font-medium text-ink">
+            Quantity (pieces)
+          </label>
+          <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-900">
+            MOQ {moq} pcs
+          </span>
+        </div>
+
+        <div className="mt-2 grid grid-cols-3 gap-2">
+          {[1, 2, 3].map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setQuantity(moq * m)}
+              className={`rounded-xl py-2.5 text-sm font-semibold transition ${
+                quantity === moq * m
+                  ? "bg-ink text-white"
+                  : "bg-white text-ink ring-1 ring-slate-300 hover:ring-slate-500"
+              }`}
+            >
+              {m === 1 ? `MOQ · ${moq}` : `${m}× · ${moq * m}`}
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-2 flex items-stretch gap-2">
+          <button
+            type="button"
+            aria-label="One piece less"
+            onClick={() => setQuantity((q) => Math.max(0, q - 1))}
+            className="w-12 shrink-0 rounded-xl bg-white text-xl font-semibold text-ink ring-1 ring-slate-300"
+          >
+            −
+          </button>
+          <input
+            id="quantity"
+            name="quantity"
+            type="number"
+            inputMode="numeric"
+            min={moq}
+            step={1}
+            value={quantity}
+            onChange={(e) => setQuantity(Math.max(0, Number(e.target.value)))}
+            className="block w-full rounded-xl border border-slate-300 px-3.5 py-3 text-center text-lg font-semibold text-ink shadow-sm outline-none focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20"
+          />
+          <button
+            type="button"
+            aria-label="One piece more"
+            onClick={() => setQuantity((q) => q + 1)}
+            className="w-12 shrink-0 rounded-xl bg-white text-xl font-semibold text-ink ring-1 ring-slate-300"
+          >
+            +
+          </button>
+        </div>
+        {quantity < moq ? (
+          <p className="mt-1.5 text-xs font-medium text-amber-800">
+            Add {moq - quantity} more piece{moq - quantity === 1 ? "" : "s"} to reach the minimum order of {moq}.
+          </p>
+        ) : (
+          <p className="mt-1.5 text-xs text-slate-500">
+            Minimum order is {moq} pieces. You can order any amount above it.
+          </p>
+        )}
         {state?.errors?.quantity && (
           <p className="mt-1 text-xs text-red-600">{state.errors.quantity[0]}</p>
         )}
       </div>
 
       <div className="flex items-center justify-between rounded-lg bg-background px-3.5 py-2.5 text-sm">
-        <span className="text-slate-500">Order total</span>
+        <span className="text-slate-500">
+          Order total · {quantity} pcs × {formatPaise(unitPricePaise)}
+        </span>
         <span className="font-semibold text-ink">{formatPaise(total)}</span>
       </div>
 

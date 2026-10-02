@@ -16,7 +16,8 @@ import {
 } from "@/components/Icons";
 
 export const metadata: Metadata = {
-  title: "Platform",
+  title: "B2B Fashion Sourcing Platform: AI Matching, Orders & Supply Chain",
+  alternates: { canonical: "/platform" },
   description:
     "Explore GarmentBazaar's AI-first platform: product onboarding, procurement, dynamic pricing, inventory optimization, supply chain orchestration, and retailer recommendations.",
 };

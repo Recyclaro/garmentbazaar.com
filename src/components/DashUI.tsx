@@ -150,6 +150,12 @@ export function OrderList({
                     {formatPaise(o.total_amount_paise)}
                   </span>
                 </p>
+                <p className="mt-1 text-xs text-slate-500">
+                  MOQ {o.collection_moq} · {formatPaise(o.unit_price_paise)}/pc
+                  {o.collection_moq > 0 && o.quantity >= o.collection_moq * 2
+                    ? ` · ${Math.floor(o.quantity / o.collection_moq)}× MOQ`
+                    : ""}
+                </p>
               </div>
             </div>
             {reorder && (
@@ -172,6 +178,7 @@ export function OrderList({
               <th className="px-4 py-3">Collection</th>
               <th className="px-4 py-3">{who === "brand" ? "Brand" : "Retailer"}</th>
               <th className="px-4 py-3">Pieces</th>
+              <th className="px-4 py-3">MOQ</th>
               <th className="px-4 py-3">Total</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3">Date</th>
@@ -189,6 +196,7 @@ export function OrderList({
                 </td>
                 <td className="px-4 py-3 text-slate-600">{party(o)}</td>
                 <td className="px-4 py-3 text-slate-600">{o.quantity}</td>
+                <td className="px-4 py-3 text-slate-600">{o.collection_moq}</td>
                 <td className="px-4 py-3 font-semibold text-ink">
                   {formatPaise(o.total_amount_paise)}
                 </td>

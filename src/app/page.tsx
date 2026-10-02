@@ -1,5 +1,4 @@
 import CardRail from "@/components/CardRail";
-import MobileBuyBar, { MobileBarSpacer } from "@/components/MobileBuyBar";
 import Link from "next/link";
 import Image from "next/image";
 import Container from "@/components/Container";
@@ -10,6 +9,8 @@ import MarginCalculator from "@/components/MarginCalculator";
 import StockPlanner from "@/components/StockPlanner";
 import RetailerHowItWorks from "@/components/RetailerHowItWorks";
 import DirectAdvantage from "@/components/DirectAdvantage";
+import SmallTownSection from "@/components/SmallTownSection";
+import HomeFaq from "@/components/HomeFaq";
 import { departments } from "@/data/departments";
 import { priceBands, inBand } from "@/lib/priceBands";
 import { formatPaise } from "@/lib/currency";
@@ -100,17 +101,17 @@ export default function Home() {
             <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:items-center">
               <div className="lg:col-span-6">
                 <p className="text-xs font-bold uppercase tracking-[0.16em] text-amber-300">
-                  For boutiques, stores &amp; online sellers
+                  For shops in Tier 2, 3 &amp; 4 towns
                 </p>
-                <h1 className="text-balance mt-5 font-serif text-5xl font-semibold leading-[1.02] tracking-tight text-white sm:text-7xl">
+                <h1 className="text-balance mt-5 font-serif text-[2.6rem] font-semibold leading-[1.02] tracking-tight text-white sm:text-7xl">
                   Stock what sells.
                   <br />
                   <span className="text-amber-300">Skip the mandi.</span>
                 </h1>
                 <p className="text-balance mt-6 max-w-xl text-lg leading-8 text-white/85">
-                  Order branded fashion straight from the brands. Wholesale
-                  price per piece up front, small MOQs, and every order in one
-                  dashboard.
+                  Order branded fashion straight from the brands, from any
+                  town in India. Price per piece up front, small MOQs, and
+                  every order in one place.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Link
@@ -205,6 +206,9 @@ export default function Home() {
       <div className="mt-10">
         <DeptMarquee />
       </div>
+
+      {/* Tier 2-4 towns */}
+      <SmallTownSection minMoq={minMoq} />
 
       {/* How it works for retailers */}
       <RetailerHowItWorks collections={all.length} departments={departments.length} />
@@ -416,6 +420,9 @@ export default function Home() {
         </Container>
       </section>
 
+      {/* FAQ */}
+      <HomeFaq />
+
       {/* CTA */}
       <section className="bg-background pb-12">
         <Container>
@@ -507,12 +514,6 @@ export default function Home() {
           </div>
         </Container>
       </section>
-      <MobileBarSpacer />
-      <MobileBuyBar
-        cta="Start buying"
-        href="/collections"
-        secondary={{ label: "Under ₹500", href: "/collections?price=under-500" }}
-      />
     </>
   );
 }

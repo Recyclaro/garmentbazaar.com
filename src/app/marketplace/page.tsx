@@ -3,7 +3,8 @@ import MarketplaceClient from "./MarketplaceClient";
 import { listApprovedSuppliers, supplierRowToSupplier } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Marketplace",
+  title: "Garment Manufacturers & Fabric Suppliers in India",
+  alternates: { canonical: "/marketplace" },
   description:
     "Browse GarmentBazaar's directory of AI-verified manufacturers and factories across India's textile hubs. Filter by category, region, and certification, then request a quote.",
 };

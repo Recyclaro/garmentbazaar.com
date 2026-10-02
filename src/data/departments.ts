@@ -5,6 +5,12 @@ import type { CollectionCategory } from "@/data/collections";
 // which uses dark text on yellow.
 export interface Department {
   name: CollectionCategory;
+  /** URL slug for /wholesale/<slug>. */
+  slug: string;
+  /** Page title and H1 for the department landing page. */
+  seoTitle: string;
+  /** Meta description and intro for the landing page. */
+  seoDescription: string;
   label: string;
   band: string;
   text: string;
@@ -14,6 +20,10 @@ export interface Department {
 export const departments: Department[] = [
   {
     name: "Menswear",
+    slug: "menswear",
+    seoTitle: "Wholesale Menswear",
+    seoDescription:
+      "Wholesale menswear for retailers: shirts, polos, jeans, jackets and suits direct from brands. Price per piece up front, small MOQs.",
     label: "Men's wear",
     band: "bg-[#16335e]",
     text: "text-white",
@@ -26,6 +36,10 @@ export const departments: Department[] = [
   },
   {
     name: "Womenswear",
+    slug: "womenswear",
+    seoTitle: "Wholesale Womenswear",
+    seoDescription:
+      "Wholesale womenswear for boutiques and stores: dresses, tops, co-ords, blazers and denim direct from brands, at brand-set MOQs.",
     label: "Women's wear",
     band: "bg-[#b0164f]",
     text: "text-white",
@@ -38,6 +52,10 @@ export const departments: Department[] = [
   },
   {
     name: "Kidswear",
+    slug: "kidswear",
+    seoTitle: "Wholesale Kidswear",
+    seoDescription:
+      "Wholesale kidswear for retailers: boys and girls tees, dresses, ethnic sets and winter wear, direct from brands with small MOQs.",
     label: "Kids' wear",
     band: "bg-[#f4c430]",
     text: "text-ink",
@@ -50,6 +68,10 @@ export const departments: Department[] = [
   },
   {
     name: "Ethnic & Occasion",
+    slug: "ethnic-wear",
+    seoTitle: "Wholesale Ethnic Wear",
+    seoDescription:
+      "Wholesale ethnic wear for retailers: kurtis, sarees, lehengas, anarkalis and sherwanis direct from brands. See price per piece before you order.",
     label: "Ethnic & occasion",
     band: "bg-[#b91c1c]",
     text: "text-white",
@@ -62,6 +84,10 @@ export const departments: Department[] = [
   },
   {
     name: "Activewear",
+    slug: "activewear",
+    seoTitle: "Wholesale Activewear",
+    seoDescription:
+      "Wholesale activewear and sportswear for stores: yoga sets, gym tees, tracksuits and team jerseys direct from brands.",
     label: "Activewear & sports",
     band: "bg-[#1d4ed8]",
     text: "text-white",
@@ -74,6 +100,10 @@ export const departments: Department[] = [
   },
   {
     name: "Footwear",
+    slug: "footwear",
+    seoTitle: "Wholesale Footwear",
+    seoDescription:
+      "Wholesale footwear for retailers: sneakers, sports shoes, formal shoes, heels, sandals and boots direct from brands at small MOQs.",
     label: "Footwear",
     band: "bg-[#0f766e]",
     text: "text-white",
@@ -86,6 +116,10 @@ export const departments: Department[] = [
   },
   {
     name: "Bags & Luggage",
+    slug: "bags-luggage",
+    seoTitle: "Wholesale Bags & Luggage",
+    seoDescription:
+      "Wholesale bags for retailers: handbags, backpacks, totes, duffels and cabin luggage direct from brands.",
     label: "Bags & luggage",
     band: "bg-[#6d28d9]",
     text: "text-white",
@@ -98,6 +132,10 @@ export const departments: Department[] = [
   },
   {
     name: "Accessories",
+    slug: "accessories",
+    seoTitle: "Wholesale Fashion Accessories",
+    seoDescription:
+      "Wholesale fashion accessories: watches, sunglasses, belts, caps, scarves and jewellery for retailers, direct from brands.",
     label: "Accessories",
     band: "bg-[#7c4a1e]",
     text: "text-white",
@@ -110,6 +148,10 @@ export const departments: Department[] = [
   },
   {
     name: "Innerwear & Sleepwear",
+    slug: "innerwear-sleepwear",
+    seoTitle: "Wholesale Innerwear & Sleepwear",
+    seoDescription:
+      "Wholesale innerwear and sleepwear for stores: night suits, pyjama sets, camisoles, briefs and shapewear direct from brands.",
     label: "Innerwear & sleepwear",
     band: "bg-[#be185d]",
     text: "text-white",
@@ -122,6 +164,10 @@ export const departments: Department[] = [
   },
   {
     name: "Maternity & Plus Size",
+    slug: "maternity-plus-size",
+    seoTitle: "Wholesale Maternity & Plus Size",
+    seoDescription:
+      "Wholesale maternity and plus size clothing for retailers: maternity dresses, nursing wear and plus size tops and denim.",
     label: "Maternity & plus size",
     band: "bg-[#9d174d]",
     text: "text-white",
@@ -134,6 +180,10 @@ export const departments: Department[] = [
   },
   {
     name: "Uniforms & Workwear",
+    slug: "uniforms-workwear",
+    seoTitle: "Wholesale Uniforms & Workwear",
+    seoDescription:
+      "Bulk uniforms and workwear: corporate polos, school uniforms, chef coats, scrubs and safety vests made to order by brands.",
     label: "Uniforms & workwear",
     band: "bg-[#1e3a8a]",
     text: "text-white",
@@ -146,6 +196,10 @@ export const departments: Department[] = [
   },
   {
     name: "Home & Lifestyle",
+    slug: "home-textiles",
+    seoTitle: "Wholesale Home Textiles",
+    seoDescription:
+      "Wholesale home textiles for retailers: bed linen, bath towels, cushion covers, curtains and robes direct from brands.",
     label: "Lifestyle & home textiles",
     band: "bg-[#4338ca]",
     text: "text-white",
@@ -157,3 +211,12 @@ export const departments: Department[] = [
     ],
   },
 ];
+
+export function departmentBySlug(slug: string): Department | undefined {
+  return departments.find((d) => d.slug === slug);
+}
+
+export function departmentHref(name: string): string {
+  const d = departments.find((x) => x.name === name);
+  return d ? `/wholesale/${d.slug}` : `/collections?category=${encodeURIComponent(name)}`;
+}

@@ -49,7 +49,9 @@ export default function CollectionCard({ collection }: { collection: Collection 
             {formatPaise(collection.pricePaise)}
             <span className="font-normal text-slate-400"> / unit</span>
           </span>
-          <span className="text-xs text-slate-500">MOQ {collection.moq}</span>
+          <span className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-900">
+            MOQ {collection.moq} pcs
+          </span>
         </div>
 
         <Link

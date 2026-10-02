@@ -6,7 +6,8 @@ import { IconBuilding, IconFactory, IconStorefront } from "@/components/Icons";
 import { getSupplierBySlug } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact GarmentBazaar",
+  alternates: { canonical: "/contact" },
   description:
     "Get in touch with GarmentBazaar to request a demo or learn how our AI-first sourcing platform can work for your brand, factory, or retail business.",
 };

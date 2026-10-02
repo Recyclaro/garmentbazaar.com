@@ -3,7 +3,8 @@ import AuthShell from "@/components/AuthShell";
 import SignupForm from "@/components/SignupForm";
 
 export const metadata: Metadata = {
-  title: "Sign Up",
+  title: "Create a Free Buyer or Seller Account",
+  alternates: { canonical: "/signup" },
   description:
     "Create a GarmentBazaar account as a brand, manufacturer, or retailer.",
 };

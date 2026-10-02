@@ -33,7 +33,8 @@ export async function generateMetadata({
   const supplier = getPublicSupplier(slug);
   if (!supplier) return { title: "Supplier not found" };
   return {
-    title: supplier.name,
+    title: `${supplier.name}, ${supplier.category} Manufacturer in ${supplier.city}`,
+    alternates: { canonical: `/marketplace/${supplier.slug}` },
     description: `${supplier.name} — ${supplier.category} manufacturer in ${supplier.city}, ${supplier.region}. ${
       supplier.specialties.length > 0 ? `Specialties: ${supplier.specialties.join(", ")}.` : ""
     }`.trim(),

@@ -6,7 +6,7 @@ import { IconArrowRight } from "./Icons";
 // One department as a colour band with four product photos, like the
 // product sheet. The whole card links to collections filtered to it.
 export default function DeptBand({ dept }: { dept: Department }) {
-  const href = `/collections?category=${encodeURIComponent(dept.name)}`;
+  const href = `/wholesale/${dept.slug}`;
   return (
     <div className="group overflow-hidden rounded-2xl border border-slate-200 bg-white transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
       <Link

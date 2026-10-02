@@ -1,6 +1,6 @@
 import CardRail from "@/components/CardRail";
-import MobileBuyBar, { MobileBarSpacer } from "@/components/MobileBuyBar";
 import PageHero from "@/components/PageHero";
+import SmallTownSection from "@/components/SmallTownSection";
 import MarginCalculator from "@/components/MarginCalculator";
 import { priceBands } from "@/lib/priceBands";
 import DeptMarquee from "@/components/DeptMarquee";
@@ -12,9 +12,10 @@ import { IconArrowRight } from "@/components/Icons";
 import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "For Retailers",
+  title: "Wholesale Clothing for Retailers in Tier 2, 3 & 4 Cities",
+  alternates: { canonical: "/solutions/retailers" },
   description:
-    "Buy branded fashion and lifestyle stock at wholesale price, direct from brands, at each brand's minimum order quantity.",
+    "Wholesale clothing, footwear and accessories for retailers in Tier 2, 3 and 4 cities. Order direct from brands on your phone, see price per piece, buy at small MOQs. No trips to the mandi.",
 };
 
 // The live collections strip reads from the database, so render per request.
@@ -83,9 +84,9 @@ export default function RetailersPage() {
             {/* Hero */}
       <PageHero
         tone="rose"
-        eyebrow="For retailers and buyers"
+        eyebrow="For shops in Tier 2, 3 & 4 towns"
         title="Your store. Their brands. Wholesale prices."
-        subtitle="Restock from reviewed brands in a few taps. See the price per piece before you order, buy only the MOQ the brand sets, and track every order in one place."
+        subtitle="Restock from reviewed brands in a few taps, from any town in India. See the price per piece before you order, buy only the MOQ the brand sets, and track every order in one place."
         photos={[
           { file: "women-dress", alt: "Dress" },
           { file: "men-polo", alt: "Polo shirt" },
@@ -112,6 +113,8 @@ export default function RetailersPage() {
       <div className="mt-10">
         <DeptMarquee />
       </div>
+
+      <SmallTownSection minMoq={null} />
 
       {/* Buyer types */}
       <section className="bg-white py-16 sm:py-20">
@@ -271,12 +274,6 @@ export default function RetailersPage() {
           </div>
         </Container>
       </section>
-      <MobileBarSpacer />
-      <MobileBuyBar
-        cta="Start buying"
-        href="/collections"
-        secondary={{ label: "Under ₹500", href: "/collections?price=under-500" }}
-      />
     </>
   );
 }

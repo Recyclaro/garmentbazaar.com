@@ -8,7 +8,8 @@ import { IconArrowRight, IconCheck } from "@/components/Icons";
 import { listApprovedSuppliers, supplierRowToSupplier } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Fabric & Mills",
+  title: "Fabric Suppliers & Garment Mills: Sell to Brands",
+  alternates: { canonical: "/solutions/manufacturers" },
   description:
     "Mills, fabric suppliers and garment factories sell to verified brands on GarmentBazaar. List fabric, capacity and surplus stock, and receive quote requests directly.",
 };

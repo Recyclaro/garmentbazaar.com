@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Container from "@/components/Container";
 import PageHero from "@/components/PageHero";
 import CollectionCard from "@/components/CollectionCard";
@@ -22,16 +22,30 @@ export default function CollectionsClient({
   initialCategory = "All",
   initialPrice = "all",
   initialSort = "new",
+  initialQuery = "",
+  hero,
 }: {
   collections: Collection[];
   initialCategory?: CollectionCategory | "All";
   initialPrice?: string;
   initialSort?: SortKey;
+  initialQuery?: string;
+  /** Overrides the hero copy, e.g. on department landing pages. */
+  hero?: { eyebrow: string; title: string; subtitle: string };
 }) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const [category, setCategory] = useState<CollectionCategory | "All">(initialCategory);
   const [price, setPrice] = useState<string>(initialPrice);
   const [sort, setSort] = useState<SortKey>(initialSort);
+  const chipsRef = useRef<HTMLDivElement>(null);
+
+  // On phones the chip row scrolls sideways; bring the chosen department
+  // into view (e.g. on /wholesale/footwear) without moving the page.
+  useEffect(() => {
+    const row = chipsRef.current;
+    const active = row?.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (row && active) row.scrollLeft = active.offsetLeft - 24;
+  }, [category]);
 
   function clearFilters() {
     setQuery("");
@@ -65,9 +79,12 @@ export default function CollectionsClient({
     <>
       <PageHero
         tone="rose"
-        eyebrow="Shop wholesale"
-        title="Fresh stock, straight from the brand."
-        subtitle="Browse collections from reviewed brands, see the wholesale price per piece up front, and order at the brand's MOQ. No middleman, no haggling."
+        eyebrow={hero?.eyebrow ?? "Shop wholesale"}
+        title={hero?.title ?? "Fresh stock, straight from the brand."}
+        subtitle={
+          hero?.subtitle ??
+          "Browse collections from reviewed brands, see the wholesale price per piece up front, and order at the brand's MOQ. No middleman, no haggling."
+        }
         photos={[
           { file: "hero-women", alt: "Women's wear" },
           { file: "men-jacket", alt: "Jacket" },
@@ -80,10 +97,14 @@ export default function CollectionsClient({
 
       <section className="bg-background pb-16 pt-6 sm:pb-20 sm:pt-10">
       <Container>
-        <div className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-2 sm:mx-0 sm:px-0">
+        <div
+          ref={chipsRef}
+          className="relative -mx-6 flex gap-2 overflow-x-auto px-6 pb-2 sm:mx-0 sm:px-0"
+        >
           {["All" as const, ...collectionCategories].map((c) => (
             <button
               key={c}
+              aria-pressed={category === c}
               onClick={() => setCategory(c)}
               className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${
                 category === c
