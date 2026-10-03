@@ -1,8 +1,8 @@
 "use server";
 
-import { headers } from "next/headers";
 import { z } from "zod";
 import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
+import { aiEnabled, allowAiCall } from "@/lib/claude";
 import {
   aiPlan,
   regions,
@@ -36,32 +36,6 @@ export interface AdvisorState {
   aiFallback?: boolean;
 }
 
-// Simple in-memory limits so the public form can't run up the Claude bill:
-// a few AI plans per visitor per hour and a daily cap for the whole site.
-// Over the limit, the plan still comes back from the built-in rules.
-const perVisitor = new Map<string, number[]>();
-let day = "";
-let dayCount = 0;
-const HOUR = 60 * 60 * 1000;
-
-function allowAi(ip: string): boolean {
-  const today = new Date().toISOString().slice(0, 10);
-  if (today !== day) {
-    day = today;
-    dayCount = 0;
-    perVisitor.clear();
-  }
-  const cap = Number(process.env.ADVISOR_DAILY_LIMIT) || 300;
-  if (dayCount >= cap) return false;
-  const now = Date.now();
-  const recent = (perVisitor.get(ip) ?? []).filter((t) => now - t < HOUR);
-  if (recent.length >= 6) return false;
-  recent.push(now);
-  perVisitor.set(ip, recent);
-  dayCount += 1;
-  return true;
-}
-
 export async function getStockPlan(
   _prev: AdvisorState | undefined,
   formData: FormData,
@@ -87,10 +61,8 @@ export async function getStockPlan(
 
   let plan: StockPlan | null = null;
   let aiFallback = false;
-  if (process.env.ANTHROPIC_API_KEY) {
-    const h = await headers();
-    const ip = (h.get("x-forwarded-for") ?? "").split(",")[0].trim() || h.get("x-real-ip") || "unknown";
-    if (allowAi(ip)) plan = await aiPlan(input, catalogue);
+  if (aiEnabled()) {
+    if (await allowAiCall("advisor", 6)) plan = await aiPlan(input, catalogue);
     aiFallback = plan === null;
   }
   plan ??= rulesPlan(input, catalogue);

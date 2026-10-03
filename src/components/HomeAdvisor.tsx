@@ -1,15 +1,12 @@
-import Container from "./Container";
 import { regions, seasons, shopTypes, type Season } from "@/lib/advisorOptions";
 import { IconArrowRight, IconCheck, IconSparkles } from "./Icons";
 
-// Home page entry to the stock advisor. A plain GET form, so it works
+// Home page entry to the stock advisor (inside the AI tools section). A plain GET form, so it works
 // before any JavaScript loads; the advisor page builds the plan on arrival.
 export default function HomeAdvisor({ aiOn, season }: { aiOn: boolean; season: Season }) {
   const field =
     "mt-1.5 block w-full rounded-xl border border-white/20 bg-white px-3.5 py-2.5 text-sm text-ink outline-none focus:ring-2 focus:ring-amber-300";
   return (
-    <section className="bg-white py-16 sm:py-20">
-      <Container>
         <div className="relative overflow-hidden rounded-[2rem] bg-[#12264a] p-6 text-white sm:p-10 lg:p-12">
           <div aria-hidden className="pointer-events-none absolute -left-24 -top-24 h-80 w-80 rounded-full bg-[#b0164f]/40 blur-3xl" />
           <div aria-hidden className="pointer-events-none absolute -bottom-32 right-0 h-80 w-80 rounded-full bg-amber-300/15 blur-3xl" />
@@ -84,7 +81,5 @@ export default function HomeAdvisor({ aiOn, season }: { aiOn: boolean; season: S
             </form>
           </div>
         </div>
-      </Container>
-    </section>
   );
 }

@@ -20,7 +20,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const core = [
     page("", 1, "daily"),
     page("/collections", 0.9, "daily"),
+    page("/ai-tools", 0.8, "weekly"),
     page("/stock-advisor", 0.8, "weekly"),
+    page("/ask", 0.7, "weekly"),
+    page("/whatsapp-writer", 0.7, "weekly"),
     page("/solutions/retailers", 0.9, "weekly"),
     page("/solutions/brands", 0.7, "monthly"),
     page("/solutions/manufacturers", 0.7, "monthly"),

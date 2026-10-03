@@ -25,7 +25,7 @@ const solutions = [
 
 const navLinks = [
   { href: "/collections", label: "Shop" },
-  { href: "/stock-advisor", label: "Stock Advisor" },
+  { href: "/ai-tools", label: "AI Tools" },
   { href: "/marketplace", label: "Suppliers" },
   { href: "/guides", label: "Guides" },
   { href: "/platform", label: "Platform" },

@@ -12,7 +12,7 @@ import StockPlanner from "@/components/StockPlanner";
 import TripCostCalculator from "@/components/TripCostCalculator";
 import HomeHowItWorks from "@/components/HomeHowItWorks";
 import ToolTabs from "@/components/ToolTabs";
-import HomeAdvisor from "@/components/HomeAdvisor";
+import HomeAI from "@/components/HomeAI";
 import { aiEnabled, currentSeason } from "@/lib/advisor";
 import HomeFaq from "@/components/HomeFaq";
 import { departments } from "@/data/departments";
@@ -38,6 +38,7 @@ const bandLook: Record<string, { photo: string; bg: string; text: string; sub: s
 
 
 export default function Home() {
+  const aiOn = aiEnabled();
   const all = listApprovedCollections().map(collectionRowToCollection);
   const fresh = all.filter((c) => c.imagePath).slice(0, 8);
   const brands = new Set(all.map((c) => c.brandName)).size;
@@ -86,12 +87,13 @@ export default function Home() {
         minMoq={minMoq}
         minPrice={minPrice}
         listings={heroListings}
+        aiOn={aiOn}
       />
 
       <DeptTiles />
 
-      {/* Stock advisor */}
-      <HomeAdvisor aiOn={aiEnabled()} season={currentSeason()} />
+      {/* AI tools */}
+      <HomeAI aiOn={aiOn} season={currentSeason()} />
 
       {/* Just dropped */}
       {fresh.length > 0 && (

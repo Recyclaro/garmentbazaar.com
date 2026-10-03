@@ -36,12 +36,14 @@ export default function HomeHero({
   minMoq,
   minPrice,
   listings,
+  aiOn,
 }: {
   collections: number;
   brands: number;
   minMoq: number | null;
   minPrice: number | null;
   listings: HeroListing[];
+  aiOn: boolean;
 }) {
   const cards = listings.slice(0, 4);
   const tilt = ["lg:-rotate-2", "lg:rotate-2 lg:translate-y-8", "lg:rotate-1", "lg:-rotate-1 lg:translate-y-8"];
@@ -98,7 +100,7 @@ export default function HomeHero({
               Order straight from the brands, from anywhere in India.
             </p>
 
-            <form action="/collections" method="get" role="search" className="mt-8 max-w-xl">
+            <form action="/ask" method="get" role="search" className="mt-8 max-w-xl">
               <label htmlFor="hero-q" className="sr-only">
                 Search wholesale collections
               </label>
@@ -108,8 +110,8 @@ export default function HomeHero({
                   id="hero-q"
                   name="q"
                   type="search"
-                  maxLength={80}
-                  placeholder="Search kurtis, kids tees, sarees…"
+                  maxLength={200}
+                  placeholder={aiOn ? "Try: cotton kurtis under ₹500 for summer" : "Search kurtis, kids tees, sarees…"}
                   className="min-w-0 flex-1 bg-transparent py-2.5 text-base text-ink placeholder:text-slate-400 focus:outline-none"
                 />
                 <button
@@ -120,6 +122,18 @@ export default function HomeHero({
                 </button>
               </div>
             </form>
+            <Link
+              href="#ai-tools"
+              className="mt-3 inline-flex items-center gap-2 text-sm text-white/80 transition hover:text-amber-200"
+            >
+              <span className="rounded-full bg-gradient-to-r from-amber-300 to-orange-300 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-ink">
+                New
+              </span>
+              {aiOn
+                ? "AI search in Hindi or English, a stock advisor and a WhatsApp writer"
+                : "Free stock advisor, smart search and WhatsApp writer"}
+              <IconArrowRight className="h-3.5 w-3.5" />
+            </Link>
 
             <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
               <span className="text-white/60">Popular:</span>

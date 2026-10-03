@@ -1,4 +1,5 @@
 import "server-only";
+import { aiEnabled, callClaudeTool, clip } from "./claude";
 import type { Collection, CollectionCategory } from "@/data/collections";
 
 // Stock advisor: turns a shop's profile (region, town tier, shop type,
@@ -65,9 +66,7 @@ export function currentSeason(now = new Date()): Season {
   return "monsoon";
 }
 
-export function aiEnabled(): boolean {
-  return Boolean(process.env.ANTHROPIC_API_KEY);
-}
+export { aiEnabled };
 
 // ---------------------------------------------------------------------------
 // Built-in rules
@@ -296,8 +295,7 @@ interface ToolPlan {
 }
 
 export async function aiPlan(input: AdvisorInput, catalogue: Collection[]): Promise<StockPlan | null> {
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) return null;
+  if (!aiEnabled()) return null;
   const budgetPaise = input.budgetRupees * 100;
 
   const lines = catalogue
@@ -327,43 +325,11 @@ Build a practical buying plan for one shop from the catalogue provided. Rules:
 Catalogue (slug | name | brand | category | wholesale price | MOQ | description)
 ${lines}`;
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 45000);
-  try {
-    const res = await fetch(`${process.env.ANTHROPIC_BASE_URL || "https://api.anthropic.com"}/v1/messages`, {
-      method: "POST",
-      signal: controller.signal,
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5",
-        max_tokens: 3000,
-        system,
-        tools: [planTool],
-        tool_choice: { type: "tool", name: planTool.name },
-        messages: [{ role: "user", content: user }],
-      }),
-    });
-    if (!res.ok) {
-      console.error("[advisor] Claude API error", res.status, (await res.text()).slice(0, 300));
-      return null;
-    }
-    const data = (await res.json()) as { content?: { type: string; name?: string; input?: ToolPlan }[] };
-    const block = data.content?.find((b) => b.type === "tool_use" && b.name === planTool.name);
-    if (!block?.input) return null;
-    return checkPlan(block.input, catalogue, budgetPaise);
-  } catch (err) {
-    console.error("[advisor] Claude request failed", err instanceof Error ? err.message : err);
-    return null;
-  } finally {
-    clearTimeout(timer);
-  }
+  const raw = await callClaudeTool<ToolPlan>({ system, user, tool: planTool, maxTokens: 3000 });
+  return raw ? checkPlan(raw, catalogue, budgetPaise) : null;
 }
 
-const str = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+const str = clip;
 
 // Keep only picks that exist, respect MOQ and fit the budget; recompute
 // every amount from the catalogue.
