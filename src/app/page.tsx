@@ -9,9 +9,9 @@ import HomeGuides from "@/components/HomeGuides";
 import SectionHeading from "@/components/SectionHeading";
 import MarginCalculator from "@/components/MarginCalculator";
 import StockPlanner from "@/components/StockPlanner";
-import RetailerHowItWorks from "@/components/RetailerHowItWorks";
-import DirectAdvantage from "@/components/DirectAdvantage";
-import SmallTownSection from "@/components/SmallTownSection";
+import TripCostCalculator from "@/components/TripCostCalculator";
+import HomeHowItWorks from "@/components/HomeHowItWorks";
+import ToolTabs from "@/components/ToolTabs";
 import HomeFaq from "@/components/HomeFaq";
 import { departments } from "@/data/departments";
 import { priceBands, inBand } from "@/lib/priceBands";
@@ -154,28 +154,64 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* Tier 2-4 towns + mandi trip calculator */}
-      <SmallTownSection minMoq={minMoq} />
+      {/* How it works + why direct pays */}
+      <HomeHowItWorks collections={all.length} departments={departments.length} minMoq={minMoq} />
 
-      {/* How it works for retailers */}
-      <RetailerHowItWorks collections={all.length} departments={departments.length} />
-
-      {/* Why direct pays */}
-      <DirectAdvantage />
-
-      {/* Profit & planning toolkit */}
-      <section id="planner" className="scroll-mt-24 bg-white py-16 sm:py-20">
+      {/* Free tools, one tab each */}
+      <section id="tools" className="scroll-mt-24 bg-white py-16 sm:py-20">
         <Container>
           <SectionHeading
             eyebrow="Free retailer tools"
             tone="text-[#0f766e]"
-            title="Plan smarter. Earn more per piece."
-            intro="Work out how far your budget goes, then check the margin on any line before you order."
+            title="Do the maths before you order"
+            intro="Three quick calculators. Change the example numbers to match your shop."
           />
-          <div className="mt-10 space-y-8">
-            <StockPlanner bands={plannerBands} />
-            <MarginCalculator />
-          </div>
+          <ToolTabs
+            tabs={[
+              {
+                id: "trip",
+                label: "Mandi trip cost",
+                hint: "What restocking trips cost you",
+                panel: (
+                  <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+                    <div className="lg:col-span-7">
+                      <TripCostCalculator />
+                    </div>
+                    <div className="flex flex-col rounded-3xl bg-[#12264a] p-6 text-white sm:p-8 lg:col-span-5">
+                      <p className="text-xs font-bold uppercase tracking-[0.16em] text-amber-300">What it counts</p>
+                      <ul className="mt-4 space-y-3 text-sm leading-6 text-white/85">
+                        <li><span className="font-semibold text-white">Travel and stay</span> for every buying trip</li>
+                        <li><span className="font-semibold text-white">Sales you miss</span> while the shop is shut or short-staffed</li>
+                        <li><span className="font-semibold text-white">Before a single piece</span>: this is spent before you buy any stock</li>
+                      </ul>
+                      <p className="mt-6 text-sm leading-6 text-white/70">
+                        On GarmentBazaar you see every brand&apos;s wholesale price and MOQ from your counter.
+                      </p>
+                      <Link
+                        href="/collections?price=under-500"
+                        className="mt-6 inline-flex items-center justify-center gap-2 self-start rounded-full bg-amber-300 px-5 py-3 text-sm font-semibold text-ink transition hover:bg-amber-200"
+                      >
+                        Browse stock under ₹500
+                        <IconArrowRight className="h-4 w-4" />
+                      </Link>
+                    </div>
+                  </div>
+                ),
+              },
+              {
+                id: "planner",
+                label: "Stock planner",
+                hint: "How far your budget goes",
+                panel: <StockPlanner bands={plannerBands} />,
+              },
+              {
+                id: "margin",
+                label: "Margin calculator",
+                hint: "Profit on any line",
+                panel: <MarginCalculator />,
+              },
+            ]}
+          />
         </Container>
       </section>
 

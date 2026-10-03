@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Container from "./Container";
+import CardRail from "./CardRail";
 import SectionHeading from "./SectionHeading";
 import { guides } from "@/content/generated";
 import { IconArrowRight } from "./Icons";
@@ -18,12 +19,12 @@ export default function HomeGuides() {
           intro="Practical, plain-English guides on buying, stocking and margins for shop owners across India."
           link={{ href: "/guides", label: "All guides" }}
         />
-        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+        <CardRail cols="lg:grid-cols-3">
           {latest.map((g) => (
             <Link
               key={g.slug}
               href={`/guides/${g.slug}`}
-              className="group flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10"
+              className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10"
             >
               <span className="relative block h-44 bg-[#f1efeb]">
                 <Image
@@ -50,7 +51,7 @@ export default function HomeGuides() {
               </span>
             </Link>
           ))}
-        </div>
+        </CardRail>
       </Container>
     </section>
   );
