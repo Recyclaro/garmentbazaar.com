@@ -32,7 +32,7 @@ export default function SmallTownSection({ minMoq }: { minMoq: number | null }) 
   ];
 
   return (
-    <section className="bg-[#fff8e6] py-20 sm:py-24">
+    <section className="bg-[#fff8e6] py-16 sm:py-20">
       <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start">
           <div className="lg:col-span-6">

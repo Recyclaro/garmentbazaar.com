@@ -31,7 +31,7 @@ const faqs = [
 
 export default function HomeFaq() {
   return (
-    <section id="faq" className="bg-white py-20 sm:py-24">
+    <section id="faq" className="bg-white py-16 sm:py-20">
       <JsonLd
         data={{
           "@context": "https://schema.org",
