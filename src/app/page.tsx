@@ -12,6 +12,8 @@ import StockPlanner from "@/components/StockPlanner";
 import TripCostCalculator from "@/components/TripCostCalculator";
 import HomeHowItWorks from "@/components/HomeHowItWorks";
 import ToolTabs from "@/components/ToolTabs";
+import HomeAdvisor from "@/components/HomeAdvisor";
+import { aiEnabled, currentSeason } from "@/lib/advisor";
 import HomeFaq from "@/components/HomeFaq";
 import { departments } from "@/data/departments";
 import { priceBands, inBand } from "@/lib/priceBands";
@@ -87,6 +89,9 @@ export default function Home() {
       />
 
       <DeptTiles />
+
+      {/* Stock advisor */}
+      <HomeAdvisor aiOn={aiEnabled()} season={currentSeason()} />
 
       {/* Just dropped */}
       {fresh.length > 0 && (
