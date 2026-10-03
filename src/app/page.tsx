@@ -14,6 +14,7 @@ import HomeHowItWorks from "@/components/HomeHowItWorks";
 import ToolTabs from "@/components/ToolTabs";
 import HomeAI from "@/components/HomeAI";
 import { aiEnabled, currentSeason } from "@/lib/advisor";
+import { buildAiDemo } from "@/lib/aiDemo";
 import HomeFaq from "@/components/HomeFaq";
 import { departments } from "@/data/departments";
 import { priceBands, inBand } from "@/lib/priceBands";
@@ -39,6 +40,7 @@ const bandLook: Record<string, { photo: string; bg: string; text: string; sub: s
 
 export default function Home() {
   const aiOn = aiEnabled();
+  const season = currentSeason();
   const all = listApprovedCollections().map(collectionRowToCollection);
   const fresh = all.filter((c) => c.imagePath).slice(0, 8);
   const brands = new Set(all.map((c) => c.brandName)).size;
@@ -93,7 +95,7 @@ export default function Home() {
       <DeptTiles />
 
       {/* AI tools */}
-      <HomeAI aiOn={aiOn} season={currentSeason()} />
+      <HomeAI aiOn={aiOn} season={season} demo={buildAiDemo(all, season)} />
 
       {/* Just dropped */}
       {fresh.length > 0 && (

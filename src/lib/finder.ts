@@ -34,8 +34,8 @@ const stop = new Set(
 );
 
 function parsePrice(q: string): number | null {
-  const m = q.match(/(?:under|below|less than|upto|up to|within|tak|se kam|<)\s*(?:rs\.?|₹|inr)?\s*([\d,]+)/i)
-    ?? q.match(/(?:rs\.?|₹|inr)\s*([\d,]+)\s*(?:tak|ke andar|se kam|or less|max)/i);
+  const m = q.match(/(?:under|below|less than|upto|up to|within|<)\s*(?:rs\.?|₹|inr)?\s*([\d,]+)/i)
+    ?? q.match(/(?:rs\.?|₹|inr)?\s*([\d,]+)\s*(?:rs\.?|rupees?|rupaye)?\s*(?:tak|ke andar|ke neeche|se kam|or less|max)/i);
   if (!m) return /sasta|saste|cheap|budget|low price/i.test(q) ? 50000 : null;
   const n = Number(m[1].replace(/,/g, ""));
   return n > 0 ? n * 100 : null;
@@ -44,8 +44,34 @@ function parsePrice(q: string): number | null {
 function parseMoq(q: string): number | null {
   const m = q.match(/moq\s*(?:under|below|upto|up to|<|of|tak)?\s*(\d+)/i) ?? q.match(/(\d+)\s*(?:pcs|pieces)\s*(?:moq|minimum)/i);
   if (m) return Number(m[1]);
-  return /small moq|low moq|kam moq|chhota order|small order|few pieces/i.test(q) ? 20 : null;
+  return /(small|low|kam|chh?ott?[aei]) (moq|order)|few pieces/i.test(q) ? 30 : null;
 }
+
+// Everyday and Hinglish words mapped to words used in listings.
+const synonyms: Record<string, string[]> = {
+  kurti: ["kurti", "kurta"],
+  kurta: ["kurta", "kurti"],
+  sari: ["saree"],
+  saree: ["saree", "sari"],
+  chappal: ["sandal", "slipper"],
+  joota: ["shoe"],
+  joote: ["shoe"],
+  juta: ["shoe"],
+  jooti: ["jutti", "shoe"],
+  bachon: ["kids"],
+  bacche: ["kids"],
+  bachche: ["kids"],
+  gents: ["men"],
+  ladie: [],
+  ladies: [],
+  women: [],
+  kapde: [],
+  kapda: [],
+  wale: [],
+  wala: [],
+  andar: [],
+  chhota: [],
+};
 
 export function rulesFind(query: string, catalogue: Collection[]): FindResult {
   const maxPricePaise = parsePrice(query);
@@ -56,20 +82,42 @@ export function rulesFind(query: string, catalogue: Collection[]): FindResult {
     .replace(/[^a-z0-9\s-]/g, " ")
     .split(/\s+/)
     .filter((w) => w.length > 2 && !stop.has(w) && !/^\d+$/.test(w))
-    .map((w) => w.replace(/(es|s)$/, ""));
+    .flatMap((w) => synonyms[w] ?? synonyms[w.replace(/s$/, "")] ?? [w.replace(/(es|s)$/, "")]);
+
+  // Who it's for: keep men's and kids' lines out of a "ladies" search, etc.
+  const forWomen = /ladies|women|womens|mahila|girls? kurti|aurat/i.test(query);
+  const forMen = /\bgents|\bmen\b|\bmens\b|mard/i.test(query);
+  const forKids = /kid|bach|child|boys|girls|school/i.test(query);
+  const isKids = (c: Collection) => c.category === "Kidswear" || /\b(kids?|little|junior|boys|girls|baby)\b/i.test(c.name);
+  const isMen = (c: Collection) =>
+    c.category === "Menswear" ||
+    /\b(men'?s|gents|sherwani)\b/i.test(`${c.name} ${c.description}`) ||
+    /(^|[/-])men[-.]|sherwani/i.test(c.imagePath ?? "");
+  const isWomen = (c: Collection) =>
+    c.category === "Womenswear" || /\b(women'?s|ladies|skirts?|blouses?|leggings|sarees?|lehenga|anarkali|dress(es)?|kurtis?|camisoles?|lingerie)\b/i.test(c.name);
+  const fits = (c: Collection) =>
+    !(forWomen && !forKids && (isKids(c) || isMen(c))) &&
+    !(forMen && !forKids && (isKids(c) || isWomen(c))) && !(forKids && !forWomen && !forMen && !isKids(c) && categories.length > 1);
 
   const scored = catalogue
+    .filter(fits)
     .filter((c) => (maxPricePaise ? c.pricePaise <= maxPricePaise : true))
     .filter((c) => (maxMoq ? c.moq <= maxMoq : true))
     .map((c) => {
       const text = `${c.name} ${c.description} ${c.category} ${c.brandName}`.toLowerCase();
+      const name = c.name.toLowerCase();
       let s = categories.includes(c.category) ? 3 : 0;
-      for (const w of words) if (text.includes(w)) s += 2;
+      for (const w of words) {
+        if (name.includes(w)) s += 5;
+        else if (text.includes(w)) s += 2;
+      }
       return { c, s };
     })
     .filter((x) => x.s > 0 || (categories.length === 0 && words.length === 0))
-    .sort((a, b) => b.s - a.s || a.c.pricePaise - b.c.pricePaise)
-    .slice(0, 8);
+    .sort((a, b) => b.s - a.s || a.c.pricePaise - b.c.pricePaise);
+  // Drop weak tail matches once there are strong ones.
+  const top = scored[0]?.s ?? 0;
+  const strong = scored.filter((x) => x.s >= Math.min(top, Math.max(3, top * 0.45))).slice(0, 8);
 
   const bits: string[] = [];
   if (categories.length) bits.push(categories.join(", "));
@@ -77,10 +125,10 @@ export function rulesFind(query: string, catalogue: Collection[]): FindResult {
   if (maxMoq) bits.push(`MOQ up to ${maxMoq}`);
   return {
     engine: "rules",
-    reply: scored.length
-      ? `Showing ${scored.length} collection${scored.length === 1 ? "" : "s"}${bits.length ? ` for ${bits.join(" · ")}` : ""}.`
+    reply: strong.length
+      ? `Showing ${strong.length} collection${strong.length === 1 ? "" : "s"}${bits.length ? ` for ${bits.join(" · ")}` : ""}.`
       : "Nothing matched exactly. Try fewer words, a higher price or a department name.",
-    matches: scored.map(({ c }) => ({
+    matches: strong.map(({ c }) => ({
       collection: c,
       why: `₹${Math.round(c.pricePaise / 100)} a piece, MOQ ${c.moq}.`,
     })),

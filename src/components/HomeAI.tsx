@@ -2,13 +2,15 @@ import Link from "next/link";
 import Container from "./Container";
 import SectionHeading from "./SectionHeading";
 import HomeAdvisor from "./HomeAdvisor";
+import AiDemo from "./AiDemo";
+import type { AiDemoData } from "@/lib/aiDemo";
 import type { Season } from "@/lib/advisorOptions";
 import { IconArrowRight, IconSearch, IconSparkles } from "./Icons";
 
 // Home page showcase for the AI tools: the stock advisor up front, then
 // plain-language search and the WhatsApp writer. Wording only says "AI"
 // when Claude is switched on (ANTHROPIC_API_KEY).
-export default function HomeAI({ aiOn, season }: { aiOn: boolean; season: Season }) {
+export default function HomeAI({ aiOn, season, demo }: { aiOn: boolean; season: Season; demo: AiDemoData }) {
   return (
     <section id="ai-tools" className="scroll-mt-24 bg-white py-16 sm:py-20">
       <Container>
@@ -24,6 +26,10 @@ export default function HomeAI({ aiOn, season }: { aiOn: boolean; season: Season
         />
 
         <div className="mt-10">
+          <AiDemo data={demo} />
+        </div>
+
+        <div className="mt-5">
           <HomeAdvisor aiOn={aiOn} season={season} />
         </div>
 
