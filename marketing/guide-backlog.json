@@ -14,7 +14,8 @@
       "audience": "retailers",
       "department": "Kidswear",
       "topic": "Stocking kidswear for school reopening season",
-      "status": "todo"
+      "status": "done",
+      "slug": "kidswear-school-reopening-stock-guide"
     },
     {
       "id": 3,
