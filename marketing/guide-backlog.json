@@ -22,7 +22,8 @@
       "audience": "retailers",
       "department": null,
       "topic": "How to price clothes in your shop for a healthy margin",
-      "status": "todo"
+      "status": "done",
+      "slug": "how-to-price-clothes-for-profit"
     },
     {
       "id": 4,
