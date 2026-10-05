@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Container from "@/components/Container";
 import AiPageHero from "@/components/AiPageHero";
 import AskFinder from "@/components/AskFinder";
 import { aiEnabled } from "@/lib/claude";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Ask & Find Wholesale Stock in Hindi or English",
   description:
     "Describe the stock you need in your own words, like cotton kurtis under ₹500 with a small MOQ, and see matching wholesale collections from brands on GarmentBazaar.",
-  alternates: { canonical: "/ask" },
-};
+  path: "/ask",
+});
 
 export const dynamic = "force-dynamic";
 

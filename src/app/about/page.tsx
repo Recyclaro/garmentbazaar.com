@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import PageHero from "@/components/PageHero";
 import StatRibbon from "@/components/StatRibbon";
 import Container from "@/components/Container";
@@ -11,12 +12,12 @@ import {
   IconSparkles,
 } from "@/components/Icons";
 
-export const metadata: Metadata = {
-  title: "About GarmentBazaar",
-  alternates: { canonical: "/about" },
+export const metadata: Metadata = pageMeta({
+  title: "About GarmentBazaar: Wholesale Buying for Every Town",
   description:
-    "GarmentBazaar's mission is to become the AI-first B2B fashion sourcing platform for India's fashion and lifestyle ecosystem.",
-};
+    "GarmentBazaar helps clothing retailers in Tier 2, 3 and 4 towns buy branded wholesale stock direct from brands, online, with prices and MOQs shown up front.",
+  path: "/about",
+});
 
 const values = [
   {

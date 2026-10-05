@@ -51,7 +51,8 @@ from this repo and the web, not from live site data.
   110-170 characters; 4-8 keywords people actually search.
 - Link to real pages only: `/collections`, `/collections?price=under-500`,
   `/collections?sort=moq-asc`, `/wholesale/<department-slug>` (see
-  `src/data/departments.ts`), `/signup?role=retailer`, `/guides/<slug>`.
+  `src/data/departments.ts`), `/wholesale-clothing/<town-slug>` (see
+  `src/data/cities.ts`), `/signup?role=retailer`, `/guides/<slug>`.
 - `hero` must be an existing file stem in `public/images/products`.
 - `date` is today (IST). Set the backlog item to `done` with the slug.
 - Run `npm run content:check`. Fix every error before continuing.

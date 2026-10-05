@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/Container";
 import { guides } from "@/content/generated";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Retailer Guides: Wholesale Buying, MOQ & Stocking Tips",
   description:
     "Free guides for clothing shop owners in India: how to buy wholesale, use MOQs, plan seasonal stock and grow margins, written for Tier 2, 3 and 4 towns.",
-  alternates: { canonical: "/guides" },
-};
+  path: "/guides",
+});
 
 const audienceLabel: Record<string, string> = {
   retailers: "For retailers",

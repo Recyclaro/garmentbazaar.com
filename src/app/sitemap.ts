@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { departments } from "@/data/departments";
 import { guides } from "@/content/generated";
+import { cities } from "@/data/cities";
 import { listApprovedCollections, listApprovedSuppliers } from "@/lib/db";
 
 const siteUrl = "https://garmentbazaar.com";
@@ -36,6 +37,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const depts = departments.map((d) => page(`/wholesale/${d.slug}`, 0.8, "daily"));
 
+  const towns = [
+    page("/wholesale-clothing", 0.8, "weekly"),
+    ...cities.map((c) => page(`/wholesale-clothing/${c.slug}`, 0.7, "weekly")),
+  ];
+
   const guidePages = [
     page("/guides", 0.8, "daily"),
     ...guides.map((g) => ({
@@ -62,5 +68,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
-  return [...core, ...depts, ...guidePages, ...collections, ...suppliers];
+  return [...core, ...depts, ...towns, ...guidePages, ...collections, ...suppliers];
 }

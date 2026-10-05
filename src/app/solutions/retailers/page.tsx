@@ -1,22 +1,24 @@
 import CardRail from "@/components/CardRail";
 import PageHero from "@/components/PageHero";
 import SmallTownSection from "@/components/SmallTownSection";
+import TownLinks from "@/components/TownLinks";
 import MarginCalculator from "@/components/MarginCalculator";
 import { priceBands } from "@/lib/priceBands";
 import DeptMarquee from "@/components/DeptMarquee";
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import Container from "@/components/Container";
 import CollectionCard from "@/components/CollectionCard";
 import { IconArrowRight } from "@/components/Icons";
 import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Wholesale Clothing for Retailers in Tier 2, 3 & 4 Cities",
-  alternates: { canonical: "/solutions/retailers" },
   description:
-    "Wholesale clothing, footwear and accessories for retailers in Tier 2, 3 and 4 cities. Order direct from brands on your phone, see price per piece, buy at small MOQs. No trips to the mandi.",
-};
+    "Buy branded wholesale clothing from your own town. Order direct from brands on your phone, see price per piece up front and buy at small MOQs. No mandi trips.",
+  path: "/solutions/retailers",
+});
 
 // The live collections strip reads from the database, so render per request.
 export const dynamic = "force-dynamic";
@@ -115,6 +117,7 @@ export default function RetailersPage() {
       </div>
 
       <SmallTownSection minMoq={null} />
+      <TownLinks />
 
       {/* Buyer types */}
       <section className="bg-white py-16 sm:py-20">

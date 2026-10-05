@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import AuthShell from "@/components/AuthShell";
 import SignupForm from "@/components/SignupForm";
 
-export const metadata: Metadata = {
-  title: "Create a Free Buyer or Seller Account",
-  alternates: { canonical: "/signup" },
+export const metadata: Metadata = pageMeta({
+  title: "Join Free: Retailer, Brand or Manufacturer Account",
   description:
-    "Join GarmentBazaar free as a retailer, brand or manufacturer. Takes under a minute: pick your role, add your mobile and city, and start buying or selling wholesale.",
-};
+    "Create a free GarmentBazaar account in under a minute. Retailers buy branded wholesale stock direct from brands; brands and manufacturers list and sell.",
+  path: "/signup",
+});
 
 export default async function SignupPage({
   searchParams,

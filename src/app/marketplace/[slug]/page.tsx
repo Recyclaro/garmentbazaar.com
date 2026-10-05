@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta, notFoundMeta } from "@/lib/seo";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -31,14 +32,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const supplier = getPublicSupplier(slug);
-  if (!supplier) return { title: "Supplier not found" };
-  return {
+  if (!supplier) return notFoundMeta("Supplier not found");
+  return pageMeta({
     title: `${supplier.name}, ${supplier.category} Manufacturer in ${supplier.city}`,
-    alternates: { canonical: `/marketplace/${supplier.slug}` },
+    path: `/marketplace/${supplier.slug}`,
     description: `${supplier.name} — ${supplier.category} manufacturer in ${supplier.city}, ${supplier.region}. ${
       supplier.specialties.length > 0 ? `Specialties: ${supplier.specialties.join(", ")}.` : ""
     }`.trim(),
-  };
+  });
 }
 
 export default async function SupplierDetailPage({

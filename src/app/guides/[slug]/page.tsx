@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta, notFoundMeta } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -25,21 +26,16 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const g = findGuide(slug);
-  if (!g) return { title: "Guide not found" };
-  return {
+  if (!g) return notFoundMeta("Guide not found");
+  const meta = pageMeta({
     title: g.title,
     description: g.description,
+    path: `/guides/${g.slug}`,
+    image: `/images/products/${g.hero}.jpg`,
+    type: "article",
     keywords: g.keywords,
-    alternates: { canonical: `/guides/${g.slug}` },
-    openGraph: {
-      type: "article",
-      title: g.title,
-      description: g.description,
-      url: `/guides/${g.slug}`,
-      publishedTime: g.date,
-      images: [{ url: `/images/products/${g.hero}.jpg`, alt: g.title }],
-    },
-  };
+  });
+  return { ...meta, openGraph: { ...meta.openGraph, type: "article", publishedTime: g.date } };
 }
 
 export default async function GuidePage({

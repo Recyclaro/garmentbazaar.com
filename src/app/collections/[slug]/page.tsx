@@ -1,5 +1,6 @@
 import MobileBuyBar, { MobileBarSpacer } from "@/components/MobileBuyBar";
 import type { Metadata } from "next";
+import { pageMeta, notFoundMeta } from "@/lib/seo";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -29,19 +30,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const collection = getPublicCollection(slug);
-  if (!collection) return { title: "Collection not found" };
+  if (!collection) return notFoundMeta("Collection not found");
   const price = formatPaise(collection.pricePaise);
-  return {
-    title: `${collection.name} Wholesale by ${collection.brandName} | ${price}/piece, MOQ ${collection.moq}`,
-    description: `Buy ${collection.name} wholesale from ${collection.brandName} at ${price} per piece, minimum order ${collection.moq} pieces. ${collection.description}`,
-    alternates: { canonical: `/collections/${collection.slug}` },
-    openGraph: {
-      title: `${collection.name} | ${price}/piece wholesale`,
-      description: collection.description,
-      url: `/collections/${collection.slug}`,
-      ...(collection.imagePath ? { images: [{ url: collection.imagePath, alt: collection.name }] } : {}),
-    },
-  };
+  const lead = `Buy ${collection.name} wholesale from ${collection.brandName} at ${price} per piece, MOQ ${collection.moq}. `;
+  const description = (lead + collection.description).slice(0, 200);
+  return pageMeta({
+    title: `${collection.name} Wholesale, ${price}/piece, MOQ ${collection.moq}`,
+    description,
+    path: `/collections/${collection.slug}`,
+    image: collection.imagePath ?? undefined,
+    imageAlt: collection.name,
+  });
 }
 
 export default async function CollectionDetailPage({

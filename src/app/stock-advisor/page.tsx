@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Container from "@/components/Container";
 import StockAdvisor from "@/components/StockAdvisor";
 import { aiEnabled, currentSeason } from "@/lib/advisor";
 import { regions, seasons, shopTypes } from "@/lib/advisorOptions";
 import { IconSparkles } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Stock Advisor: Plan Your Wholesale Order for Your Town",
   description:
     "Tell us your town, shop type, season and budget. Get a budget split and the exact wholesale collections to order, with reasons, from brands live on GarmentBazaar.",
-  alternates: { canonical: "/stock-advisor" },
-};
+  path: "/stock-advisor",
+});
 
 // The AI switch (ANTHROPIC_API_KEY) and the season are read per request.
 export const dynamic = "force-dynamic";

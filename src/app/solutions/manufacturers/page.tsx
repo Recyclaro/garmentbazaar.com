@@ -1,5 +1,6 @@
 import PageHero from "@/components/PageHero";
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import Container from "@/components/Container";
 import SupplierCard from "@/components/SupplierCard";
@@ -7,12 +8,12 @@ import PhotoStrip from "@/components/PhotoStrip";
 import { IconArrowRight, IconCheck } from "@/components/Icons";
 import { listApprovedSuppliers, supplierRowToSupplier } from "@/lib/db";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Fabric Suppliers & Garment Mills: Sell to Brands",
-  alternates: { canonical: "/solutions/manufacturers" },
   description:
     "Mills, fabric suppliers and garment factories sell to verified brands on GarmentBazaar. List fabric, capacity and surplus stock, and receive quote requests directly.",
-};
+  path: "/solutions/manufacturers",
+});
 
 // The supplier strip reads from the database, so render per request.
 export const dynamic = "force-dynamic";

@@ -2,6 +2,7 @@ import PageHero from "@/components/PageHero";
 import DeptBand from "@/components/DeptBand";
 import { departments } from "@/data/departments";
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import Container from "@/components/Container";
 import {
@@ -15,12 +16,12 @@ import {
   IconUpload,
 } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Sell Your Brand Wholesale to Retailers Across India",
-  alternates: { canonical: "/solutions/brands" },
   description:
     "List your fashion and lifestyle collections on GarmentBazaar and sell wholesale to boutiques, retail chains, online sellers and export buyers across India.",
-};
+  path: "/solutions/brands",
+});
 
 const benefits = [
   {

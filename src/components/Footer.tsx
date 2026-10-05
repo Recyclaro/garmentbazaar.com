@@ -4,6 +4,28 @@ import Logo from "./Logo";
 
 const columns = [
   {
+    title: "Buy wholesale",
+    links: [
+      { href: "/collections", label: "All collections" },
+      { href: "/wholesale/ethnic-wear", label: "Wholesale ethnic wear" },
+      { href: "/wholesale/menswear", label: "Wholesale menswear" },
+      { href: "/wholesale/womenswear", label: "Wholesale womenswear" },
+      { href: "/wholesale/kidswear", label: "Wholesale kidswear" },
+      { href: "/collections?sort=moq-asc", label: "Lowest MOQ first" },
+    ],
+  },
+  {
+    title: "By town",
+    links: [
+      { href: "/wholesale-clothing/lucknow", label: "Lucknow" },
+      { href: "/wholesale-clothing/indore", label: "Indore" },
+      { href: "/wholesale-clothing/jaipur", label: "Jaipur" },
+      { href: "/wholesale-clothing/patna", label: "Patna" },
+      { href: "/wholesale-clothing/coimbatore", label: "Coimbatore" },
+      { href: "/wholesale-clothing", label: "All towns" },
+    ],
+  },
+  {
     title: "Platform",
     links: [
       { href: "/platform", label: "AI Sourcing Platform" },
@@ -37,12 +59,13 @@ export default function Footer() {
   return (
     <footer className="border-t border-white/10 bg-ink text-slate-300">
       <Container className="py-16">
-        <div className="grid grid-cols-2 gap-10 md:grid-cols-6">
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-4 lg:grid-cols-8">
           <div className="col-span-2">
             <Logo dark />
             <p className="mt-4 max-w-xs text-sm leading-6 text-slate-400">
-              The AI-first B2B sourcing and supply chain platform for India&apos;s
-              fashion and lifestyle ecosystem.
+              The wholesale buying platform for clothing retailers in every
+              Indian town. Branded stock direct from brands, with prices and
+              MOQs up front.
             </p>
           </div>
           {columns.map((col) => (
@@ -66,7 +89,7 @@ export default function Footer() {
             <h3 className="text-sm font-semibold text-white">Get in touch</h3>
             <ul className="mt-4 space-y-3 text-sm text-slate-400">
               <li>
-                <a href="mailto:hello@garmentbazaar.com" className="hover:text-accent-400">
+                <a href="mailto:hello@garmentbazaar.com" className="[overflow-wrap:anywhere] hover:text-accent-400">
                   hello@garmentbazaar.com
                 </a>
               </li>

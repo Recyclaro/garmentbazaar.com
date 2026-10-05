@@ -88,16 +88,22 @@ export default function HomeHero({
               <IconArrowRight className="h-3.5 w-3.5" />
             </Link>
 
-            <h1 className="text-balance mt-6 font-serif text-[2.75rem] font-semibold leading-[1.02] tracking-tight sm:text-7xl">
-              Stock what sells.
-              <br />
-              <span className="bg-gradient-to-r from-amber-200 via-amber-300 to-orange-300 bg-clip-text text-transparent">
-                Skip the mandi.
+            <h1 className="mt-6">
+              <span className="block font-sans text-sm font-bold uppercase tracking-[0.16em] text-amber-200 sm:text-base">
+                Wholesale clothing for retailers
+              </span>
+              <span className="text-balance mt-3 block font-serif text-[2.75rem] font-semibold leading-[1.02] tracking-tight sm:text-7xl">
+                Stock what sells.
+                <br />
+                <span className="bg-gradient-to-r from-amber-200 via-amber-300 to-orange-300 bg-clip-text text-transparent">
+                  Skip the mandi.
+                </span>
               </span>
             </h1>
             <p className="text-balance mt-5 max-w-xl text-lg leading-8 text-white/80">
-              Branded wholesale fashion for shops in Tier 2, 3 and 4 towns.
-              Order straight from the brands, from anywhere in India.
+              India&apos;s wholesale buying platform for shops in Tier 2, 3 and 4
+              towns. Order branded stock straight from the brands, from anywhere
+              in India.
             </p>
 
             <form action="/ask" method="get" role="search" className="mt-8 max-w-xl">

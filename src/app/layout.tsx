@@ -25,9 +25,9 @@ const playfairDisplay = Playfair_Display({
 
 const siteUrl = "https://garmentbazaar.com";
 
-const siteTitle = "GarmentBazaar | Wholesale Clothing for Retailers, Direct from Brands";
+const siteTitle = "GarmentBazaar: Wholesale Clothing for Retailers in India";
 const siteDescription =
-  "Buy branded clothing, footwear and accessories wholesale, direct from brands. Price per piece shown up front, small MOQs, 12 departments. B2B fashion marketplace for boutiques, stores and online sellers in India.";
+  "India's wholesale buying platform for clothing retailers. Order branded stock direct from brands from any town, with price per piece and small MOQs shown up front.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -39,6 +39,9 @@ export const metadata: Metadata = {
   applicationName: "GarmentBazaar",
   keywords: [
     "wholesale clothing for retailers",
+    "online wholesale clothing India",
+    "wholesale clothes for shop",
+    "buy wholesale clothing online for retail shop",
     "B2B fashion marketplace India",
     "buy branded clothes wholesale",
     "wholesale garments online",
@@ -92,6 +95,7 @@ export default async function RootLayout({
               url: siteUrl,
               logo: `${siteUrl}/icon`,
               email: "hello@garmentbazaar.com",
+              slogan: "Stock what sells. Skip the mandi.",
               description: siteDescription,
               areaServed: "IN",
             },
@@ -99,6 +103,7 @@ export default async function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "GarmentBazaar",
+              alternateName: "Garment Bazaar",
               url: siteUrl,
               inLanguage: "en-IN",
               potentialAction: {

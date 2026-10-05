@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import Container from "@/components/Container";
 import AiPageHero from "@/components/AiPageHero";
 import { aiEnabled } from "@/lib/claude";
 import { IconArrowRight, IconSearch, IconSparkles, IconTarget } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "AI Tools for Clothing Shop Owners",
   description:
     "Free tools for retailers in Tier 2, 3 and 4 towns: a stock advisor that plans your order, search in Hindi or English, and a WhatsApp message writer in regional languages.",
-  alternates: { canonical: "/ai-tools" },
-};
+  path: "/ai-tools",
+});
 
 export const dynamic = "force-dynamic";
 

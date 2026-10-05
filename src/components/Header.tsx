@@ -28,7 +28,7 @@ const navLinks = [
   { href: "/ai-tools", label: "AI Tools" },
   { href: "/marketplace", label: "Suppliers" },
   { href: "/guides", label: "Guides" },
-  { href: "/platform", label: "Platform" },
+  { href: "/wholesale-clothing", label: "By town" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];

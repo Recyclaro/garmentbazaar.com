@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta, notFoundMeta } from "@/lib/seo";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import CollectionsClient from "@/app/collections/CollectionsClient";
@@ -20,19 +21,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const d = departmentBySlug(slug);
-  if (!d) return { title: "Department not found" };
-  const title = `${d.seoTitle} for Retailers | Direct from Brands`;
-  return {
-    title,
+  if (!d) return notFoundMeta("Department not found");
+  return pageMeta({
+    title: `${d.seoTitle} for Retailers, Direct from Brands`,
     description: d.seoDescription,
-    alternates: { canonical: `/wholesale/${d.slug}` },
-    openGraph: {
-      title: `${d.seoTitle} | GarmentBazaar`,
-      description: d.seoDescription,
-      url: `/wholesale/${d.slug}`,
-      images: [{ url: `/images/products/${d.photos[0].file}.jpg`, alt: d.seoTitle }],
-    },
-  };
+    path: `/wholesale/${d.slug}`,
+    image: `/images/products/${d.photos[0].file}.jpg`,
+    imageAlt: d.seoTitle,
+  });
 }
 
 export default async function WholesaleDepartmentPage({

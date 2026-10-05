@@ -16,6 +16,7 @@ import HomeAI from "@/components/HomeAI";
 import { aiEnabled, currentSeason } from "@/lib/advisor";
 import { buildAiDemo } from "@/lib/aiDemo";
 import HomeFaq from "@/components/HomeFaq";
+import TownLinks from "@/components/TownLinks";
 import { departments } from "@/data/departments";
 import { priceBands, inBand } from "@/lib/priceBands";
 import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
@@ -165,6 +166,8 @@ export default function Home() {
 
       {/* How it works + why direct pays */}
       <HomeHowItWorks collections={all.length} departments={departments.length} minMoq={minMoq} />
+
+      <TownLinks tone="bg-background" />
 
       {/* Free tools, one tab each */}
       <section id="tools" className="scroll-mt-24 bg-white py-16 sm:py-20">

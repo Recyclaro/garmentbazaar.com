@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Container from "@/components/Container";
 import AiPageHero from "@/components/AiPageHero";
 import WhatsAppWriter from "@/components/WhatsAppWriter";
 import { aiEnabled } from "@/lib/claude";
 import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "WhatsApp Message Writer for Clothing Shops",
   description:
     "Turn the stock you buy into ready-to-send WhatsApp broadcasts, Status lines and customer follow-ups in Hinglish, Hindi or your regional language. Free for shop owners.",
-  alternates: { canonical: "/whatsapp-writer" },
-};
+  path: "/whatsapp-writer",
+});
 
 export const dynamic = "force-dynamic";
 

@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import CollectionsClient from "./CollectionsClient";
 import { listApprovedCollections, collectionRowToCollection } from "@/lib/db";
 import { collectionCategories } from "@/data/collections";
 import { priceBands } from "@/lib/priceBands";
 
-export const metadata: Metadata = {
-  title: "Shop Wholesale Clothing, Footwear & Accessories",
-  alternates: { canonical: "/collections" },
+export const metadata: Metadata = pageMeta({
+  title: "Wholesale Clothing Online: Buy Direct from Brands",
   description:
-    "Browse fashion and lifestyle collections listed directly by brands. Filter by category, then order at the brand's minimum order quantity (MOQ).",
-};
+    "Buy branded clothing, footwear and accessories wholesale online. Price per piece and brand MOQ on every listing, reviewed brands, free for retailers across India.",
+  path: "/collections",
+});
 
 // Listings change as brands submit and admins moderate them, so always read
 // fresh from the database rather than serving a build-time snapshot.

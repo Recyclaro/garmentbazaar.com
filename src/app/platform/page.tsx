@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import PageHero from "@/components/PageHero";
 import Container from "@/components/Container";
 import Eyebrow from "@/components/Eyebrow";
@@ -15,12 +16,12 @@ import {
   IconUpload,
 } from "@/components/Icons";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "B2B Fashion Sourcing Platform: AI Matching, Orders & Supply Chain",
-  alternates: { canonical: "/platform" },
   description:
-    "Explore GarmentBazaar's AI-first platform: product onboarding, procurement, dynamic pricing, inventory optimization, supply chain orchestration, and retailer recommendations.",
-};
+    "How GarmentBazaar works: product onboarding for brands, wholesale ordering for retailers, pricing and stock tools, and supply chain features for fashion businesses.",
+  path: "/platform",
+});
 
 const modules = [
   {

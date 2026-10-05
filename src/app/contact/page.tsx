@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Image from "next/image";
 import Container from "@/components/Container";
 import ContactForm from "@/components/ContactForm";
 import { IconBuilding, IconFactory, IconStorefront } from "@/components/Icons";
 import { getSupplierBySlug } from "@/lib/db";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Contact GarmentBazaar",
-  alternates: { canonical: "/contact" },
   description:
-    "Get in touch with GarmentBazaar to request a demo or learn how our AI-first sourcing platform can work for your brand, factory, or retail business.",
-};
+    "Questions about buying wholesale as a retailer, listing your brand or selling fabric? Get in touch with the GarmentBazaar team.",
+  path: "/contact",
+});
 
 const audiences = [
   {
