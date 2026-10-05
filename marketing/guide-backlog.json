@@ -30,7 +30,8 @@
       "audience": "retailers",
       "department": null,
       "topic": "Dead stock in a clothing shop: how to prevent it and clear it",
-      "status": "todo"
+      "status": "done",
+      "slug": "dead-stock-clothing-shop-prevent-and-clear"
     },
     {
       "id": 5,
