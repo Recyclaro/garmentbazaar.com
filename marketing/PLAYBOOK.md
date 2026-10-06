@@ -107,6 +107,38 @@ from this repo and the web, not from live site data.
 - Put the same summary at the end of the run summary, plus a reminder to
   check live numbers at https://garmentbazaar.com/dashboard/admin/marketing.
 
+### 5. Backlink outreach (Wednesdays only, Gmail drafts only)
+
+Earn links from real, relevant sites. Never buy links, swap links in
+bulk, post in comment sections or forums, or use link farms, private
+blog networks or "DR 50 guest post for ₹X" sellers: Google penalises
+those and it would hurt the whole site.
+
+- Find 3 link opportunities, one of each where possible:
+  1. **Editorial / guest article**: Indian textile, apparel or retail
+     trade publications and blogs that publish contributed articles
+     (e.g. Fibre2Fashion industry articles, Indian Retailer, Apparel
+     Resources, Textile Value Chain). Pitch an original article idea
+     built on one of our published guides, written for their readers.
+  2. **Resource page**: pages that list tools or resources for small
+     retailers, boutique owners or textile businesses (government MSME
+     and trade-body resource pages, college fashion-business course
+     pages, retail association sites). Suggest the free tools or a
+     specific guide as a useful addition.
+  3. **Unlinked mention or association**: a site that mentions
+     GarmentBazaar without a link, or a trade association / chamber /
+     cluster body (e.g. Tirupur, Surat, Ludhiana, Panipat,
+     Jaipur clusters) with a member or partner directory.
+- Use only contact addresses the site publishes for editorial or
+  partnership enquiries. Subject is always `GarmentBazaar for <Site name>`;
+  search Gmail first and skip any site already contacted.
+- Each draft: under 150 words, specific to that site and one page on it,
+  offering something useful to their readers (an article idea with a
+  2-line outline, or the exact guide/tool URL to add), signed "Team
+  GarmentBazaar", ending with the opt-out line.
+- Do not write link prospects to the repo. List them (site, page,
+  pitch in one line) in the run summary under "Backlink drafts".
+
 ## Publishing rules
 
 - Only add or edit files in `src/content/guides/`, `marketing/social/`,
