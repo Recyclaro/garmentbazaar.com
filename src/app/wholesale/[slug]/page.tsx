@@ -23,7 +23,7 @@ export async function generateMetadata({
   const d = departmentBySlug(slug);
   if (!d) return notFoundMeta("Department not found");
   return pageMeta({
-    title: `${d.seoTitle} for Retailers, Direct from Brands`,
+    title: `${d.seoTitle} for Retailers`,
     description: d.seoDescription,
     path: `/wholesale/${d.slug}`,
     image: `/images/products/${d.photos[0].file}.jpg`,

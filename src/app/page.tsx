@@ -151,7 +151,7 @@ export default function Home() {
                 <div className="absolute bottom-4 right-4 h-44 w-32 overflow-hidden rounded-2xl bg-white shadow-lg shadow-black/20 transition duration-300 group-hover:scale-105">
                   <Image
                     src={img(b.look.photo)}
-                    alt=""
+                    alt={`${b.label} wholesale stock`}
                     fill
                     unoptimized
                     sizes="128px"

@@ -34,11 +34,11 @@ export async function generateMetadata({
   const supplier = getPublicSupplier(slug);
   if (!supplier) return notFoundMeta("Supplier not found");
   return pageMeta({
-    title: `${supplier.name}, ${supplier.category} Manufacturer in ${supplier.city}`,
+    title: `${supplier.name}: ${supplier.category} Manufacturer, ${supplier.city}`,
     path: `/marketplace/${supplier.slug}`,
-    description: `${supplier.name} — ${supplier.category} manufacturer in ${supplier.city}, ${supplier.region}. ${
-      supplier.specialties.length > 0 ? `Specialties: ${supplier.specialties.join(", ")}.` : ""
-    }`.trim(),
+    description: `${supplier.name} is a ${supplier.category.toLowerCase()} manufacturer in ${supplier.city}, ${supplier.region}.${
+      supplier.specialties.length > 0 ? ` Makes ${supplier.specialties.slice(0, 4).join(", ").toLowerCase()}.` : ""
+    } See the profile and send a sourcing enquiry on GarmentBazaar, India's B2B apparel marketplace.`,
   });
 }
 

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireRole } from "@/lib/dal";
+import LinkBadge from "@/components/LinkBadge";
 import { listSuppliersByOwner, listRfqsForSupplierOwner } from "@/lib/db";
 import { IconArrowRight, IconCheck } from "@/components/Icons";
 
@@ -17,6 +18,7 @@ export default async function ManufacturerDashboardPage({
   const session = await requireRole("manufacturer");
   const { created, updated } = await searchParams;
   const listings = listSuppliersByOwner(session.userId);
+  const firstLive = listings.find((l) => l.status === "approved");
   const rfqs = listRfqsForSupplierOwner(session.userId);
 
   return (
@@ -119,6 +121,13 @@ export default async function ManufacturerDashboardPage({
           </div>
         )}
       </section>
+
+      {firstLive && (
+        <LinkBadge
+          variant="find-us"
+          href={`https://garmentbazaar.com/marketplace/${encodeURIComponent(firstLive.slug)}`}
+        />
+      )}
     </div>
   );
 }

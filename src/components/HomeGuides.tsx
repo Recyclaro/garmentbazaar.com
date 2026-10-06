@@ -29,7 +29,7 @@ export default function HomeGuides() {
               <span className="relative block h-44 bg-[#f1efeb]">
                 <Image
                   src={`/images/products/${g.hero}.jpg`}
-                  alt=""
+                  alt={g.title}
                   fill
                   unoptimized
                   sizes="(min-width: 768px) 30vw, 100vw"

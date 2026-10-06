@@ -22,7 +22,7 @@ export default function DeptTiles() {
                   <span className={`absolute inset-x-0 bottom-0 h-1.5 ${d.band}`} />
                   <Image
                     src={`/images/products/${d.photos[0].file}.jpg`}
-                    alt=""
+                    alt={`${d.seoTitle} for retail shops`}
                     fill
                     unoptimized
                     sizes="(min-width: 640px) 15vw, 96px"

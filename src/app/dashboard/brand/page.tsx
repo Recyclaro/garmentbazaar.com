@@ -1,5 +1,6 @@
 import Image from "next/image";
 import SetupChecklist from "@/components/SetupChecklist";
+import LinkBadge from "@/components/LinkBadge";
 import Link from "next/link";
 import { requireRole } from "@/lib/dal";
 import {
@@ -36,6 +37,7 @@ export default async function BrandDashboardPage({
   const orders = listOrdersForCollectionOwner(session.userId);
 
   const live = collections.filter((c) => c.status === "approved").length;
+  const firstLive = collections.find((c) => c.status === "approved");
   const inReview = collections.filter((c) => c.status === "pending").length;
   const active = orders.filter((o) => o.status !== "cancelled" && o.status !== "failed");
   const pieces = active.reduce((n, o) => n + o.quantity, 0);
@@ -297,6 +299,13 @@ export default async function BrandDashboardPage({
           </div>
         )}
       </section>
+
+      {firstLive && (
+        <LinkBadge
+          variant="available"
+          href={`https://garmentbazaar.com/collections/${encodeURIComponent(firstLive.slug)}`}
+        />
+      )}
     </div>
   );
 }

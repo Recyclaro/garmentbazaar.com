@@ -30,14 +30,17 @@ export function pageMeta({
   noindex?: boolean;
 }): Metadata {
   const shareTitle = `${title} | ${SITE_NAME}`;
+  // Google shows roughly 60 characters. When the brand suffix would push the
+  // title past that, drop the suffix rather than lose the keywords.
+  const fullTitle = shareTitle.length <= 60 ? title : { absolute: title };
   const images = [
     image
       ? { url: image, alt: imageAlt ?? title }
       : { url: DEFAULT_SHARE_IMAGE, width: 1200, height: 630, alt: "GarmentBazaar: wholesale clothing for retailers" },
   ];
   return {
-    title,
-    description,
+    title: fullTitle,
+    description: clip(description, 160),
     ...(keywords ? { keywords } : {}),
     alternates: { canonical: path },
     ...(noindex ? { robots: { index: false, follow: true } } : {}),
@@ -64,3 +67,11 @@ export const notFoundMeta = (title: string): Metadata => ({
   title,
   robots: { index: false, follow: true },
 });
+
+/** Cut text to `max` characters at a word boundary, ending with an ellipsis. */
+export function clip(text: string, max: number): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max - 1);
+  return cut.slice(0, cut.lastIndexOf(" ")).replace(/[,;:\-–—\s]+$/, "") + "…";
+}

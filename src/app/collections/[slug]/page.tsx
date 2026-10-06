@@ -33,9 +33,9 @@ export async function generateMetadata({
   if (!collection) return notFoundMeta("Collection not found");
   const price = formatPaise(collection.pricePaise);
   const lead = `Buy ${collection.name} wholesale from ${collection.brandName} at ${price} per piece, MOQ ${collection.moq}. `;
-  const description = (lead + collection.description).slice(0, 200);
+  const description = lead + collection.description;
   return pageMeta({
-    title: `${collection.name} Wholesale, ${price}/piece, MOQ ${collection.moq}`,
+    title: `${collection.name} Wholesale, MOQ ${collection.moq}`,
     description,
     path: `/collections/${collection.slug}`,
     image: collection.imagePath ?? undefined,
