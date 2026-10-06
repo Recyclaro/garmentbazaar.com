@@ -38,7 +38,8 @@
       "audience": "retailers",
       "department": "Menswear",
       "topic": "Menswear basics every small-town shop should carry",
-      "status": "todo"
+      "status": "done",
+      "slug": "menswear-basics-small-town-shop"
     },
     {
       "id": 6,
