@@ -4,6 +4,10 @@ import JsonLd from "./JsonLd";
 // Answers stick to how the platform works today.
 const faqs = [
   {
+    q: "Is Garment Bazaar the same as GarmentBazaar.com?",
+    a: "Yes. GarmentBazaar, also written Garment Bazaar or Garment Bazar, is the B2B wholesale clothing platform at garmentbazaar.com, where retailers across India order branded stock direct from brands.",
+  },
+  {
     q: "What is MOQ and how small can my order be?",
     a: "MOQ is the minimum order quantity the brand sets for a collection, shown on every listing. You can order any amount at or above it, so you can start small and reorder what sells.",
   },

@@ -27,7 +27,7 @@ const siteUrl = "https://garmentbazaar.com";
 
 const siteTitle = "GarmentBazaar: Wholesale Clothing for Retailers in India";
 const siteDescription =
-  "India's wholesale buying platform for clothing retailers. Order branded stock direct from brands from any town, with price per piece and small MOQs shown up front.";
+  "GarmentBazaar (Garment Bazaar) is India's wholesale platform for clothing retailers. Buy branded stock direct from brands, with per-piece prices and small MOQs.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -38,6 +38,10 @@ export const metadata: Metadata = {
   description: siteDescription,
   applicationName: "GarmentBazaar",
   keywords: [
+    "GarmentBazaar",
+    "Garment Bazaar",
+    "garment bazaar wholesale",
+    "garment bazaar online",
     "wholesale clothing for retailers",
     "online wholesale clothing India",
     "wholesale clothes for shop",
@@ -91,7 +95,9 @@ export default async function RootLayout({
             {
               "@context": "https://schema.org",
               "@type": "Organization",
+              "@id": `${siteUrl}/#organization`,
               name: "GarmentBazaar",
+              alternateName: ["Garment Bazaar", "Garment Bazar", "GarmentBazaar.com", "Garment Bazaar India"],
               url: siteUrl,
               logo: `${siteUrl}/icon`,
               email: "hello@garmentbazaar.com",
@@ -102,8 +108,10 @@ export default async function RootLayout({
             {
               "@context": "https://schema.org",
               "@type": "WebSite",
+              "@id": `${siteUrl}/#website`,
               name: "GarmentBazaar",
-              alternateName: "Garment Bazaar",
+              alternateName: ["Garment Bazaar", "Garment Bazar", "GarmentBazaar.com", "Garment Bazaar India"],
+              publisher: { "@id": `${siteUrl}/#organization` },
               url: siteUrl,
               inLanguage: "en-IN",
               potentialAction: {

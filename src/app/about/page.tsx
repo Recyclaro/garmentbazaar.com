@@ -13,7 +13,7 @@ import {
 } from "@/components/Icons";
 
 export const metadata: Metadata = pageMeta({
-  title: "About GarmentBazaar: Wholesale Buying for Every Town",
+  title: "About GarmentBazaar (Garment Bazaar)",
   description:
     "GarmentBazaar helps clothing retailers in Tier 2, 3 and 4 towns buy branded wholesale stock direct from brands, online, with prices and MOQs shown up front.",
   path: "/about",
@@ -52,7 +52,7 @@ export default function AboutPage() {
         tone="navy"
         eyebrow="About GarmentBazaar"
         title="Building the backbone of fashion sourcing"
-        subtitle="GarmentBazaar connects brands, manufacturers, factories and retailers across India's fashion and lifestyle ecosystem on a single, intelligent platform."
+        subtitle="GarmentBazaar (Garment Bazaar) connects brands, manufacturers, factories and retailers across India's fashion and lifestyle ecosystem on a single, intelligent platform."
         photos={[
           { file: "hero-men", alt: "Men's wear" },
           { file: "fabric-cotton", alt: "Cotton fabric" },

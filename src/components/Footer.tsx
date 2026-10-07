@@ -99,7 +99,7 @@ export default function Footer() {
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row">
           <p className="text-xs text-slate-500">
-            © {new Date().getFullYear()} GarmentBazaar. All rights reserved.
+            © {new Date().getFullYear()} GarmentBazaar (Garment Bazaar), wholesale clothing for retailers in India. All rights reserved.
           </p>
           <p className="text-xs text-slate-500">
             Built for India&apos;s fashion &amp; lifestyle supply chain.
