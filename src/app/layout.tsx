@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
@@ -128,6 +129,14 @@ export default async function RootLayout({
         <Footer />
         <div className="h-16 md:hidden" aria-hidden />
         <MobileNav loggedIn={Boolean(user)} />
+        {/* Google Analytics 4 */}
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-H0LYB5WFRK" strategy="afterInteractive" />
+        <Script id="ga4" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-H0LYB5WFRK');`}
+        </Script>
       </body>
     </html>
   );
